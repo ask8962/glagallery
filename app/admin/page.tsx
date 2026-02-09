@@ -36,7 +36,17 @@ const ADMIN_EMAIL = "anukalp.gupta_cs23@gla.ac.in"
 export default function AdminPage() {
   const { user, profile } = useAuth()
   const { db } = getFirebase()
-  const isAdmin = profile?.role === "admin" || profile?.email === ADMIN_EMAIL
+  const isAdmin = (profile?.role === "admin" || profile?.role === "super_admin") ||
+    (profile?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase())
+
+  useEffect(() => {
+    console.log("Admin Access Check:", {
+      email: profile?.email,
+      role: profile?.role,
+      isAdmin,
+      expectedEmail: ADMIN_EMAIL
+    })
+  }, [profile, isAdmin])
 
   const [users, setUsers] = useState<UserProfile[]>([])
   const [events, setEvents] = useState<Event[]>([])
