@@ -118,7 +118,7 @@
     "@vitejs/plugin-react": "^5.1.2",
     "@vitest/browser-playwright": "4.0.17",
     "@vitest/coverage-v8": "4.0.17",
-    "jsdom": "^27.4.0",
+    "jsdom": "^28.0.0",
     "playwright": "^1.58.0",
     "postcss": "^8.5",
     "storybook": "^10.2.0",
