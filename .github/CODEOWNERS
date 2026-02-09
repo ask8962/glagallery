@@ -1,0 +1,24 @@
+# This file defines code owners for automatic review assignment
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repo
+* @ask8962
+
+# Frontend components
+/components/ @ask8962
+/app/ @ask8962
+
+# Backend/API routes
+/app/api/ @ask8962
+
+# Core utilities
+/lib/ @ask8962
+
+# Configuration files
+*.config.js @ask8962
+*.config.ts @ask8962
+
+# Firebase
+firebase*.json @ask8962
+/firestore.rules @ask8962
+/storage.rules @ask8962
