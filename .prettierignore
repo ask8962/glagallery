@@ -1,0 +1,22 @@
+# Ignore artifacts
+.next
+out
+build
+node_modules
+
+# Ignore lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Ignore generated files
+*.min.js
+*.min.css
+
+# Ignore config files
+.env*
+firebase*.json
+
+# Ignore IDE
+.vscode
+.idea
