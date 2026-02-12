@@ -33,8 +33,29 @@ const typeConfig = {
 export default function ChangelogPage() {
     const releases: Release[] = [
         {
+            version: "2.16.0",
+            date: "February 12, 2026",
+            changes: [
+                { type: "feature", title: "Club Verification System", description: "Clubs can now request official verification with document uploads and admin approval workflow" },
+                { type: "feature", title: "Verified Badge", description: "Verified clubs display a blue ✅ badge next to their name on all pages" },
+                { type: "feature", title: "Club Verification Dashboard", description: "Admins can view, approve, or reject club verification requests from the admin panel" },
+                { type: "fix", title: "Admin Panel Access Fix", description: "Fixed middleware redirect loop that prevented admin panel access" },
+                { type: "improvement", title: "Admin Email Validation", description: "Admin access check now uses case-insensitive email comparison" },
+            ],
+        },
+        {
+            version: "2.15.0",
+            date: "February 9, 2026",
+            changes: [
+                { type: "feature", title: "Command Menu (⌘K)", description: "Quick search and navigation with Ctrl+K — find pages, features, and settings instantly" },
+                { type: "feature", title: "Skeleton Loaders", description: "Beautiful loading states for Events, Clubs, Gallery, and Admin pages" },
+                { type: "feature", title: "Empty State Components", description: "Helpful illustrations and CTAs when sections have no data" },
+                { type: "improvement", title: "UX Polish — Phase 14", description: "Smoother transitions, consistent loading patterns, and improved visual feedback across the app" },
+            ],
+        },
+        {
             version: "2.14.0",
-            date: "February 28, 2026",
+            date: "February 1, 2026",
             changes: [
                 { type: "feature", title: "Points Wallet", description: "Track all your point earnings and spendings in one place" },
                 { type: "feature", title: "Email Notifications", description: "Get notified when your reward redemption is fulfilled or cancelled" },
@@ -43,58 +64,70 @@ export default function ChangelogPage() {
         },
         {
             version: "2.13.0",
-            date: "February 10, 2026",
+            date: "January 20, 2026",
             changes: [
                 { type: "improvement", title: "Navigation Redesign", description: "Cleaner navigation with grouped 'Explore' and 'Community' menus" },
                 { type: "feature", title: "Rewards Management", description: "Admins can now create, edit, and delete rewards from the dashboard" },
+                { type: "feature", title: "Academic Calendar", description: "University academic dates managed from the admin panel" },
+                { type: "feature", title: "Faculty Verification", description: "Admin tool to verify faculty accounts" },
             ],
         },
         {
             version: "2.12.0",
-            date: "January 25, 2026",
+            date: "January 10, 2026",
             changes: [
                 { type: "feature", title: "Rewards Store", description: "Redeem your points for exclusive rewards, merchandise, and privileges" },
                 { type: "feature", title: "Redemption History", description: "Track your redeemed rewards and their fulfillment status" },
+                { type: "feature", title: "Campus Map", description: "Interactive campus map to find venues and event locations" },
             ],
         },
         {
             version: "2.11.0",
-            date: "January 5, 2026",
+            date: "December 20, 2025",
             changes: [
-                { type: "feature", title: "Clubs & Societies", description: "Create and join campus clubs with dedicated profile pages" },
-                { type: "feature", title: "Club Events", description: "Clubs can now host their own events" },
+                { type: "feature", title: "Clubs & Societies", description: "Create and join campus clubs with dedicated profile pages, logos, and cover images" },
+                { type: "feature", title: "Club Events", description: "Clubs can now host their own events with dedicated event listings" },
+                { type: "feature", title: "Club Recruitment", description: "Open and close recruitment periods for campus clubs" },
+                { type: "feature", title: "Club Elections", description: "Organize and manage digital club elections" },
             ],
         },
         {
             version: "2.10.0",
-            date: "December 15, 2025",
+            date: "December 1, 2025",
             changes: [
-                { type: "feature", title: "Install as App", description: "Install GLA Gallery on your phone or desktop for quick access" },
-                { type: "improvement", title: "Faster Loading", description: "Added smooth loading animations across all pages" },
+                { type: "feature", title: "Progressive Web App", description: "Install GLA Gallery on your phone or desktop for quick access" },
+                { type: "improvement", title: "Faster Loading", description: "Added smooth loading animations and skeleton loaders" },
+                { type: "feature", title: "Notification Center", description: "Centralized inbox for all notifications with read/unread state" },
+                { type: "feature", title: "Notification Permission Banner", description: "Smart banner prompting users to enable push notifications" },
             ],
         },
         {
             version: "2.9.0",
-            date: "November 20, 2025",
+            date: "November 10, 2025",
             changes: [
                 { type: "feature", title: "Event Attendance", description: "Track your event attendance and earn reliability badges" },
-                { type: "feature", title: "Attendee Export", description: "Event organizers can export attendee lists" },
+                { type: "feature", title: "Attendee Export", description: "Event organizers can export attendee lists as CSV" },
+                { type: "feature", title: "No-Show Processing", description: "Automated penalties for users who book but don't attend events" },
+                { type: "security", title: "Security Logging", description: "Comprehensive audit trail for admin actions and critical events" },
             ],
         },
         {
             version: "2.8.0",
-            date: "October 25, 2025",
+            date: "October 20, 2025",
             changes: [
-                { type: "feature", title: "Campus Events", description: "Browse, register, and attend campus events with QR tickets" },
-                { type: "feature", title: "Event Calendar", description: "View all upcoming events in a monthly calendar" },
+                { type: "feature", title: "Campus Events", description: "Browse, register, and attend campus events with QR-coded tickets" },
+                { type: "feature", title: "Event Calendar", description: "View all upcoming events in a monthly calendar view" },
+                { type: "feature", title: "Waitlist System", description: "Auto-promote from waitlist when attendees cancel" },
+                { type: "feature", title: "Calendar Export", description: "Download .ics files for events to add to your calendar" },
             ],
         },
         {
             version: "2.7.0",
-            date: "September 30, 2025",
+            date: "September 25, 2025",
             changes: [
-                { type: "feature", title: "Announcements", description: "Receive important updates via email notifications" },
-                { type: "improvement", title: "Email Templates", description: "Beautiful email designs for all notifications" },
+                { type: "feature", title: "Broadcast Emails", description: "Admins can send targeted announcements to all users or selected groups" },
+                { type: "improvement", title: "Email Templates", description: "Beautiful email designs for all notification types" },
+                { type: "feature", title: "Resume Builder", description: "Generate professional PDF resumes from your profile data" },
             ],
         },
         {
@@ -103,6 +136,7 @@ export default function ChangelogPage() {
             changes: [
                 { type: "feature", title: "User Profiles", description: "View any user's profile, followers, and badge collection" },
                 { type: "feature", title: "Badge Tiers", description: "Earn Bronze, Silver, and Gold badges based on your activity" },
+                { type: "feature", title: "Online Presence", description: "See who's online with real-time presence indicators" },
             ],
         },
         {
@@ -111,22 +145,25 @@ export default function ChangelogPage() {
             changes: [
                 { type: "feature", title: "Stories", description: "Share photos and videos that disappear after 24 hours" },
                 { type: "feature", title: "Share & Download", description: "Share posts to social media or download with watermark" },
+                { type: "feature", title: "Report System", description: "Flag inappropriate content for admin review" },
             ],
         },
         {
             version: "2.4.0",
             date: "June 5, 2025",
             changes: [
-                { type: "feature", title: "Push Notifications", description: "Get instant alerts for likes, comments, and follows" },
-                { type: "feature", title: "Two-Factor Auth", description: "Added extra security with email verification codes" },
+                { type: "feature", title: "Push Notifications", description: "Get instant alerts for likes, comments, and follows via Firebase Cloud Messaging" },
+                { type: "feature", title: "Two-Factor Auth", description: "Added extra security with email verification codes (OTP)" },
+                { type: "security", title: "Rate Limiting", description: "Per-IP rate limiting on all sensitive endpoints via Upstash Redis" },
             ],
         },
         {
             version: "2.3.0",
             date: "May 1, 2025",
             changes: [
-                { type: "feature", title: "Gamification", description: "Earn points, level up, maintain login streaks, and compete on leaderboards" },
-                { type: "feature", title: "Hackathon Check-in", description: "Teams get unique QR codes for venue entry" },
+                { type: "feature", title: "Gamification", description: "Earn points, level up, maintain login streaks, and compete on the leaderboard" },
+                { type: "feature", title: "Hackathon Check-in", description: "Teams get unique QR codes for venue entry with sound effects on successful scan" },
+                { type: "improvement", title: "Image Compression", description: "Automatic client-side image compression before upload for faster loading" },
             ],
         },
         {
@@ -134,7 +171,9 @@ export default function ChangelogPage() {
             date: "March 20, 2025",
             changes: [
                 { type: "feature", title: "Hackathons", description: "Create teams, submit projects, and compete in hackathons" },
-                { type: "feature", title: "Live Leaderboard", description: "Real-time ranking during hackathons" },
+                { type: "feature", title: "Live Leaderboard", description: "Real-time ranking and scoring during hackathon events" },
+                { type: "feature", title: "Judging System", description: "Multi-criteria scoring with customizable rubrics" },
+                { type: "feature", title: "Mentorship", description: "Assign mentors to hackathon teams for guidance" },
             ],
         },
         {
@@ -144,15 +183,17 @@ export default function ChangelogPage() {
                 { type: "feature", title: "Notifications", description: "In-app and email notifications for all social activity" },
                 { type: "feature", title: "Bookmarks", description: "Save posts for later viewing" },
                 { type: "feature", title: "Follow System", description: "Follow friends and see their posts in your feed" },
+                { type: "feature", title: "Comments & Replies", description: "Nested comment threads with reply functionality" },
             ],
         },
         {
             version: "2.0.0",
             date: "January 1, 2025",
             changes: [
-                { type: "feature", title: "Complete Redesign", description: "Fresh new look with dark mode support" },
-                { type: "feature", title: "Video Support", description: "Upload and share video memories" },
-                { type: "improvement", title: "Performance Boost", description: "3x faster page loads and smoother animations" },
+                { type: "feature", title: "Complete Redesign", description: "Fresh new look with dark mode support and glassmorphism effects" },
+                { type: "feature", title: "Video Support", description: "Upload and share video memories alongside photos" },
+                { type: "improvement", title: "Performance Boost", description: "3x faster page loads with Turbopack and optimized bundle splitting" },
+                { type: "security", title: "Security Headers", description: "Added CSP, X-Frame-Options, HSTS, and other security headers" },
             ],
         },
         {
@@ -224,7 +265,7 @@ export default function ChangelogPage() {
             date: "August 1, 2023",
             changes: [
                 { type: "feature", title: "Initial Release", description: "Photo gallery with likes, comments, and user profiles" },
-                { type: "feature", title: "Google Sign-in", description: "Quick and secure authentication" },
+                { type: "feature", title: "Google Sign-in", description: "Quick and secure authentication with GLA email restriction" },
             ],
         },
     ]
@@ -248,11 +289,11 @@ export default function ChangelogPage() {
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-2 rounded-full mb-6">
                         <Gift className="h-4 w-4" />
-                        <span className="text-sm font-medium">What's New</span>
+                        <span className="text-sm font-medium">What&apos;s New</span>
                     </div>
                     <h1 className="text-3xl md:text-4xl font-bold mb-4">Changelog</h1>
                     <p className="text-muted-foreground max-w-2xl mx-auto">
-                        Stay up to date with all the latest features, improvements, and fixes.
+                        Stay up to date with all the latest features, improvements, and fixes in GLA Gallery.
                     </p>
                 </div>
 

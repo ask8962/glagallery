@@ -1,10 +1,10 @@
 # 🎓 GLA Gallery
 
-> **Campus Memories & Hackathon Management Platform**  
-> A modern web application for GLA University students to share campus moments and participate in hackathons.
+> **Campus Memories & Event Management Platform**  
+> A full-stack web application for GLA University students to share campus moments, manage events & hackathons, earn rewards, and build community.
 
-![Next.js](https://img.shields.io/badge/Next.js-15.2-black?logo=next.js)
-![Firebase](https://img.shields.io/badge/Firebase-12.7-orange?logo=firebase)
+![Next.js](https://img.shields.io/badge/Next.js-16.1-black?logo=next.js)
+![Firebase](https://img.shields.io/badge/Firebase-Latest-orange?logo=firebase)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38B2AC?logo=tailwind-css)
 ![License](https://img.shields.io/badge/License-MIT-green?logo=opensourceinitiative)
@@ -15,69 +15,93 @@
 
 ## ✨ Features
 
-### 📅 Campus Event Hub
-- **Event Discovery** - Browse upcoming workshops, hackathons, and cultural fests
-- **Smart Calendar** - Monthly view of all campus activities
-- **Digital Ticketing** - QR-coded tickets generated instantly upon registration
-- **RSVP System** - Manage capacity and registration deadlines
-- **🆕 No-Show Penalty System**
-  - **Reliability Score** - Users earn trust by attending events they book
-  - **Automatic Restrictions** - Penalizes repeat no-shows to ensure fair access
-  - **Badges** - Visual reliability indicators (Excellent/Good/Fair/Poor) on profiles
-
 ### 📸 Gallery & Social
-- **Photo & Video Uploads** - Share campus memories with compression support
-- **Like & Comment System** - Engage with posts from fellow students
-- **User Profiles** - Customizable profiles with social links
-- **Tagging & Hashtags** - Organize content with tags and trending hashtags
-- **Bookmarks** - Save posts for later viewing
-- **Follow System** - Follow your friends and get updates
-- **🆕 Social Share** - One-click share to WhatsApp, Twitter, Facebook, LinkedIn
+- **Photo & Video Uploads** — Share campus memories with automatic compression
+- **Like & Comment System** — Engage with posts, nested replies, and reactions
+- **Stories** — Share ephemeral photo/video stories (24-hour auto-expiry)
+- **User Profiles** — Customizable profiles with social links, badges, and activity
+- **Tagging & Hashtags** — Organize content with tags and trending hashtags
+- **Bookmarks** — Save posts for later viewing
+- **Follow System** — Follow friends and get updates in your feed
+- **Social Share** — One-click share to WhatsApp, Twitter, Facebook, LinkedIn
+- **Image Lightbox** — Full-screen image viewing with navigation
+
+### 📅 Campus Event Hub
+- **Event Discovery** — Browse upcoming workshops, hackathons, and cultural fests
+- **Digital Ticketing** — QR-coded tickets generated instantly upon registration
+- **RSVP & Waitlist** — Manage capacity, deadlines, and auto-promote from waitlists
+- **Calendar Export** — Download `.ics` files for any event
+- **No-Show Penalty System** — Reliability scoring and automatic restrictions for repeat no-shows
+- **Event Feedback** — Post-event feedback collection system
+- **Check-in System** — QR-based check-in at venue entry
 
 ### 🏆 Hackathon Management
-- **Create Hackathons** - Admins can organize hackathon events
-- **Team Registration** - Students can form teams and register
-- **Project Submissions** - Submit projects with GitHub links, demos, videos
-- **Judging System** - Judges score submissions with customizable criteria
-- **Live Leaderboard** - Real-time ranking of teams
-- **🆕 QR Check-in** - Teams get unique QR codes for venue entry
-  - Sound effects on successful scan
-  - Print roster for organizers
+- **Create Hackathons** — Admins can organize multi-phase hackathon events
+- **Team Registration** — Students form and manage teams
+- **Project Submissions** — Submit with GitHub links, demos, videos, and descriptions
+- **Judging System** — Multi-criteria scoring by assigned judges
+- **Live Leaderboard** — Real-time ranking of teams
+- **Mentorship System** — Assign mentors to teams
+- **Timeline & Schedule** — Detailed hackathon schedule with milestones
+- **QR Check-in** — Team QR codes for venue entry with sound effects
+
+### 🏫 Clubs & Societies
+- **Club Directory** — Browse and join campus clubs with dedicated pages
+- **Club Management** — Cover images, logos, announcements, member management
+- **Club Verification** — Official verification workflow with ✅ Verified Badge
+- **Role-based Access** — President, Vice President, Secretary, Treasurer, and Member roles
+- **Club Analytics** — Engagement metrics and member stats for club admins
+- **Recruitment System** — Open/close recruitment periods for clubs
+- **Election Manager** — Organize club elections digitally
 
 ### 🎮 Gamification
-- **Points System** - Earn points for uploads, likes, comments
-- **Levels & Badges** - Progress through levels and unlock achievements
-- **Login Streaks** - Maintain daily login streaks
-- **Leaderboard** - Compete with other students
+- **Points System** — Earn points for uploads, likes, comments, and attendance
+- **Levels & Badges** — Progress through levels and unlock achievements (Bronze/Silver/Gold)
+- **Login Streaks** — Maintain daily login streaks for bonus points
+- **Leaderboard** — Campus-wide competition rankings
 
 ### 🎁 Rewards Store
-- **Redeem Points** - Exchange earned points for digital/physical rewards
-- **Catalog System** - Browse rewards by category (Digital, Physical, Privilege)
-- **Redemption History** - Track status of your orders
-- **Admin Management** - Admins can manage stock and fulfill orders
+- **Redeem Points** — Exchange earned points for digital/physical rewards
+- **Catalog System** — Browse rewards by category (Digital, Physical, Privilege)
+- **Redemption Tracking** — Track status of orders (Pending → Fulfilled)
+- **Points Wallet** — Full transaction history with earnings and spendings
+- **Admin Management** — Create, edit, and manage rewards stock
 
 ### 🔔 Notifications
-- **🆕 Push Notifications** - Real-time browser/mobile alerts via Firebase Cloud Messaging
-- **In-App Notifications** - Get notified about likes, comments, follows
-- **Email Notifications** - Optional email alerts for important events
-- **Hackathon Updates** - Deadline reminders and announcements
+- **Push Notifications** — Real-time browser alerts via Firebase Cloud Messaging
+- **In-App Notifications** — Likes, comments, follows, event reminders
+- **Email Notifications** — Broadcast emails, reward fulfillment, and announcements
+- **Notification Center** — Centralized inbox with read/unread states
 
 ### 👨‍💼 Admin Panel
-- **User Management** - View and manage all users
-- **Event Management** - View all events, process no-shows, and export attendee lists
-- **📢 Broadcast Emails** - Send targeted announcements to users (All/Selected)
-- **Content Moderation** - Review reported content
-- **Analytics Dashboard** - Visualize platform statistics
-- **QR Scanner** - Built-in scanner for event and hackathon check-ins
+- **User Management** — View, search, and manage all users with role toggles
+- **Event Management** — Oversee all events, process no-shows, export attendee lists
+- **Hackathon Management** — Monitor hackathons from creation to results
+- **Club Verification Dashboard** — Approve or reject club verification requests
+- **Faculty Verification** — Verify faculty accounts
+- **Academic Calendar Manager** — Manage university academic dates
+- **Broadcast Emails** — Send targeted announcements to All/Selected users
+- **Analytics Dashboard** — Visualize platform stats with charts
+- **QR Scanner** — Built-in scanner for event and hackathon check-ins
+- **Health Monitoring** — System health and API status checks
+- **Security Reports** — Audit logs and security event tracking
 
 ### 🔒 Security & Privacy
-- **Secure Auth** - Firebase Google Sign-In with strict email domain restrictions (@gla.ac.in)
-- **2FA Protection** - Optional Email OTP for sensitive actions
-- **Rate Limiting** - Advanced API rate limiting to prevent abuse
-- **CSP & Headers** - Strict Content Security Policy and security headers
-- **Audit Logging** - Comprehensive security logging for critical actions
-- **Input Sanitization** - Robust protection against injection attacks
-- **Privacy Controls** - Users can manage profile visibility and data settings
+- **GLA Email Gate** — Only `@gla.ac.in` emails can sign in
+- **2FA Protection** — Optional Email OTP for sensitive actions
+- **Rate Limiting** — Per-IP limits on OTP, uploads, comments, and likes (via Upstash Redis)
+- **CSP & Security Headers** — Strict Content Security Policy, X-Frame-Options, HSTS
+- **Input Sanitization** — DOMPurify-based protection against XSS/injection
+- **Audit Logging** — Security event logging for critical admin actions
+- **Privacy Controls** — Profile visibility and data settings
+- **Firebase Security Rules** — Granular Firestore & Storage rules
+
+### ⌨️ Developer Experience
+- **Command Menu** — `Ctrl+K` quick search and navigation
+- **Storybook** — Component library documentation
+- **Vitest + Playwright** — Unit, integration, and browser tests
+- **TypeDoc** — API documentation generation
+- **GitHub Actions** — CI/CD pipeline
 
 ---
 
@@ -85,15 +109,20 @@
 
 | Layer | Technology |
 |-------|------------|
-| **Framework** | Next.js 15 (App Router) |
-| **Language** | TypeScript |
+| **Framework** | Next.js 16 (App Router + Turbopack) |
+| **Language** | TypeScript 5 |
 | **Styling** | Tailwind CSS 4 |
 | **UI Components** | Radix UI + shadcn/ui |
 | **Database** | Firebase Firestore |
-| **Authentication** | Firebase Auth (Google) |
+| **Authentication** | Firebase Auth (Google OAuth) |
 | **Storage** | Firebase Storage |
+| **Rate Limiting** | Upstash Redis |
 | **Animations** | Framer Motion |
 | **Charts** | Recharts |
+| **Email** | Nodemailer (SMTP) |
+| **QR Codes** | qrcode.react + html5-qrcode |
+| **PDF** | jsPDF |
+| **Testing** | Vitest + Playwright + Storybook |
 | **Deployment** | Vercel |
 
 ---
@@ -102,8 +131,8 @@
 
 ### Prerequisites
 - Node.js 18+
-- pnpm (recommended) or npm
-- Firebase project
+- pnpm 8+ (recommended) or npm
+- Firebase project with Firestore, Auth, and Storage enabled
 
 ### Setup
 
@@ -120,7 +149,7 @@
 
 3. **Configure environment variables**
    
-   Create a `.env.local` file:
+   Copy `.env.example` to `.env.local` and fill in your values:
    ```env
    # Firebase Configuration
    NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
@@ -129,14 +158,18 @@
    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.firebasestorage.app
    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
    NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
-   
+
    # App Configuration
    NEXT_PUBLIC_APP_URL=https://glagallery.vercel.app
-   
+
    # Security
    JWT_SECRET=your_jwt_secret_here
-   
-   # Email (Optional)
+
+   # Rate Limiting (Upstash Redis)
+   UPSTASH_REDIS_REST_URL=your_upstash_url
+   UPSTASH_REDIS_REST_TOKEN=your_upstash_token
+
+   # Email (Optional — for 2FA & broadcasts)
    SMTP_HOST=smtp.gmail.com
    SMTP_PORT=587
    SMTP_USER=your_email@gmail.com
@@ -157,15 +190,15 @@
 
 ## 🔐 Security
 
-- **GLA Email Restriction**: Only users with `@gla.ac.in` emails can sign in.
-- **Email OTP 2FA**: Optional Two-Factor Authentication using server-side generated 6-digit codes.
-- **API Rate Limiting**:
-  - **OTP Requests**: Limited to 5 requests per hour per IP.
-  - **OTP Verification**: Limited to 10 attempts per hour per IP.
-  - **General APIs**: Uploads (10/hr), Comments (50/hr), Likes (100/hr) are all ratelimited by IP to prevent spam.
-- **Secure Cookies**: Auth cookies are set with `httpOnly`, `secure` (in production), and `SameSite` attributes to prevent XSS and CSRF attacks.
-- **Firebase Security Rules**: Granular database & storage rules ensuring users can only edit their own data.
-- **Role-Based Access Control**: Strict segregation between Student and Admin privileges.
+| Protection | Details |
+|-----------|---------|
+| **Email Restriction** | Only `@gla.ac.in` domains allowed |
+| **2FA (Email OTP)** | 6-digit server-generated codes, 5 req/hr limit |
+| **API Rate Limiting** | Uploads: 10/hr, Comments: 50/hr, Likes: 100/hr per IP |
+| **Security Headers** | CSP, X-Frame-Options, HSTS, Referrer-Policy, Permissions-Policy |
+| **Input Sanitization** | DOMPurify for all user-generated content |
+| **Firebase Rules** | Granular read/write rules per collection |
+| **RBAC** | Student, Admin, Super Admin role segregation |
 
 ---
 
@@ -174,43 +207,44 @@
 ```
 glagallery/
 ├── app/                        # Next.js App Router pages
-│   ├── about/                  # About page
 │   ├── admin/                  # Admin dashboard
 │   │   ├── analytics/          # Platform analytics
-│   │   ├── email-logs/         # Email delivery logs
-│   │   ├── reports/            # Content moderation
-│   │   └── scanner/            # Event/Hackathon QR scanner
+│   │   ├── health/             # System health monitoring
+│   │   ├── reports/            # Security reports
+│   │   ├── rewards/            # Rewards management
+│   │   └── scanner/            # QR scanner
 │   ├── api/                    # Server-side API routes
+│   │   ├── academic-calendar/  # Calendar management
+│   │   ├── admin/              # Admin endpoints
+│   │   ├── auth/               # Auth & 2FA endpoints
+│   │   ├── clubs/              # Club CRUD & verification
+│   │   ├── events/             # Events, RSVP, tickets
+│   │   ├── faculty/            # Faculty verification
+│   │   ├── notifications/      # Push & in-app notifications
+│   │   ├── points/             # Points history
+│   │   └── rewards/            # Rewards & redemptions
 │   ├── changelog/              # Release notes
-│   ├── contact/                # Contact form
-│   ├── events/                 # Campus Event Hub
-│   │   ├── [id]/               # Event details
-│   │   ├── create/             # Create new event
-│   │   └── my-tickets/         # User's tickets
-│   ├── faq/                    # Frequently Asked Questions
-│   ├── gallery/                # Main photo gallery
-│   ├── hackathons/             # Hackathon Management
-│   │   ├── [id]/               # Hackathon details
-│   │   │   ├── check-in/       # Team QR check-in
-│   │   │   ├── judge/          # Submission judging
-│   │   │   ├── register/       # Team registration
-│   │   │   ├── submit/         # Project submission
-│   │   │   └── team/           # Team workspace
-│   │   └── create/             # Create new hackathon
-│   ├── privacy/                # Privacy Policy
-│   ├── profile/                # User profiles & settings
-│   ├── search/                 # User search
-│   ├── terms/                  # Terms of Service
-│   ├── trending/               # Trending posts
-│   ├── upload/                 # Post upload
-│   └── verify-2fa/             # 2FA verification
+│   ├── clubs/                  # Club directory & management
+│   ├── events/                 # Campus events
+│   ├── hackathons/             # Hackathon platform
+│   ├── profile/                # User profile & resume builder
+│   ├── rewards/                # Rewards store & wallet
+│   └── search/                 # User search
 ├── components/                 # Reusable UI components
 │   ├── admin/                  # Admin-specific components
-│   ├── events/                 # Event-related components
-│   ├── hackathons/             # Hackathon-specific components
+│   ├── clubs/                  # Club components
+│   ├── events/                 # Event components
+│   ├── hackathons/             # Hackathon components
 │   ├── profile/                # Profile components
-│   └── ui/                     # shadcn/ui library components
-└── lib/                        # Core utilities & configs
+│   ├── scanner/                # QR scanner components
+│   ├── skeletons/              # Loading skeletons
+│   ├── stories/                # Story components
+│   └── ui/                     # shadcn/ui primitives
+├── context/                    # React Context providers
+├── lib/                        # Core utilities & configs
+├── __tests__/                  # Test suites
+├── stories/                    # Storybook stories
+└── docs/                       # Documentation
 ```
 
 ---
@@ -221,12 +255,17 @@ glagallery/
 
 1. Push your code to GitHub
 2. Import project in [Vercel](https://vercel.com)
-3. Add environment variables in Vercel dashboard
+3. Add all `.env.local` variables in Vercel dashboard
 4. Deploy!
 
-### Environment Variables for Production
+### Firebase Setup
 
-Add all `.env.local` variables to your Vercel project settings.
+1. Create a Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
+2. Enable **Authentication** (Google provider), **Firestore**, and **Storage**
+3. Deploy security rules:
+   ```bash
+   firebase deploy --only firestore:rules,storage:rules
+   ```
 
 ---
 
@@ -234,15 +273,17 @@ Add all `.env.local` variables to your Vercel project settings.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
+3. Commit your changes (`git commit -m 'feat: Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
@@ -250,7 +291,8 @@ This project is licensed under the MIT License.
 
 **Anukalp Gupta**  
 GLA University, Mathura  
-[anukalp.gupta_cs23@gla.ac.in](mailto:anukalp.gupta_cs23@gla.ac.in)
+[anukalp.gupta_cs23@gla.ac.in](mailto:anukalp.gupta_cs23@gla.ac.in)  
+[GitHub: @ask8962](https://github.com/ask8962)
 
 ---
 
