@@ -33,6 +33,16 @@ const typeConfig = {
 export default function ChangelogPage() {
     const releases: Release[] = [
         {
+            version: "2.17.0",
+            date: "February 14, 2026",
+            changes: [
+                { type: "feature", title: "GLA Bot (AI Assistant)", description: "Meet your new campus guide! Ask about events, clubs, and more. Powered by Claude, Gemini, and Groq." },
+                { type: "improvement", title: "Documentation Overhaul", description: "Updated architecture docs and added comprehensive guide for the new AI system." },
+                { type: "improvement", title: "Smart Fallback Engine", description: "The bot automatically switches between AI providers to ensure 99.9% uptime." },
+                { type: "security", title: "Chat Rate Limiting", description: "Added intelligent rate limiting to prevent API abuse while keeping chat accessible." },
+            ],
+        },
+        {
             version: "2.16.0",
             date: "February 12, 2026",
             changes: [

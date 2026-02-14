@@ -132,6 +132,7 @@ graph TD
         B21["/profile"] --> B22["User Profile"]
         B23["/profile/:uid"] --> B24["Other User Profile"]
         B25["/search"] --> B26["Global Search"]
+        B27["/assistant"] --> B28["AI Chat Interface"]
     end
     
     subgraph Admin["Admin Routes"]

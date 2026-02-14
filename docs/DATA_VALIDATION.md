@@ -153,7 +153,10 @@ MAX_HACKATHON_DESCRIPTION_LENGTH = 5000
 \`\`\`typescript
 upload: 10 per hour
 comment: 50 per hour
+upload: 10 per hour
+comment: 50 per hour
 like: 200 per hour
+chat: 50 per hour
 \`\`\`
 
 ## Security Features
