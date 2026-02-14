@@ -69,7 +69,7 @@ export default function ChangelogPage() {
             changes: [
                 { type: "feature", title: "Points Wallet", description: "Track all your point earnings and spendings in one place" },
                 { type: "feature", title: "Email Notifications", description: "Get notified when your reward redemption is fulfilled or cancelled" },
-                { type: "improvement", title: "Points Deduction Fix", description: "Points are now correctly deducted when redeeming rewards" },
+                { type: "fix", title: "Points Deduction Fix", description: "Points are now correctly deducted when redeeming rewards" },
             ],
         },
         {
