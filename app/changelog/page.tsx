@@ -117,75 +117,11 @@ export default function ChangelogPage() {
             ],
         },
         {
-            version: "1.8.0",
-            date: "November 15, 2024",
-            changes: [
-                { type: "feature", title: "Advanced Search", description: "Filter by date, user, and content type" },
-                { type: "improvement", title: "Gallery Layout", description: "New masonry grid for better photo display" },
-            ],
-        },
-        {
-            version: "1.7.0",
-            date: "September 20, 2024",
-            changes: [
-                { type: "feature", title: "Photo Albums", description: "Organize your photos into custom albums" },
-                { type: "feature", title: "Bulk Upload", description: "Upload multiple photos at once" },
-            ],
-        },
-        {
-            version: "1.6.0",
-            date: "July 25, 2024",
-            changes: [
-                { type: "feature", title: "Direct Messages", description: "Send private messages to other users" },
-                { type: "improvement", title: "Privacy Controls", description: "Control who can see your posts and profile" },
-            ],
-        },
-        {
-            version: "1.5.0",
-            date: "May 30, 2024",
-            changes: [
-                { type: "feature", title: "Search", description: "Find posts, users, and tags across the platform" },
-                { type: "improvement", title: "Performance", description: "Faster image loading and smoother scrolling" },
-            ],
-        },
-        {
-            version: "1.4.0",
-            date: "March 15, 2024",
-            changes: [
-                { type: "feature", title: "Hashtags", description: "Add hashtags to posts for better discoverability" },
-                { type: "feature", title: "Trending", description: "Browse trending posts and popular hashtags" },
-            ],
-        },
-        {
-            version: "1.3.0",
-            date: "January 10, 2024",
-            changes: [
-                { type: "feature", title: "Profile Editing", description: "Update your bio, profile picture, and social links" },
-                { type: "improvement", title: "Mobile Experience", description: "Better touch gestures and responsive design" },
-            ],
-        },
-        {
-            version: "1.2.0",
-            date: "November 5, 2023",
-            changes: [
-                { type: "feature", title: "Image Filters", description: "Apply filters before uploading your photos" },
-                { type: "fix", title: "Upload Stability", description: "Fixed issues with large file uploads" },
-            ],
-        },
-        {
-            version: "1.1.0",
-            date: "September 20, 2023",
-            changes: [
-                { type: "feature", title: "Comment Replies", description: "Reply to comments and have conversations" },
-                { type: "improvement", title: "Notifications", description: "Get notified when someone likes or comments" },
-            ],
-        },
-        {
             version: "1.0.0",
             date: "August 1, 2023",
             changes: [
-                { type: "feature", title: "Initial Release", description: "Photo gallery with likes, comments, and user profiles" },
-                { type: "feature", title: "Google Sign-in", description: "Quick and secure authentication with GLA email restriction" },
+                { type: "feature", title: "Initial Release", description: "Core platform launch with Event listings and User Profiles." },
+                { type: "feature", title: "Google Sign-in", description: "Secure authentication restricted to GLA University email domains." },
             ],
         },
     ]
