@@ -119,39 +119,7 @@ export type UserProfile = {
   facultyProfile?: FacultyProfile
 }
 
-export type Comment = {
-  uid: string
-  text: string
-  name: string
-  photoURL?: string
-  createdAt: any
-  hidden?: boolean
-  moderationScore?: number
-  flagged?: boolean
-}
 
-export type Post = {
-  id: string
-  mediaURL: string
-  mediaType: "image" | "video"
-  uploaderUid: string
-  uploaderName: string
-  uploaderPhotoURL?: string
-  title: string
-  description?: string
-  tags: string[]
-  hashtags?: string[]
-  taggedUsers?: string[]
-  likes: string[]
-  comments: Comment[]
-  bookmarkedBy?: string[]
-  createdAt: any
-  trendingScore?: number
-  // Moderation
-  status?: "pending" | "approved" | "removed" | "flagged"
-  moderationScore?: number
-  reportCount?: number
-}
 
 // Hackathon Management System Types
 export type HackathonStatus = "upcoming" | "registration" | "active" | "judging" | "completed"
@@ -325,13 +293,12 @@ export type EmailLog = {
   createdAt: any
 }
 
+  // Activity Feed Types
+  | "badge_unlocked"
+  | "level_up"
+  | "followed"
 // Activity Feed Types
 export type ActivityType =
-  | "post_uploaded"
-  | "post_liked"
-  | "post_commented"
-  | "comment_received"
-  | "like_received"
   | "badge_unlocked"
   | "level_up"
   | "followed"
@@ -346,8 +313,6 @@ export type Activity = {
   icon?: string
   link?: string
   metadata?: {
-    postId?: string
-    commentId?: string
     badgeId?: string
     targetUserId?: string
     targetUserName?: string
@@ -584,19 +549,7 @@ export type PointTransaction = {
   createdAt: any
 }
 
-// Gallery Album Types
-export type Album = {
-  id: string
-  name: string
-  description?: string
-  coverImageURL?: string
-  postIds: string[]
-  creatorUid: string
-  creatorName: string
-  visibility: "public" | "private" | "followers"
-  createdAt: any
-  updatedAt?: any
-}
+
 
 // Academic Calendar Types
 export type AcademicEventType =

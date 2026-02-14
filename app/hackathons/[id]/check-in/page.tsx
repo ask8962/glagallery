@@ -23,8 +23,7 @@ import {
     Volume2,
 } from "lucide-react"
 import Link from "next/link"
-
-const ADMIN_EMAIL = "anukalp.gupta_cs23@gla.ac.in"
+import { isAdminEmail } from "@/lib/config"
 
 // Sound effects
 function playSuccessSound() {
@@ -88,7 +87,7 @@ export default function CheckInPage() {
 
     const scannerRef = useRef<any>(null)
     const processedTeamRef = useRef<string | null>(null)
-    const isAdmin = profile?.role === "admin" || profile?.email === ADMIN_EMAIL
+    const isAdmin = profile?.role === "admin" || isAdminEmail(profile?.email || "")
 
     useEffect(() => {
         loadData()
@@ -438,8 +437,8 @@ export default function CheckInPage() {
                                 initial={false}
                                 animate={checkedIn ? { scale: [1, 1.02, 1] } : {}}
                                 className={`flex items-center justify-between p-3 rounded-lg border ${checkedIn
-                                        ? "bg-green-50 dark:bg-green-950 border-green-200"
-                                        : "bg-muted/30"
+                                    ? "bg-green-50 dark:bg-green-950 border-green-200"
+                                    : "bg-muted/30"
                                     }`}
                             >
                                 <div>

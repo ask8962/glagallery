@@ -89,113 +89,13 @@ service cloud.firestore {
                        resource.data.email != 'anukalp.gupta_cs23@gla.ac.in';
     }
     
-    // ============================================
-    // STORIES COLLECTION (24-hour posts)
-    // ============================================
-    match /stories/{storyId} {
-      // All GLA users can read stories
-      allow read: if hasGLAEmail();
-      
-      // GLA users can create their own stories
-      allow create: if hasGLAEmail() &&
-                       request.resource.data.userId == request.auth.uid &&
-                       request.resource.data.mediaURL is string &&
-                       request.resource.data.mediaType in ['image', 'video'];
-      
-      // Owner can update (for viewer tracking) or delete
-      // Anyone can add themselves to viewers array
-      allow update: if hasGLAEmail() && 
-                       (isOwner(resource.data.userId) ||
-                        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['viewers']) &&
-                         request.resource.data.viewers.hasAll(resource.data.viewers)));
-      
-      // Owner or admin can delete
-      allow delete: if hasGLAEmail() && 
-                       (isOwner(resource.data.userId) || isSuperAdmin() || isAdminByRole());
-    }
+
     
-    // ============================================
-    // POSTS COLLECTION
-    // ============================================
-    match /posts/{postId} {
-      // All GLA users can read posts
-      allow read: if hasGLAEmail();
-      
-      // GLA users can create posts with valid structure
-      allow create: if hasGLAEmail() &&
-                       request.resource.data.uploaderUid == request.auth.uid &&
-                       request.resource.data.title is string &&
-                       request.resource.data.title.size() > 0 &&
-                       request.resource.data.title.size() <= 200 &&
-                       request.resource.data.mediaURL is string &&
-                       request.resource.data.mediaType in ['image', 'video'];
-      
-      // Owner or admin can update (cannot change owner)
-      allow update: if hasGLAEmail() && 
-                       (isOwner(resource.data.uploaderUid) || isSuperAdmin() || isAdminByRole()) &&
-                       request.resource.data.uploaderUid == resource.data.uploaderUid;
-      
-      // Owner or admin can delete
-      allow delete: if hasGLAEmail() && 
-                       (isOwner(resource.data.uploaderUid) || isSuperAdmin() || isAdminByRole());
-      
-      // Comments subcollection
-      match /comments/{commentId} {
-        // Admins can read all, users can read non-hidden
-        allow read: if hasGLAEmail() && 
-                       (isSuperAdmin() || 
-                        isAdminByRole() || 
-                        resource.data.hidden != true);
-        
-        // GLA users can create comments
-        allow create: if hasGLAEmail() &&
-                         request.resource.data.uid == request.auth.uid &&
-                         request.resource.data.text is string &&
-                         request.resource.data.text.size() > 0 &&
-                         request.resource.data.text.size() <= 1000 &&
-                         request.resource.data.hidden == false;
-        
-        // Comment owner or admin can update/delete
-        allow update, delete: if hasGLAEmail() && 
-                                (isOwner(resource.data.uid) || isSuperAdmin() || isAdminByRole());
-      }
-    }
+
     
-    // ============================================
-    // COLLECTIONS (User's saved collections)
-    // ============================================
-    match /collections/{collectionId} {
-      // Owner, public collections, or admin can read
-      allow read: if hasGLAEmail() && 
-                     (isOwner(resource.data.ownerUid) || 
-                      resource.data.isPublic == true ||
-                      isSuperAdmin() ||
-                      isAdminByRole());
-      
-      // GLA users can create collections
-      allow create: if hasGLAEmail() &&
-                       request.resource.data.ownerUid == request.auth.uid &&
-                       request.resource.data.title is string &&
-                       request.resource.data.title.size() <= 100;
-      
-      // Owner or admin can update (cannot change owner)
-      allow update: if hasGLAEmail() && 
-                       (isOwner(resource.data.ownerUid) || isSuperAdmin() || isAdminByRole()) &&
-                       request.resource.data.ownerUid == resource.data.ownerUid;
-      
-      // Owner or admin can delete
-      allow delete: if hasGLAEmail() && 
-                       (isOwner(resource.data.ownerUid) || isSuperAdmin() || isAdminByRole());
-    }
+
     
-    // ============================================
-    // TRENDING HASHTAGS
-    // ============================================
-    match /trending_hashtags/{hashtagId} {
-      allow read: if hasGLAEmail();
-      allow create, update: if hasGLAEmail();
-      allow delete: if isSuperAdmin() || isAdminByRole();
-    }
+
     
     // ============================================
     // HACKATHONS
@@ -334,7 +234,7 @@ service cloud.firestore {
       // GLA users can create reports
       allow create: if hasGLAEmail() &&
                        request.resource.data.reportedBy == request.auth.uid &&
-                       request.resource.data.contentType in ['post', 'comment', 'user'] &&
+                       request.resource.data.contentType in ['user'] &&
                        request.resource.data.reason is string &&
                        request.resource.data.reason.size() > 0 &&
                        request.resource.data.status == 'pending';
@@ -527,34 +427,7 @@ service cloud.firestore {
       allow delete: if isSuperAdmin();
     }
     
-    // ============================================
-    // ALBUMS COLLECTION (Gallery Albums)
-    // ============================================
-    match /albums/{albumId} {
-      // Public albums readable by all GLA users
-      // Private/followers albums readable by owner or admin
-      allow read: if hasGLAEmail() && 
-                     (resource.data.visibility == 'public' ||
-                      isOwner(resource.data.creatorUid) ||
-                      isSuperAdmin() ||
-                      isAdminByRole());
-      
-      // GLA users can create albums
-      allow create: if hasGLAEmail() &&
-                       request.resource.data.creatorUid == request.auth.uid &&
-                       request.resource.data.name is string &&
-                       request.resource.data.name.size() > 0 &&
-                       request.resource.data.visibility in ['public', 'private', 'followers'];
-      
-      // Owner or admin can update (cannot change owner)
-      allow update: if hasGLAEmail() && 
-                       (isOwner(resource.data.creatorUid) || isSuperAdmin() || isAdminByRole()) &&
-                       request.resource.data.creatorUid == resource.data.creatorUid;
-      
-      // Owner or admin can delete
-      allow delete: if hasGLAEmail() && 
-                       (isOwner(resource.data.creatorUid) || isSuperAdmin() || isAdminByRole());
-    }
+
     
     // ============================================
     // FACULTY REQUESTS COLLECTION

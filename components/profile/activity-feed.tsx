@@ -8,9 +8,6 @@ import { Card } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { formatDistanceToNow } from "date-fns"
 import {
-  Upload,
-  Heart,
-  MessageCircle,
   Award,
   TrendingUp,
   UserPlus,
@@ -23,11 +20,6 @@ interface ActivityFeedProps {
 }
 
 const activityIcons: Record<string, React.ReactNode> = {
-  post_uploaded: <Upload className="h-4 w-4" />,
-  post_liked: <Heart className="h-4 w-4" />,
-  post_commented: <MessageCircle className="h-4 w-4" />,
-  comment_received: <MessageCircle className="h-4 w-4" />,
-  like_received: <Heart className="h-4 w-4" />,
   badge_unlocked: <Award className="h-4 w-4" />,
   level_up: <TrendingUp className="h-4 w-4" />,
   followed: <UserPlus className="h-4 w-4" />,
@@ -118,7 +110,7 @@ export function ActivityFeed({ userId }: ActivityFeedProps) {
               >
                 <div className="flex-shrink-0 mt-0.5">
                   <div className="h-8 w-8 rounded-full bg-accent/10 flex items-center justify-center text-accent">
-                    {activityIcons[activity.type] || <Upload className="h-4 w-4" />}
+                    {activityIcons[activity.type] || <Award className="h-4 w-4" />}
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">

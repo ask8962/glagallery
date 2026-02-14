@@ -9,8 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
 import { Users } from "lucide-react"
 import { AdminStatsSkeleton } from "@/components/skeletons/admin-skeleton"
-
-const ADMIN_EMAIL = "anukalp.gupta_cs23@gla.ac.in"
+import { isAdminEmail } from "@/lib/config"
 
 interface AnalyticsData {
   totalUsers: number
@@ -20,7 +19,7 @@ interface AnalyticsData {
 export default function AnalyticsPage() {
   const { profile } = useAuth()
   const { db } = getFirebase()
-  const isAdmin = profile?.role === "admin" || profile?.email === ADMIN_EMAIL
+  const isAdmin = profile?.role === "admin" || isAdminEmail(profile?.email || "")
 
   const [loading, setLoading] = useState(true)
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)

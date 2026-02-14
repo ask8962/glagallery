@@ -21,6 +21,7 @@ import {
     Plus,
     Sparkles,
     GraduationCap,
+    Bot,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -48,6 +49,7 @@ export function CommandMenu({ open, onOpenChange }: CommandMenuProps) {
         { icon: Trophy, label: "Hackathons", href: "/hackathons" },
         { icon: Gift, label: "Rewards Store", href: "/rewards" },
         { icon: GraduationCap, label: "Academic Calendar", href: "/calendar" },
+        { icon: Bot, label: "GLA Bot", href: "/assistant" },
     ]
 
     // Admin items (only for admins)

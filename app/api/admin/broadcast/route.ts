@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { adminDb } from "@/lib/firebase-admin"
 import type { UserProfile } from "@/lib/types"
-import { APP_CONFIG } from "@/lib/config"
+import { APP_CONFIG, getAdminEmails, isAdminEmail } from "@/lib/config"
 import { getClientIP, checkServerRateLimit } from "@/lib/server-auth"
 
 // SMTP configuration
@@ -11,12 +11,6 @@ const SMTP_USER = process.env.SMTP_USER
 const SMTP_PASSWORD = process.env.SMTP_PASSWORD
 const SMTP_FROM_EMAIL = APP_CONFIG.EMAIL_FROM_ADDRESS
 const SMTP_FROM_NAME = APP_CONFIG.EMAIL_FROM_NAME
-
-// Admin emails that can send broadcasts (lowercase)
-const ADMIN_EMAILS = [
-    "anukalp.gupta_cs23@gla.ac.in",
-    "admin@gla.ac.in",
-]
 
 interface BroadcastRequest {
     subject: string
@@ -143,15 +137,15 @@ export async function POST(request: NextRequest) {
 
         console.log("Broadcast request received from:", adminEmail)
 
-        // Validate admin - check hardcoded list OR check Firestore for admin role
+        // Validate admin - check centralized config OR check Firestore for admin role
         let isAdmin = false
 
         if (adminEmail) {
             const normalizedEmail = adminEmail.toLowerCase().trim()
 
-            // Check hardcoded list first
-            if (ADMIN_EMAILS.some(e => e.toLowerCase() === normalizedEmail)) {
-                console.log("Admin found in hardcoded list")
+            // Check centralized config list first
+            if (isAdminEmail(normalizedEmail)) {
+                console.log("Admin found in config list")
                 isAdmin = true
             } else {
                 console.log("Checking Firestore (Admin SDK) for role...")
@@ -172,7 +166,7 @@ export async function POST(request: NextRequest) {
                     } else {
                         console.log("User not found in Firestore")
                     }
-                } catch (e) {
+                } catch (e: unknown) {
                     console.error("Error checking Firestore admin status:", e)
                 }
             }

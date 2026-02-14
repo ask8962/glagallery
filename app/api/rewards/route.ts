@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { adminDb } from "@/lib/firebase-admin"
-import { getUserFromRequest } from "@/lib/jwt-auth"
+import { verifyAdminAccess } from "@/lib/server-auth"
 import { Timestamp } from "firebase-admin/firestore"
 
 // GET - Fetch all active rewards
@@ -30,16 +30,9 @@ export async function GET() {
 // POST - Create new reward (Admin only)
 export async function POST(request: NextRequest) {
     try {
-        const user = await getUserFromRequest(request)
-        if (!user) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-        }
-
-        // Check if admin
-        const userDoc = await adminDb.collection("users").doc(user.userId).get()
-        const userData = userDoc.data()
-        if (userData?.role !== "admin") {
-            return NextResponse.json({ error: "Admin access required" }, { status: 403 })
+        const authCheck = await verifyAdminAccess(request)
+        if (!authCheck.authorized) {
+            return NextResponse.json({ error: authCheck.error }, { status: 403 })
         }
 
         const body = await request.json()

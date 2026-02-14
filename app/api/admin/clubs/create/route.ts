@@ -1,25 +1,18 @@
 import { adminDb, adminAuth } from "@/lib/firebase-admin"
-
+import { isAdminEmail } from "@/lib/config"
+import { verifyAdminAccess } from "@/lib/server-auth"
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
     try {
-        const authHeader = req.headers.get("Authorization")
-        if (!authHeader?.startsWith("Bearer ")) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        const authCheck = await verifyAdminAccess(req)
+        if (!authCheck.authorized || !authCheck.user) {
+            return NextResponse.json({ error: authCheck.error }, { status: 403 })
         }
 
-        const token = authHeader.split("Bearer ")[1]
-        const decodedToken = await adminAuth.verifyIdToken(token)
-
-        // Check if admin
-        const userDoc = await adminDb.collection("users").doc(decodedToken.uid).get()
-        const userData = userDoc.data()
-
-        // In production, checking email is safer or strict role check
-        if (userData?.role !== "admin" && userData?.email !== "anukalp.gupta_cs23@gla.ac.in") {
-            return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-        }
+        // Use authCheck.user instead of decodedToken
+        // The original code checked role OR email. verifyAdminAccess checks email.
+        // Let's stick to verifyAdminAccess as the single source of truth.
 
         const body = await req.json()
         const { name, category, description, presidentUid, email } = body
@@ -44,7 +37,7 @@ export async function POST(req: Request) {
             updatedAt: new Date(),
             verification: {
                 status: "verified",
-                verifiedBy: decodedToken.uid,
+                verifiedBy: authCheck.user.uid,
                 verifiedAt: new Date()
             }
         }

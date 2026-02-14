@@ -278,7 +278,7 @@ export async function getUserProfile(currentUserId: string | null, targetUserId:
         // Return limited profile for private accounts
         return {
           ...targetUserData,
-          email: privacySettings.showEmail ? targetUserData.email : undefined,
+          email: privacySettings.showEmail ? targetUserData.email : "",
         }
       }
     }
@@ -287,7 +287,7 @@ export async function getUserProfile(currentUserId: string | null, targetUserId:
     if (!privacySettings.showEmail) {
       return {
         ...targetUserData,
-        email: undefined,
+        email: "",
       }
     }
 
@@ -367,18 +367,16 @@ export async function getUserStatistics(userId: string) {
 
     const userData = userDoc.data() as UserProfile
 
-    // Get posts count
-    const postsQuery = query(collection(db, "posts"), where("uploaderUid", "==", userId))
-    const postsSnapshot = await getDocs(postsQuery)
-    const posts = postsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-
-    const totalLikes = posts.reduce((sum, post: any) => sum + (post.likes?.length || 0), 0)
-    const totalComments = posts.reduce((sum, post: any) => sum + (post.comments?.length || 0), 0)
+    // Get posts count - Social Gallery removed, so these are 0
+    // If we want to keep the shape for frontend compatibility:
+    const posts = []
+    const totalLikes = 0
+    const totalComments = 0
 
     return {
-      posts: posts.length,
-      likes: totalLikes,
-      comments: totalComments,
+      posts: 0,
+      likes: 0,
+      comments: 0,
       followers: (userData.followers || []).length,
       following: (userData.following || []).length,
       badges: (userData.badges || []).length,

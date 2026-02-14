@@ -19,8 +19,7 @@ import { motion } from "framer-motion"
 import { Flag, Check, X } from "lucide-react"
 import { format } from "date-fns"
 import { AdminTableSkeleton } from "@/components/skeletons/admin-skeleton"
-
-const ADMIN_EMAIL = "anukalp.gupta_cs23@gla.ac.in"
+import { isAdminEmail } from "@/lib/config"
 
 interface Report {
   id: string
@@ -40,7 +39,7 @@ interface Report {
 export default function ReportsPage() {
   const { profile } = useAuth()
   const { db } = getFirebase()
-  const isAdmin = profile?.role === "admin" || profile?.email === ADMIN_EMAIL
+  const isAdmin = profile?.role === "admin" || isAdminEmail(profile?.email || "")
 
   const [reports, setReports] = useState<Report[]>([])
   const [loading, setLoading] = useState(true)

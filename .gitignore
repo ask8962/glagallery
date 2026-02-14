@@ -48,3 +48,10 @@ ui-debug.log
 
 *storybook.log
 storybook-static
+
+# Debug logs
+*.log
+!CHANGELOG.md
+
+# Development scripts
+*.ps1

@@ -1,0 +1,93 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { useAuth } from "@/context/auth-context"
+import { getFirebase } from "@/lib/firebase"
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore"
+import { getAllHackathons } from "@/lib/hackathons"
+import { Card } from "@/components/ui/card"
+import { Users, Calendar, Trophy, QrCode } from "lucide-react"
+import Link from "next/link"
+import { AdminStatsSkeleton } from "@/components/skeletons/admin-skeleton"
+import type { Event, Hackathon, UserProfile } from "@/lib/types"
+
+export function AdminStats() {
+    const { db } = getFirebase()
+    const [usersCount, setUsersCount] = useState(0)
+    const [eventsCount, setEventsCount] = useState(0)
+    const [hackathonsCount, setHackathonsCount] = useState(0)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        setLoading(true)
+
+        // Users count
+        const unsubUsers = onSnapshot(collection(db, "users"), (snap) => {
+            setUsersCount(snap.size)
+        })
+
+        // Events count
+        const unsubEvents = onSnapshot(collection(db, "events"), (snap) => {
+            setEventsCount(snap.size)
+        })
+
+        // Hackathons count
+        // Note: getAllHackathons fetches data, doesn't subscribe. 
+        // Ideally we should use onSnapshot for consistency or just fetch once.
+        // Matching original behavior (fetch) but wrapped in effect
+        getAllHackathons().then(h => setHackathonsCount(h.length)).catch(console.error)
+
+        // We can assume loading finishes when listeners attach, or use a complex state.
+        // Simulating loading state for skeleton visualization
+        const timer = setTimeout(() => setLoading(false), 1000)
+
+        return () => {
+            unsubUsers()
+            unsubEvents()
+            clearTimeout(timer)
+        }
+    }, [db])
+
+    if (loading) {
+        return <AdminStatsSkeleton />
+    }
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div className="bg-card rounded-xl p-6 shadow-sm border border-border/50 text-center">
+                <div className="h-12 w-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Users className="h-6 w-6 text-accent" />
+                </div>
+                <div className="text-2xl font-bold text-primary mb-1">{usersCount}</div>
+                <div className="text-sm text-muted-foreground">Total Users</div>
+            </div>
+
+            <div className="bg-card rounded-xl p-6 shadow-sm border border-border/50 text-center">
+                <div className="h-12 w-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Calendar className="h-6 w-6 text-accent" />
+                </div>
+                <div className="text-2xl font-bold text-primary mb-1">{eventsCount}</div>
+                <div className="text-sm text-muted-foreground">Total Events</div>
+            </div>
+
+            <div className="bg-card rounded-xl p-6 shadow-sm border border-border/50 text-center">
+                <div className="h-12 w-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Trophy className="h-6 w-6 text-accent" />
+                </div>
+                <div className="text-2xl font-bold text-primary mb-1">{hackathonsCount}</div>
+                <div className="text-sm text-muted-foreground">Hackathons</div>
+            </div>
+
+            {/* Scanner Quick Access */}
+            <Link href="/admin/scanner" className="block">
+                <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl p-6 shadow-sm border border-primary/20 text-center hover:shadow-md transition-all cursor-pointer">
+                    <div className="h-12 w-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <QrCode className="h-6 w-6 text-primary" />
+                    </div>
+                    <div className="text-lg font-bold text-primary mb-1">Scan Tickets</div>
+                    <div className="text-sm text-muted-foreground">Verify Event Entry</div>
+                </div>
+            </Link>
+        </div>
+    )
+}

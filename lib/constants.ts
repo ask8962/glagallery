@@ -15,5 +15,5 @@ export const NAV_LINKS = [
     { name: "Gallery", href: "/gallery" },
     { name: "Events", href: "/events" },
     { name: "Hackathons", href: "/hackathons" },
-    { name: "Trending", href: "/trending" },
+    { name: "Clubs", href: "/clubs" },
 ]

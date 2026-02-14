@@ -4,9 +4,9 @@ import { motion } from "framer-motion"
 import Hero from "@/components/hero"
 import AboutSection from "@/components/about-section"
 import EventsSection from "@/components/events-section"
-import PromptBanner from "@/components/prompt-banner"
+
 import { Leaderboard } from "@/components/leaderboard"
-import { StoriesBar } from "@/components/stories"
+
 import { useAuth } from "@/context/auth-context"
 
 export default function HomePage() {
@@ -37,21 +37,9 @@ export default function HomePage() {
         </div>
       </motion.section>
 
-      {/* Weekly Challenge Banner */}
-      <section className="py-8 bg-background">
-        <div className="mx-auto max-w-6xl px-4 md:px-6">
-          <PromptBanner />
-        </div>
-      </section>
 
-      {/* Stories Bar */}
-      {canViewContent && (
-        <section className="py-8 bg-muted/30">
-          <div className="mx-auto max-w-6xl px-4 md:px-6">
-            <StoriesBar />
-          </div>
-        </section>
-      )}
+
+
     </div>
   )
 }

@@ -48,11 +48,11 @@ export const APP_CONFIG = {
     ALLOWED_VIDEO_TYPES: ["video/mp4", "video/mov", "video/avi", "video/webm"],
   },
 
-  // Admin emails (role-based access)
-  ADMIN_EMAILS: [
-    "anukalp.gupta_cs23@gla.ac.in",
-    // Add more admin emails here
-  ],
+  // Admin emails (role-based access) — reads from env var first, falls back to hardcoded
+  ADMIN_EMAILS: (process.env.ADMIN_EMAILS || "anukalp.gupta_cs23@gla.ac.in")
+    .split(",")
+    .map((e: string) => e.trim().toLowerCase())
+    .filter(Boolean),
 } as const
 
 /**

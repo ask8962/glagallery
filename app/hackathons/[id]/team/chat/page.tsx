@@ -22,7 +22,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Send } from "lucide-react"
 import type { Team } from "@/lib/types"
 import { sanitizeText } from "@/lib/validation"
-import { LoadingSpinner } from "@/components/loading-spinner"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { format } from "date-fns"
 
 interface ChatMessage {
@@ -39,7 +39,7 @@ export default function TeamChatPage() {
   const params = useParams()
   const hackathonId = params.id as string
   const { db } = getFirebase()
-  
+
   const [team, setTeam] = useState<Team | null>(null)
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [messageText, setMessageText] = useState("")
@@ -80,7 +80,7 @@ export default function TeamChatPage() {
         msgs.push({ id: doc.id, ...(doc.data() as any) })
       })
       setMessages(msgs)
-      
+
       // Scroll to bottom
       setTimeout(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -181,11 +181,10 @@ export default function TeamChatPage() {
                         </span>
                       </div>
                       <div
-                        className={`inline-block p-3 rounded-lg ${
-                          isOwn
+                        className={`inline-block p-3 rounded-lg ${isOwn
                             ? "bg-accent text-accent-foreground"
                             : "bg-muted text-foreground"
-                        }`}
+                          }`}
                       >
                         {message.text}
                       </div>

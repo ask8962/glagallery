@@ -7,7 +7,7 @@ import { useAuth } from "@/context/auth-context"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ThemeToggle } from "./theme-toggle"
 import { NotificationCenter } from "./notification-center"
-import { Menu, X, ChevronDown, Rocket, Users, ShoppingBag, PlusCircle, Search as SearchIcon, Trophy, Calendar, Command } from "lucide-react"
+import { Menu, X, ChevronDown, Rocket, Users, ShoppingBag, PlusCircle, Search as SearchIcon, Trophy, Calendar, Command, Bot } from "lucide-react"
 import { useState, useEffect, useCallback } from "react"
 import { CommandMenu } from "@/components/command-menu"
 import { motion, AnimatePresence } from "framer-motion"
@@ -52,6 +52,7 @@ export function Navbar() {
       icon: <Rocket className="h-4 w-4 mr-2" />,
       items: [
         { href: "/search", label: "Search", icon: <SearchIcon className="h-4 w-4 mr-2" /> },
+        { href: "/assistant", label: "GLA Bot", icon: <Bot className="h-4 w-4 mr-2" /> },
       ]
     },
     {

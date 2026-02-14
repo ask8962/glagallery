@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { adminDb } from "@/lib/firebase-admin"
+import { verifyAdminAccess } from "@/lib/server-auth"
 import { Event } from "@/lib/types"
 import { eventSchema } from "@/lib/validations/events"
 import { Timestamp } from "firebase-admin/firestore"
@@ -63,12 +64,16 @@ export async function GET(request: NextRequest) {
 
 
 
+// POST - Create new event (Admin only)
 export async function POST(request: NextRequest) {
     try {
-        // 1. Get Token (optional but recommended for attribution)
-        // In a real app, verify token. For now, we trust the client or just log it.
-        // We'll proceed without strict auth for now as per previous instructions to simplify,
-        // OR better: use the auth-utils we built.
+        // 1. Verify Admin Access
+        const authCheck = await verifyAdminAccess(request)
+        if (!authCheck.authorized || !authCheck.user) {
+            return NextResponse.json({ error: authCheck.error }, { status: 403 })
+        }
+
+        // 2. Parse Body
 
         // 2. Parse Body
         const body = await request.json()
