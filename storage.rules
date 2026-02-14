@@ -1,0 +1,163 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function hasGLAEmail() {
+      return isAuthenticated() && 
+             request.auth.token.email != null &&
+             request.auth.token.email.matches('.*@gla\\.ac\\.in$');
+    }
+    
+    function isSuperAdmin() {
+      return hasGLAEmail() && 
+             request.auth.token.email == 'ganukalp70@gmail.com';
+    }
+    
+    // Validate image content type
+    function isValidImage() {
+      return request.resource.contentType.matches('image/(jpeg|jpg|png|gif|webp|svg\\+xml)');
+    }
+    
+    // Validate video content type
+    function isValidVideo() {
+      return request.resource.contentType.matches('video/(mp4|webm|ogg|quicktime)');
+    }
+    
+    // ============================================
+    // USER UPLOADS: uploads/{userId}/{filename}
+    // ============================================
+    match /uploads/{userId}/{fileName} {
+      // All GLA users can read uploads
+      allow read: if hasGLAEmail();
+      
+      // Owner can upload with size/type validation
+      allow write: if hasGLAEmail() && 
+                      request.auth.uid == userId &&
+                      request.resource.size < 15 * 1024 * 1024 && // 15MB limit
+                      (isValidImage() || isValidVideo());
+      
+      // Owner or admin can delete
+      allow delete: if hasGLAEmail() && 
+                       (request.auth.uid == userId || isSuperAdmin());
+    }
+    
+    // ============================================
+    // HACKATHON BANNERS: hackathons/{organizerId}/{filename}
+    // ============================================
+    match /hackathons/{organizerId}/{fileName} {
+      // All GLA users can read banners
+      allow read: if hasGLAEmail();
+      
+      // Organizer can upload banners (images only, smaller size)
+      allow write: if hasGLAEmail() && 
+                      request.auth.uid == organizerId &&
+                      request.resource.size < 5 * 1024 * 1024 && // 5MB limit
+                      isValidImage();
+      
+      // Organizer or admin can delete
+      allow delete: if hasGLAEmail() && 
+                       (request.auth.uid == organizerId || isSuperAdmin());
+    }
+    
+    // ============================================
+    // PROFILE PHOTOS: profiles/{userId}/{filename}
+    // ============================================
+    match /profiles/{userId}/{fileName} {
+      // All GLA users can read profile photos
+      allow read: if hasGLAEmail();
+      
+      // Owner can upload profile photo
+      allow write: if hasGLAEmail() && 
+                      request.auth.uid == userId &&
+                      request.resource.size < 2 * 1024 * 1024 && // 2MB limit
+                      isValidImage();
+      
+      // Owner can delete
+      allow delete: if hasGLAEmail() && request.auth.uid == userId;
+    }
+    
+    // ============================================
+    // TEAM SUBMISSIONS: submissions/{hackathonId}/{teamId}/{filename}
+    // ============================================
+    match /submissions/{hackathonId}/{teamId}/{fileName} {
+      // All GLA users can read submissions
+      allow read: if hasGLAEmail();
+      
+      // Team members can upload submission files
+      allow write: if hasGLAEmail() && 
+                      request.resource.size < 50 * 1024 * 1024 && // 50MB for project files
+                      (isValidImage() || 
+                       isValidVideo() || 
+                       request.resource.contentType.matches('application/(pdf|zip|x-zip-compressed)'));
+      
+      // Admin can delete
+      allow delete: if isSuperAdmin();
+    }
+    
+    // ============================================
+    // STORIES: stories/{userId}/{filename}
+    // ============================================
+    match /stories/{userId}/{fileName} {
+      // All GLA users can read stories
+      allow read: if hasGLAEmail();
+      
+      // Owner can upload story media (images/videos)
+      allow write: if hasGLAEmail() && 
+                      request.auth.uid == userId &&
+                      request.resource.size < 50 * 1024 * 1024 && // 50MB limit for videos
+                      (isValidImage() || isValidVideo());
+      
+      // Owner or admin can delete
+      allow delete: if hasGLAEmail() && 
+                       (request.auth.uid == userId || isSuperAdmin());
+    }
+    
+    // ============================================
+    // CLUB LOGOS: club-logos/{filename}
+    // ============================================
+    match /club-logos/{fileName} {
+      // All GLA users can read club logos
+      allow read: if hasGLAEmail();
+      
+      // Any GLA user can upload club logos (admin creates clubs)
+      allow write: if hasGLAEmail() && 
+                      request.resource.size < 2 * 1024 * 1024 && // 2MB limit
+                      isValidImage();
+      
+      // Only admin can delete
+      allow delete: if isSuperAdmin();
+    }
+    
+    // ============================================
+    // CLUB COVERS: club-covers/{filename}
+    // ============================================
+    match /club-covers/{fileName} {
+      // All GLA users can read club covers
+      allow read: if hasGLAEmail();
+      
+      // Any GLA user can upload club covers
+      allow write: if hasGLAEmail() && 
+                      request.resource.size < 5 * 1024 * 1024 && // 5MB limit
+                      isValidImage();
+      
+      // Only admin can delete
+      allow delete: if isSuperAdmin();
+    }
+    
+    // ============================================
+    // DENY ALL OTHER PATHS
+    // ============================================
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,7 @@
+# Security Policy for GLA Gallery
+# https://securitytxt.org/
+
+Contact: mailto:ganukalp70@gmail.com
+Preferred-Languages: en
+Canonical: https://gla-gallery.vercel.app/.well-known/security.txt
+Expires: 2027-01-01T00:00:00.000Z

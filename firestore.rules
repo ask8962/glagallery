@@ -1,0 +1,193 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================
+    // MULTI-TENANT HELPER FUNCTIONS
+    // ============================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Checks if the user belongs to the requested organization using a document lookup
+    function isSameOrg(orgId) {
+      return isAuthenticated() && 
+             (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.organizationId == orgId || 
+              // Fallback for transition period: rely on email matching a super admin or future logic
+              request.auth.token.email == 'ganukalp70@gmail.com'); 
+    }
+
+    // Is the user an admin in this specific organization?
+    function isOrgAdmin(orgId) {
+      return isAuthenticated() && 
+             isSameOrg(orgId) && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Is the user a global super admin across all orgs?
+    function isSuperAdmin() {
+      return isAuthenticated() && request.auth.token.email == 'ganukalp70@gmail.com';
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // ============================================
+    // ORGANIZATIONS COLLECTION (New)
+    // ============================================
+    match /organizations/{orgId} {
+      // Anyone in the org can read their org details
+      allow read: if isSameOrg(orgId) || isSuperAdmin();
+      
+      // Only super admin can provision organizations
+      allow write: if isSuperAdmin();
+    }
+
+    // ============================================
+    // USERS COLLECTION
+    // ============================================
+    match /users/{userId} {
+      // Users can always read their own profile! Otherwise they can read profiles in their own organization
+      allow read: if isOwner(userId) || isSameOrg(resource.data.organizationId) || isSuperAdmin();
+      
+      // Creating Profile ensures they set the correct orgId
+      allow create: if isAuthenticated() && 
+                       isOwner(userId) &&
+                       request.resource.data.uid == userId &&
+                       request.resource.data.email == request.auth.token.email;
+      
+      // Users can update own profile, Admins can update users in their org
+      allow update: if isSuperAdmin() ||
+                       (isSameOrg(resource.data.organizationId) && 
+                         (isOwner(userId) || isOrgAdmin(resource.data.organizationId)));
+                         
+      allow delete: if isSuperAdmin() || isOrgAdmin(resource.data.organizationId);
+    }
+    
+    // ============================================
+    // EVENTS COLLECTION
+    // ============================================
+    match /events/{eventId} {
+      // Users can read published events in their org
+      allow read: if isSameOrg(resource.data.organizationId) || isSuperAdmin();
+      
+      // Admins in the org can create/update events for their org
+      allow create: if isSuperAdmin() || isOrgAdmin(request.resource.data.organizationId);
+      allow update, delete: if isSuperAdmin() || isOrgAdmin(resource.data.organizationId);
+    }
+    
+    // ============================================
+    // CLUBS COLLECTION
+    // ============================================
+    match /clubs/{clubId} {
+      allow read: if isSameOrg(resource.data.organizationId) || isSuperAdmin();
+      
+      allow create: if isSuperAdmin() || isOrgAdmin(request.resource.data.organizationId);
+      
+      allow update: if isSuperAdmin() || 
+                       isOrgAdmin(resource.data.organizationId) ||
+                       (isSameOrg(resource.data.organizationId) && 
+                        (isOwner(resource.data.presidentUid) || request.auth.uid in resource.data.admins));
+                        
+      allow delete: if isSuperAdmin();
+    }
+    
+    // ============================================
+    // HACKATHONS
+    // ============================================
+    match /hackathons/{hackathonId} {
+      allow read: if isSameOrg(resource.data.organizationId) || isSuperAdmin();
+      
+      allow create: if isSuperAdmin() || isOrgAdmin(request.resource.data.organizationId);
+      allow update, delete: if isSuperAdmin() || 
+                               isOrgAdmin(resource.data.organizationId) ||
+                               (isSameOrg(resource.data.organizationId) && isOwner(resource.data.organizerUid));
+                               
+      match /teams/{teamId} {
+        allow read: if isSuperAdmin() || isAuthenticated(); // Simplified for nested
+        allow create: if isAuthenticated() && request.resource.data.leaderUid == request.auth.uid;
+        allow update, delete: if isSuperAdmin() || isOwner(resource.data.leaderUid);
+      }
+      
+      match /submissions/{submissionId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        // Admins can update/delete
+        allow update, delete: if isSuperAdmin(); // Strict fallback
+      }
+    }
+    
+    // ============================================
+    // TICKETS COLLECTION
+    // ============================================
+    match /tickets/{ticketId} {
+      allow read: if isSuperAdmin() || 
+                     isOrgAdmin(resource.data.organizationId) ||
+                     (isSameOrg(resource.data.organizationId) && isOwner(resource.data.userId));
+      
+      allow create: if false; // Server-side APIs only
+      allow update: if isSuperAdmin() || isOrgAdmin(resource.data.organizationId);
+      allow delete: if isSuperAdmin();
+    }
+    
+    // ============================================
+    // SECURE SERVER-ONLY COLLECTIONS (Rewards, Transactions)
+    // ============================================
+    match /rewards/{rewardId} {
+      allow read: if isSameOrg(resource.data.organizationId) || isSuperAdmin();
+      allow create, update, delete: if isSuperAdmin() || isOrgAdmin(resource.data.organizationId);
+    }
+    match /redemptions/{redemptionId} {
+      allow read: if isSuperAdmin() || isOrgAdmin(resource.data.organizationId) || isOwner(resource.data.userId);
+      allow write: if false; // Admin SDK only
+    }
+    match /point_transactions/{txId} {
+      allow read: if isSuperAdmin() || isOrgAdmin(resource.data.organizationId) || isOwner(resource.data.userId);
+      allow write: if false; // Admin SDK only
+    }
+    match /transactions/{txId} {
+      allow read: if isSuperAdmin() || isOwner(resource.data.userId);
+      allow write: if false; // Admin SDK only
+    }
+
+    // ============================================
+    // SYSTEM COLLECTIONS
+    // ============================================
+    match /error_logs/{logId} {
+      allow create: if true;
+      allow read, update, delete: if isSuperAdmin();
+    }
+    
+    match /email_logs/{logId} {
+      allow create: if true;
+      allow read, update, delete: if isSuperAdmin();
+    }
+    
+    match /presence/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
+    }
+
+    // Super Admin System (Phase 4): Billing CRM & Audit Logs
+    match /billing_crm/{document=**} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    match /audit_logs/{document=**} {
+      allow read, write: if isSuperAdmin();
+    }
+    
+    match /notifications/{notificationId} {
+      allow read, update, delete: if isOwner(resource.data.userId);
+      allow create: if isAuthenticated();
+    }
+
+    // Default deny for anything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+[
+    {
+        "origin": [
+            "https://campushub.pro",
+            "http://localhost:3000"
+        ],
+        "method": [
+            "GET",
+            "HEAD"
+        ],
+        "maxAgeSeconds": 3600,
+        "responseHeader": [
+            "Content-Type",
+            "Content-Length",
+            "Access-Control-Allow-Origin"
+        ]
+    }
+]
