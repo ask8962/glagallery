@@ -87,7 +87,23 @@ GLA Gallery is exclusively for students, faculty, and staff of GLA University wi
       content: `GLA Gallery and its creator shall not be liable for any indirect, incidental, or consequential damages arising from your use of the platform.`,
     },
     {
-      title: "10. Changes to Terms",
+      title: "10. Reward Campaign Terms",
+      content: `For reward campaigns:
+
+• Each verified GLA student account is eligible for one reward claim only
+• Reward amounts (₹30–₹50) are randomly generated on our servers and cannot be influenced
+• Referral bonuses (₹10) are credited only after the referred user completes their claim
+• Rewards flagged for suspicious activity will be reviewed before processing
+• Creating multiple accounts to claim rewards is strictly prohibited and will result in disqualification
+• We reserve the right to modify, suspend, or terminate any campaign at any time
+• Reward payouts are subject to verification and administrative approval`,
+    },
+    {
+      title: "11. Disclaimer",
+      content: `⚠️ GLA Gallery is a personal project created by a student. It is NOT affiliated with, endorsed by, or sponsored by GLA University or any of its departments. Any rewards offered are personal initiatives and are not university-sanctioned.`,
+    },
+    {
+      title: "12. Changes to Terms",
       content: `We may update these Terms of Service at any time. Continued use of the platform after changes constitutes acceptance of the new terms.`,
     },
   ]

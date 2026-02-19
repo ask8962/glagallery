@@ -61,7 +61,17 @@ export default function PrivacyPage() {
       content: `We retain your data as long as your account is active. Stories are automatically deleted after 24 hours. You can delete your posts and comments at any time. Account deletion requests will be processed within 30 days.`,
     },
     {
-      title: "7. Updates to This Policy",
+      title: "7. Reward Campaign Data",
+      content: `When you participate in reward campaigns, we additionally collect:
+
+• **IP Address**: Logged at claim time for fraud prevention
+• **User-Agent**: Browser and device information for security analysis
+• **Claim Timestamp**: Server-generated timestamp of your claim
+
+This data is used exclusively for anti-fraud detection and is not shared with third parties. Reward campaign participation is voluntary and subject to separate campaign terms.`,
+    },
+    {
+      title: "8. Updates to This Policy",
       content: `We may update this Privacy Policy from time to time. We will notify you of significant changes via email or in-app notification.`,
     },
   ]

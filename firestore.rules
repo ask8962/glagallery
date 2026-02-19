@@ -456,5 +456,28 @@ service cloud.firestore {
       // Only admins can create/update/delete
       allow create, update, delete: if hasGLAEmail() && (isSuperAdmin() || isAdminByRole());
     }
+    
+    // ============================================
+    // CAMPAIGN CLAIMS (Reward Campaign — Server-side only)
+    // ============================================
+    match /campaign_claims/{claimId} {
+      // Users can read their own claim, admins can read all
+      allow read: if hasGLAEmail() && 
+                     (isOwner(claimId) || isSuperAdmin() || isAdminByRole());
+      
+      // ALL writes via Admin SDK only — client writes completely blocked
+      allow create, update, delete: if false;
+    }
+    
+    // ============================================
+    // REWARD AUDIT LOGS (Fraud Detection — Server-side only)
+    // ============================================
+    match /reward_audit_logs/{logId} {
+      // Only admins can read audit logs
+      allow read: if isSuperAdmin() || isAdminByRole();
+      
+      // ALL writes via Admin SDK only — client writes completely blocked
+      allow create, update, delete: if false;
+    }
   }
 }

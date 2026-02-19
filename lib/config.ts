@@ -38,6 +38,7 @@ export const APP_CONFIG = {
     COMMENT: 50,
     LIKE: 100,
     REPORT: 10,
+    CAMPAIGN_CLAIM: 5,
   },
 
   // File limits
