@@ -43,6 +43,7 @@ export default function ClaimRewardPage() {
         error?: string
     } | null>(null)
     const [consent, setConsent] = useState(false)
+    const [phoneNumber, setPhoneNumber] = useState("")
     const [error, setError] = useState<string | null>(null)
 
     // Listen for auth state
@@ -81,6 +82,14 @@ export default function ClaimRewardPage() {
     // Handle claim
     const handleClaim = async () => {
         if (!user || !consent) return
+
+        // Validate Phone
+        const cleanPhone = phoneNumber.replace(/\D/g, "")
+        if (cleanPhone.length !== 10) {
+            setError("Please enter a valid 10-digit phone number.")
+            return
+        }
+
         setClaiming(true)
         setError(null)
 
@@ -97,7 +106,11 @@ export default function ClaimRewardPage() {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ consent: true, referrerUid }),
+                body: JSON.stringify({
+                    consent: true,
+                    referrerUid,
+                    phoneNumber: cleanPhone
+                }),
             })
 
             const data = await res.json()
@@ -352,6 +365,24 @@ export default function ClaimRewardPage() {
                     </div>
                 )}
 
+                {/* Phone Number Input */}
+                <div className="space-y-2 mb-6 text-left">
+                    <label className="text-sm font-medium">Phone Number (UPI Linked)</label>
+                    <input
+                        type="tel"
+                        placeholder="Enter 10-digit number"
+                        value={phoneNumber}
+                        onChange={(e) => {
+                            const val = e.target.value.replace(/\D/g, "").slice(0, 10)
+                            setPhoneNumber(val)
+                        }}
+                        className="flex h-12 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                        Required for reward verification.
+                    </p>
+                </div>
+
                 {/* Consent & Disclaimer */}
                 <div className="space-y-4 mb-6">
                     <label className="flex items-start gap-3 cursor-pointer group">
@@ -378,7 +409,7 @@ export default function ClaimRewardPage() {
                             >
                                 Privacy Policy
                             </Link>
-                            . I understand my IP address is logged for security purposes.
+                            . I understand my phone number and IP address are logged for security purposes.
                         </span>
                     </label>
 
@@ -392,7 +423,7 @@ export default function ClaimRewardPage() {
                 {/* Claim Button */}
                 <Button
                     onClick={handleClaim}
-                    disabled={!consent || claiming || statusLoading}
+                    disabled={!consent || phoneNumber.length !== 10 || claiming || statusLoading}
                     size="lg"
                     className="w-full text-lg h-14"
                 >

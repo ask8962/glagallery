@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
         }
 
         // 4. ── Parse Body ─────────────────────────────────────────────
-        let body: { consent?: boolean; referrerUid?: string }
+        let body: { consent?: boolean; referrerUid?: string; phoneNumber?: string }
         try {
             body = await request.json()
         } catch {
@@ -120,7 +120,17 @@ export async function POST(request: NextRequest) {
             )
         }
 
+        if (!body.phoneNumber || !/^\d{10}$/.test(body.phoneNumber.replace(/\D/g, "").slice(-10))) {
+            return NextResponse.json(
+                { error: "Please provide a valid 10-digit phone number." },
+                { status: 400 }
+            )
+        }
+
+        const cleanPhoneNumber = body.phoneNumber.replace(/\D/g, "").slice(-10)
+
         // 5. ── Check if Already Claimed ───────────────────────────────
+        // Check by UID
         const claimRef = adminDb.collection("campaign_claims").doc(uid)
         const existingClaim = await claimRef.get()
 
@@ -133,6 +143,22 @@ export async function POST(request: NextRequest) {
                     amount: data?.rewardAmount,
                     status: data?.status,
                 },
+                { status: 409 }
+            )
+        }
+
+        // Check if phone number is already used (optional but recommended for uniqueness)
+        // Note: This requires a composite index or separate lookup if volume is high,
+        // but for now a simple query is fine given the rate limits.
+        const phoneCheck = await adminDb
+            .collection("campaign_claims")
+            .where("phoneNumber", "==", cleanPhoneNumber)
+            .limit(1)
+            .get()
+
+        if (!phoneCheck.empty) {
+            return NextResponse.json(
+                { error: "This phone number has already been used to claim a reward." },
                 { status: 409 }
             )
         }
@@ -196,6 +222,7 @@ export async function POST(request: NextRequest) {
             uid,
             email: email || "",
             displayName: auth.user.name || auth.user.email || "",
+            phoneNumber: cleanPhoneNumber,
             rewardAmount,
             referrerUid: referrerUid || null,
             referralBonus: 0,
