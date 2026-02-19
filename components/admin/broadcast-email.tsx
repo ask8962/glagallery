@@ -128,6 +128,7 @@ export function BroadcastEmail() {
     }
 
     const handleSend = async () => {
+        console.log("handleSend started");
         if (!subject.trim() || !body.trim()) {
             toast.error("Please fill in both subject and body")
             return
@@ -138,22 +139,37 @@ export function BroadcastEmail() {
             return
         }
 
+        if (!user?.email) {
+            console.error("No user email found in auth context");
+            toast.error("You must be logged in to send broadcasts");
+            return;
+        }
+
         setSending(true)
         setResult(null)
 
         try {
+            const payload = {
+                subject,
+                body,
+                adminEmail: user.email,
+                userIds: Array.from(selectedUsers),
+            };
+            console.log("Sending broadcast payload:", payload);
+
+            const token = await user.getIdToken();
             const response = await fetch("/api/admin/broadcast", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    subject,
-                    body,
-                    adminEmail: user?.email,
-                    userIds: Array.from(selectedUsers),
-                }),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(payload),
             })
 
+            console.log("Response status:", response.status);
             const data = await response.json()
+            console.log("Response data:", data);
 
             if (!response.ok) {
                 throw new Error(data.error || "Failed to send broadcast")
@@ -164,11 +180,13 @@ export function BroadcastEmail() {
 
             setSubject("")
             setBody("")
+            setShowConfirm(false) // Close only on success
         } catch (error: any) {
+            console.error("Broadcast error in frontend:", error);
             toast.error(error.message || "Failed to send broadcast")
+            // Don't close dialog on error so they can retry
         } finally {
             setSending(false)
-            setShowConfirm(false)
         }
     }
 
@@ -383,10 +401,27 @@ Check out the latest features on GLA Gallery..."
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={handleSend}>
-                                Yes, Send to {selectedUsers.size} Users
-                            </AlertDialogAction>
+                            <Button variant="outline" onClick={() => setShowConfirm(false)} disabled={sending}>
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    console.log("Confirm clicked, triggering handleSend");
+                                    handleSend();
+                                }}
+                                disabled={sending}
+                                className="bg-primary text-primary-foreground hover:bg-primary/90"
+                            >
+                                {sending ? (
+                                    <>
+                                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                        Sending...
+                                    </>
+                                ) : (
+                                    `Yes, Send to ${selectedUsers.size} Users`
+                                )}
+                            </Button>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>

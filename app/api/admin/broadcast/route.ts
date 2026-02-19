@@ -119,18 +119,19 @@ async function sendEmail(to: string, subject: string, htmlBody: string): Promise
     }
 }
 
+// Send broadcast
 export async function POST(request: NextRequest) {
     try {
         // Rate limit - allow only 1 broadcast per hour
         const clientIp = getClientIP(request)
-        const rateLimitCheck = await checkServerRateLimit(clientIp, "UPLOAD", 60 * 60 * 1000)
+        // const rateLimitCheck = await checkServerRateLimit(clientIp, "UPLOAD", 60 * 60 * 1000)
 
-        if (!rateLimitCheck.allowed) {
-            return NextResponse.json(
-                { error: "Rate limit exceeded. Only 1 broadcast per hour allowed." },
-                { status: 429 }
-            )
-        }
+        // if (!rateLimitCheck.allowed) {
+        //     return NextResponse.json(
+        //         { error: "Rate limit exceeded. Only 1 broadcast per hour allowed." },
+        //         { status: 429 }
+        //     )
+        // }
 
         const body: BroadcastRequest = await request.json()
         const { subject, body: messageBody, adminEmail, userIds } = body
@@ -203,33 +204,89 @@ export async function POST(request: NextRequest) {
 
         console.log(`Broadcasting email to ${users.length} users...`)
 
+        if (users.length === 0) {
+            return NextResponse.json({
+                success: true,
+                message: "No users selected to send broadcast",
+                stats: { total: 0, sent: 0, failed: 0 },
+            })
+        }
+
+        // Initialize Nodemailer ONCE
+        const nodemailer = await import("nodemailer")
+
+        if (!SMTP_HOST || !SMTP_USER || !SMTP_PASSWORD) {
+            throw new Error("SMTP configuration missing on server")
+        }
+
+        const transporter = nodemailer.createTransport({
+            host: SMTP_HOST,
+            port: SMTP_PORT,
+            secure: SMTP_PORT === 465,
+            auth: {
+                user: SMTP_USER,
+                pass: SMTP_PASSWORD,
+            },
+            connectionTimeout: 20000, // Increased timeout
+            greetingTimeout: 20000,
+            pool: true, // Use pooled connections for better performance
+            maxConnections: 5,
+            maxMessages: 100,
+        })
+
+        // Verify connection
+        try {
+            await transporter.verify()
+            console.log("SMTP connection verified")
+        } catch (verifyError) {
+            console.error("SMTP verify failed:", verifyError)
+            throw new Error("Failed to connect to email server")
+        }
+
         let successCount = 0
         let failCount = 0
 
-        // Send emails in batches of 10 to avoid overwhelming SMTP
-        // Send emails sequentially to avoid overwhelming SMTP and connection timeouts
-        // Note: Sequential sending is slower but much more reliable for free SMTP services like Gmail
-        for (const user of users) {
-            if (!user.email) {
-                failCount++
-                continue
+        // Send emails in batches of 5 to respect pool size
+        const BATCH_SIZE = 5
+        for (let i = 0; i < users.length; i += BATCH_SIZE) {
+            const batch = users.slice(i, i + BATCH_SIZE)
+            const promises = batch.map(async (user) => {
+                if (!user.email) return false
+
+                try {
+                    // Replace placeholders for this user
+                    const personalizedSubject = replacePlaceholders(subject, user)
+                    const personalizedBody = replacePlaceholders(messageBody, user)
+                    const html = generateBroadcastHTML(personalizedSubject, personalizedBody)
+
+                    await transporter.sendMail({
+                        from: `"${SMTP_FROM_NAME}" <${SMTP_FROM_EMAIL}>`,
+                        to: user.email,
+                        subject: personalizedSubject,
+                        html: html,
+                    })
+                    return true
+                } catch (err) {
+                    console.error(`Failed to send to ${user.email}:`, err)
+                    return false
+                }
+            })
+
+            const results = await Promise.all(promises)
+            successCount += results.filter(Boolean).length
+            failCount += results.filter(r => !r).length
+
+            // Small delay between batches
+            if (i + BATCH_SIZE < users.length) {
+                await new Promise(resolve => setTimeout(resolve, 1000))
             }
-
-            // Replace placeholders for this user
-            const personalizedSubject = replacePlaceholders(subject, user)
-            const personalizedBody = replacePlaceholders(messageBody, user)
-            const html = generateBroadcastHTML(personalizedSubject, personalizedBody)
-
-            const success = await sendEmail(user.email, personalizedSubject, html)
-            if (success) {
-                successCount++
-            } else {
-                failCount++
-            }
-
-            // Small delay between emails to be gentle on the SMTP server
-            await new Promise((resolve) => setTimeout(resolve, 500))
         }
+
+        // Determine absolute success status
+        // If at least one email sent, we consider it a partial success at minimum
+        // If NO emails sent and we had users, it's a failure
+
+        console.log(`Broadcast complete: ${successCount} sent, ${failCount} failed`)
 
         // Log broadcast using Admin SDK
         try {
@@ -240,17 +297,15 @@ export async function POST(request: NextRequest) {
                 totalUsers: users.length,
                 successCount,
                 failCount,
-                createdAt: new Date(), // Admin SDK uses native Date or Timestamp
+                createdAt: new Date(),
             })
         } catch (logError) {
             console.warn("Failed to log broadcast:", logError)
         }
 
-        console.log(`Broadcast complete: ${successCount} sent, ${failCount} failed`)
-
         return NextResponse.json({
             success: true,
-            message: "Broadcast sent successfully",
+            message: `Broadcast complete. Sent: ${successCount}, Failed: ${failCount}`,
             stats: {
                 total: users.length,
                 sent: successCount,
