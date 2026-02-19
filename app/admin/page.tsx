@@ -144,6 +144,26 @@ export default function AdminPage() {
         <h2 className="text-2xl font-semibold text-primary mb-6">Academic Calendar</h2>
         <AcademicCalendarManager />
       </motion.section>
+
+      {/* Reward Campaign Management */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 1.0 }}
+      >
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-semibold text-primary">Reward Campaign</h2>
+          <a href="/admin/campaign" className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+            Manage Campaign
+          </a>
+        </div>
+        <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
+          <div className="flex flex-col space-y-1.5">
+            <h3 className="text-lg font-semibold leading-none tracking-tight">Campaign Overview</h3>
+            <p className="text-sm text-muted-foreground">Manage student reward claims, verify users, and process payouts.</p>
+          </div>
+        </div>
+      </motion.section>
     </motion.main>
   )
 }
