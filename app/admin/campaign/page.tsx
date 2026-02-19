@@ -302,164 +302,162 @@ export default function CampaignAdminPage() {
                 </select>
             </div>
 
-        </div>
+            {/* Payment Dialog */}
+            <Dialog open={payDialog} onOpenChange={setPayDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Mark Claim as Paid</DialogTitle>
+                        <DialogDescription>
+                            Upload a payment screenshot (optional) and add a note. This will be emailed to the user.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                            <Label>User</Label>
+                            <div className="text-sm font-medium">{selectedClaim?.displayName}</div>
+                            <div className="text-sm text-muted-foreground">{selectedClaim?.email}</div>
+                            <div className="text-sm text-green-600 font-bold">Amount: ₹{selectedClaim?.rewardAmount}</div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="proof">Payment Screenshot (Optional)</Label>
+                            <Input
+                                id="proof"
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => setPaymentFile(e.target.files?.[0] || null)}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="note">Admin Note (Optional)</Label>
+                            <Textarea
+                                id="note"
+                                placeholder="Transaction ID: XXXXX..."
+                                value={paymentNote}
+                                onChange={(e) => setPaymentNote(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setPayDialog(false)}>Cancel</Button>
+                        <Button onClick={handlePaySubmit} disabled={processing} className="bg-green-600 hover:bg-green-700">
+                            {processing ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle2 className="h-4 w-4 mr-2" />}
+                            Confirm Payment & Send Email
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
-            {/* Payment Dialog */ }
-    <Dialog open={payDialog} onOpenChange={setPayDialog}>
-        <DialogContent>
-            <DialogHeader>
-                <DialogTitle>Mark Claim as Paid</DialogTitle>
-                <DialogDescription>
-                    Upload a payment screenshot (optional) and add a note. This will be emailed to the user.
-                </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-                <div className="space-y-2">
-                    <Label>User</Label>
-                    <div className="text-sm font-medium">{selectedClaim?.displayName}</div>
-                    <div className="text-sm text-muted-foreground">{selectedClaim?.email}</div>
-                    <div className="text-sm text-green-600 font-bold">Amount: ₹{selectedClaim?.rewardAmount}</div>
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="proof">Payment Screenshot (Optional)</Label>
-                    <Input
-                        id="proof"
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => setPaymentFile(e.target.files?.[0] || null)}
-                    />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="note">Admin Note (Optional)</Label>
-                    <Textarea
-                        id="note"
-                        placeholder="Transaction ID: XXXXX..."
-                        value={paymentNote}
-                        onChange={(e) => setPaymentNote(e.target.value)}
-                    />
-                </div>
-            </div>
-            <DialogFooter>
-                <Button variant="outline" onClick={() => setPayDialog(false)}>Cancel</Button>
-                <Button onClick={handlePaySubmit} disabled={processing} className="bg-green-600 hover:bg-green-700">
-                    {processing ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle2 className="h-4 w-4 mr-2" />}
-                    Confirm Payment & Send Email
-                </Button>
-            </DialogFooter>
-        </DialogContent>
-    </Dialog>
-
-    {/* Table */ }
-    <div className="rounded-md border bg-card">
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead>User / Contact</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Risk Info</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {filteredClaims.length === 0 ? (
-                    <TableRow>
-                        <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                            No claims found matching your filters.
-                        </TableCell>
-                    </TableRow>
-                ) : (
-                    filteredClaims.map((claim) => (
-                        <TableRow key={claim.uid}>
-                            <TableCell>
-                                <div className="font-medium">{claim.displayName}</div>
-                                <div className="text-xs text-muted-foreground">{claim.email}</div>
-                                {claim.phoneNumber && (
-                                    <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
-                                        <Phone className="h-3 w-3" />
-                                        {claim.phoneNumber}
-                                    </div>
-                                )}
-                            </TableCell>
-                            <TableCell>
-                                <div className="font-bold text-green-600">₹{claim.rewardAmount}</div>
-                                {claim.referralBonus ? (
-                                    <div className="text-xs text-green-600">+ ₹{claim.referralBonus} ref</div>
-                                ) : null}
-                            </TableCell>
-                            <TableCell>
-                                <Badge
-                                    variant="outline"
-                                    className={
-                                        claim.status === "flagged"
-                                            ? "text-yellow-600 border-yellow-500 bg-yellow-50"
-                                            : claim.status === "paid"
-                                                ? "text-green-600 border-green-500 bg-green-50"
-                                                : claim.status === "rejected"
-                                                    ? "text-red-600 border-red-500 bg-red-50"
-                                                    : "text-blue-600 border-blue-500 bg-blue-50"
-                                    }
-                                >
-                                    {claim.status.toUpperCase()}
-                                </Badge>
-                            </TableCell>
-                            <TableCell>
-                                <div className="text-xs">
-                                    <div title="IP Address">🌐 {claim.ipAddress}</div>
-                                    {claim.referrerUid && (
-                                        <div title="Referred By">🔗 Ref: {claim.referrerUid.slice(0, 6)}...</div>
-                                    )}
-                                </div>
-                            </TableCell>
-                            <TableCell className="text-xs text-muted-foreground">
-                                {new Date(claim.claimedAt).toLocaleDateString()}
-                                <br />
-                                {new Date(claim.claimedAt).toLocaleTimeString()}
-                            </TableCell>
-                            <TableCell className="text-right">
-                                <div className="flex justify-end gap-2">
-                                    {claim.status !== "paid" && claim.status !== "rejected" && (
-                                        <>
-                                            <Button
-                                                size="sm"
-                                                variant="outline"
-                                                className="text-green-600 hover:text-green-700 hover:bg-green-50"
-                                                onClick={() => openPayDialog(claim)}
-                                                title="Mark as Paid"
-                                            >
-                                                <CheckCircle2 className="h-4 w-4" />
-                                            </Button>
-                                            <Button
-                                                size="sm"
-                                                variant="outline"
-                                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                onClick={() => updateStatus(claim.uid, "rejected")}
-                                                title="Reject Claim"
-                                            >
-                                                <XCircle className="h-4 w-4" />
-                                            </Button>
-                                        </>
-                                    )}
-                                    {claim.status === "claimed" && (
-                                        <Button
-                                            size="sm"
-                                            variant="ghost"
-                                            className="text-yellow-600"
-                                            onClick={() => updateStatus(claim.uid, "flagged")}
-                                            title="Flag Suspicious"
-                                        >
-                                            <AlertTriangle className="h-4 w-4" />
-                                        </Button>
-                                    )}
-                                </div>
-                            </TableCell>
+            {/* Table */}
+            <div className="rounded-md border bg-card">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>User / Contact</TableHead>
+                            <TableHead>Amount</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Risk Info</TableHead>
+                            <TableHead>Date</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
-                    ))
-                )}
-            </TableBody>
-        </Table>
-    </div>
+                    </TableHeader>
+                    <TableBody>
+                        {filteredClaims.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                                    No claims found matching your filters.
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            filteredClaims.map((claim) => (
+                                <TableRow key={claim.uid}>
+                                    <TableCell>
+                                        <div className="font-medium">{claim.displayName}</div>
+                                        <div className="text-xs text-muted-foreground">{claim.email}</div>
+                                        {claim.phoneNumber && (
+                                            <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
+                                                <Phone className="h-3 w-3" />
+                                                {claim.phoneNumber}
+                                            </div>
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="font-bold text-green-600">₹{claim.rewardAmount}</div>
+                                        {claim.referralBonus ? (
+                                            <div className="text-xs text-green-600">+ ₹{claim.referralBonus} ref</div>
+                                        ) : null}
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge
+                                            variant="outline"
+                                            className={
+                                                claim.status === "flagged"
+                                                    ? "text-yellow-600 border-yellow-500 bg-yellow-50"
+                                                    : claim.status === "paid"
+                                                        ? "text-green-600 border-green-500 bg-green-50"
+                                                        : claim.status === "rejected"
+                                                            ? "text-red-600 border-red-500 bg-red-50"
+                                                            : "text-blue-600 border-blue-500 bg-blue-50"
+                                            }
+                                        >
+                                            {claim.status.toUpperCase()}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="text-xs">
+                                            <div title="IP Address">🌐 {claim.ipAddress}</div>
+                                            {claim.referrerUid && (
+                                                <div title="Referred By">🔗 Ref: {claim.referrerUid.slice(0, 6)}...</div>
+                                            )}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="text-xs text-muted-foreground">
+                                        {new Date(claim.claimedAt).toLocaleDateString()}
+                                        <br />
+                                        {new Date(claim.claimedAt).toLocaleTimeString()}
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-2">
+                                            {claim.status !== "paid" && claim.status !== "rejected" && (
+                                                <>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                                                        onClick={() => openPayDialog(claim)}
+                                                        title="Mark as Paid"
+                                                    >
+                                                        <CheckCircle2 className="h-4 w-4" />
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                        onClick={() => updateStatus(claim.uid, "rejected")}
+                                                        title="Reject Claim"
+                                                    >
+                                                        <XCircle className="h-4 w-4" />
+                                                    </Button>
+                                                </>
+                                            )}
+                                            {claim.status === "claimed" && (
+                                                <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    className="text-yellow-600"
+                                                    onClick={() => updateStatus(claim.uid, "flagged")}
+                                                    title="Flag Suspicious"
+                                                >
+                                                    <AlertTriangle className="h-4 w-4" />
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
         </div >
     )
 }
