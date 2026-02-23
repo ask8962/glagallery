@@ -272,7 +272,7 @@ export async function notifyComment(
     "comment",
     "New Comment",
     `${commenterName} commented on your post "${postTitle}"`,
-    `/gallery?post=${postId}`,
+    `/profile/${userId}`,
     {
       postId,
       commentId,
@@ -295,7 +295,7 @@ export async function notifyLike(
     "like",
     "New Like",
     `${likerName} liked your post "${postTitle}"`,
-    `/gallery?post=${postId}`,
+    `/profile/${userId}`,
     {
       postId,
       fromUserId: likerUid,
@@ -355,7 +355,7 @@ export async function notifyMention(
     "mention",
     "You were mentioned",
     `${mentionerName} mentioned you in "${postTitle}"`,
-    `/gallery?post=${postId}`,
+    `/profile/${mentionerUid}`,
     {
       postId,
       fromUserId: mentionerUid,

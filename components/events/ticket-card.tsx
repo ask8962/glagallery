@@ -75,6 +75,7 @@ export function TicketCard({ ticket }: TicketCardProps) {
                 <div className="text-center text-xs text-muted-foreground">
                     <p>Present this QR code at the venue entrance</p>
                     <p>This ticket is non-transferable</p>
+                    <p className="mt-4 font-semibold text-primary/80">Powered by GLA Gallery</p>
                 </div>
             </CardContent>
         </Card>

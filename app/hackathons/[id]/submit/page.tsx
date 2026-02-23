@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react"
 import { useAuth } from "@/context/auth-context"
 import { useParams, useRouter } from "next/navigation"
-import { 
-  getTeamById, 
+import {
+  getTeamById,
   getHackathonById,
   submitProject,
   getSubmissionByTeam
@@ -24,13 +24,13 @@ export default function SubmitProjectPage() {
   const params = useParams()
   const router = useRouter()
   const hackathonId = params.id as string
-  
+
   const [hackathon, setHackathon] = useState<Hackathon | null>(null)
   const [team, setTeam] = useState<Team | null>(null)
   const [submission, setSubmission] = useState<Submission | null>(null)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  
+
   const [projectName, setProjectName] = useState("")
   const [projectDescription, setProjectDescription] = useState("")
   const [projectURL, setProjectURL] = useState("")
@@ -52,14 +52,14 @@ export default function SubmitProjectPage() {
         getHackathonById(hackathonId),
         getUserTeams(hackathonId, user!.uid)
       ])
-      
+
       if (!hackathonData) {
         router.push("/hackathons")
         return
       }
-      
+
       setHackathon(hackathonData)
-      
+
       if (userTeams.length > 0) {
         const userTeam = userTeams[0]
         setTeam(userTeam)
@@ -68,7 +68,7 @@ export default function SubmitProjectPage() {
         setRepositoryURL(userTeam.repositoryURL || "")
         setDemoVideoURL(userTeam.demoVideoURL || "")
         setPresentationURL(userTeam.presentationURL || "")
-        
+
         // Check for existing submission
         const existingSubmission = await getSubmissionByTeam(hackathonId, userTeam.id)
         if (existingSubmission) {
@@ -87,14 +87,14 @@ export default function SubmitProjectPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!team || !hackathon) return
-    
+
     setSubmitting(true)
     try {
       const technologiesArray = technologies
         .split(",")
         .map(t => t.trim())
         .filter(t => t.length > 0)
-      
+
       await submitProject(hackathonId, team.id, {
         teamName: team.name,
         projectName: projectName.trim(),
@@ -106,7 +106,7 @@ export default function SubmitProjectPage() {
         technologies: technologiesArray,
         screenshots: [],
       })
-      
+
       router.push(`/hackathons/${hackathonId}/team`)
     } catch (error: any) {
       alert(error.message || "Failed to submit project. Please try again.")

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useAuth } from "@/context/auth-context"
 import { useParams, useRouter } from "next/navigation"
-import { 
+import {
   getHackathonById,
   getHackathonSubmissions,
   submitJudgeScore,
@@ -24,7 +24,7 @@ export default function JudgeHackathonPage() {
   const params = useParams()
   const router = useRouter()
   const hackathonId = params.id as string
-  
+
   const [hackathon, setHackathon] = useState<Hackathon | null>(null)
   const [submissions, setSubmissions] = useState<Submission[]>([])
   const [judging, setJudging] = useState<HackathonJudging[]>([])
@@ -48,19 +48,19 @@ export default function JudgeHackathonPage() {
         getHackathonSubmissions(hackathonId),
         getHackathonJudging(hackathonId)
       ])
-      
+
       if (!hackathonData) {
         router.push("/hackathons")
         return
       }
-      
+
       setHackathon(hackathonData)
       setSubmissions(submissionsData)
       setJudging(judgingData)
-      
+
       // Initialize scores from existing judging
       if (judgingData.length > 0 && user) {
-        const userJudging = judgingData.find(j => 
+        const userJudging = judgingData.find(j =>
           j.scores.some(s => s.judgeUid === user.uid)
         )
         if (userJudging) {
@@ -80,17 +80,17 @@ export default function JudgeHackathonPage() {
 
   async function handleSubmitScore() {
     if (!selectedSubmission || !user || !profile || !hackathon) return
-    
+
     setSubmitting(true)
     try {
       const criteria = hackathon.categories || ["Innovation", "Design", "Functionality", "Presentation"]
       let totalScore = 0
-      
+
       criteria.forEach(category => {
         const score = scores[category] || 0
         totalScore += score
       })
-      
+
       await submitJudgeScore(
         hackathonId,
         selectedSubmission.id,
@@ -103,7 +103,7 @@ export default function JudgeHackathonPage() {
           comments: comments.trim() || undefined,
         }
       )
-      
+
       await loadData()
       setSelectedSubmission(null)
       setScores({})
@@ -167,7 +167,7 @@ export default function JudgeHackathonPage() {
               <TabsTrigger value="submissions">Submissions ({submissions.length})</TabsTrigger>
               <TabsTrigger value="results">Results</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="submissions" className="mt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {submissions.map((submission) => (
@@ -185,17 +185,17 @@ export default function JudgeHackathonPage() {
                         Judge
                       </Button>
                     </div>
-                    
+
                     <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
                       {submission.projectDescription}
                     </p>
-                    
+
                     <div className="flex flex-wrap gap-2 mb-4">
                       {submission.technologies.map((tech, i) => (
                         <Badge key={i} variant="secondary">{tech}</Badge>
                       ))}
                     </div>
-                    
+
                     <div className="flex gap-2">
                       {submission.projectURL && (
                         <a
@@ -224,7 +224,7 @@ export default function JudgeHackathonPage() {
                 ))}
               </div>
             </TabsContent>
-            
+
             <TabsContent value="results" className="mt-6">
               <Card className="p-6">
                 <h2 className="text-2xl font-bold text-primary mb-4">Judging Results</h2>
@@ -284,13 +284,13 @@ export default function JudgeHackathonPage() {
               <h2 className="text-2xl font-bold text-primary mb-4">
                 Judge: {selectedSubmission.projectName}
               </h2>
-              
+
               <div className="space-y-6">
                 <div>
                   <h3 className="font-semibold text-primary mb-2">Project Description</h3>
                   <p className="text-muted-foreground">{selectedSubmission.projectDescription}</p>
                 </div>
-                
+
                 <div>
                   <h3 className="font-semibold text-primary mb-4">Scoring ({maxScorePerCategory} points per category)</h3>
                   <div className="space-y-4">
@@ -320,7 +320,7 @@ export default function JudgeHackathonPage() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium mb-2">Comments (Optional)</label>
                   <Textarea
@@ -330,7 +330,7 @@ export default function JudgeHackathonPage() {
                     rows={4}
                   />
                 </div>
-                
+
                 <div className="flex gap-4">
                   <Button
                     onClick={handleSubmitScore}

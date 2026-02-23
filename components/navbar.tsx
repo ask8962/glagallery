@@ -147,15 +147,7 @@ export function Navbar() {
                 </Button>
               </Link>
 
-              {/* Create Link (Only for logged in) */}
-              {user && (
-                <Link href="/upload">
-                  <Button variant="ghost" className="h-9 px-3 gap-2 text-muted-foreground hover:text-foreground">
-                    <PlusCircle className="h-4 w-4" />
-                    Create
-                  </Button>
-                </Link>
-              )}
+
 
             </div>
           </div>
@@ -290,19 +282,7 @@ export function Navbar() {
                   </Link>
                 </div>
 
-                {/* Mobile Create */}
-                {user && (
-                  <div>
-                    <Link
-                      href="/upload"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 rounded-md text-sm text-foreground hover:bg-accent/50 transition-colors"
-                    >
-                      <PlusCircle className="h-4 w-4" />
-                      Create New Post
-                    </Link>
-                  </div>
-                )}
+
 
                 {/* Mobile User Actions */}
                 <div className="pt-2 border-t border-border/50 flex flex-col gap-2 px-4">

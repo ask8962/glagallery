@@ -99,16 +99,16 @@ function getRedis(): Redis | null {
 //  Caching
 // ──────────────────────────────────────────────
 
-function hashCacheKey(userId: string, messages: ChatMessage[]): string {
-    const payload = JSON.stringify({ userId, messages })
+function hashCacheKey(userId: string, messages: ChatMessage[], systemPrompt: string): string {
+    const payload = JSON.stringify({ userId, messages, systemPrompt })
     return `chat:${crypto.createHash("sha256").update(payload).digest("hex")}`
 }
 
-async function getCachedResponse(userId: string, messages: ChatMessage[]): Promise<AIResponse | null> {
+async function getCachedResponse(userId: string, messages: ChatMessage[], systemPrompt: string): Promise<AIResponse | null> {
     const r = getRedis()
     if (!r) return null
     try {
-        const key = hashCacheKey(userId, messages)
+        const key = hashCacheKey(userId, messages, systemPrompt)
         const cached = await r.get<AIResponse>(key)
         return cached || null
     } catch {
@@ -116,11 +116,11 @@ async function getCachedResponse(userId: string, messages: ChatMessage[]): Promi
     }
 }
 
-async function setCachedResponse(userId: string, messages: ChatMessage[], response: AIResponse): Promise<void> {
+async function setCachedResponse(userId: string, messages: ChatMessage[], systemPrompt: string, response: AIResponse): Promise<void> {
     const r = getRedis()
     if (!r) return
     try {
-        const key = hashCacheKey(userId, messages)
+        const key = hashCacheKey(userId, messages, systemPrompt)
         await r.set(key, response, { ex: CACHE_TTL_SECONDS })
     } catch {
         // Silently fail — cache is best-effort
@@ -255,7 +255,7 @@ export async function callWithFallback(
     userId: string
 ): Promise<AIResponse> {
     // 1. Check cache first
-    const cached = await getCachedResponse(userId, messages)
+    const cached = await getCachedResponse(userId, messages, systemPrompt)
     if (cached) {
         console.log("[AI] Cache hit")
         return { ...cached, provider: `${cached.provider} (cached)` }
@@ -298,7 +298,7 @@ export async function callWithFallback(
             const result: AIResponse = { content: response, provider: provider.name }
 
             // Cache the response
-            await setCachedResponse(userId, messages, result)
+            await setCachedResponse(userId, messages, systemPrompt, result)
 
             if (fallbackLog.length > 0) {
                 console.warn(`[AI] Fallback log: ${fallbackLog.join(" → ")} → ${provider.name} ✓`)
@@ -326,7 +326,7 @@ export async function callWithFallback(
                     if (!isSoftFailure(retryResponse)) {
                         recordSuccess(provider.name)
                         const result: AIResponse = { content: retryResponse, provider: provider.name }
-                        await setCachedResponse(userId, messages, result)
+                        await setCachedResponse(userId, messages, systemPrompt, result)
                         return result
                     }
                 } catch {
