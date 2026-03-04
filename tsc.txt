@@ -1,0 +1,2 @@
+﻿node_modules/.pnpm/@vitejs+plugin-react@5.1.2__a31fff55ec3e000f7c13646a47ea7ab8/node_modules/@vitejs/plugin-react/dist/index.d.ts(64,113): error TS1003: Identifier expected.
+node_modules/.pnpm/@vitejs+plugin-react@5.1.2__a31fff55ec3e000f7c13646a47ea7ab8/node_modules/@vitejs/plugin-react/dist/index.d.ts(64,130): error TS1128: Declaration or statement expected.

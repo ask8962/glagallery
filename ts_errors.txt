@@ -1,0 +1,96 @@
+﻿.next/dev/types/validator.ts(783,31): error TS2344: Type 'typeof import("C:/Users/ganuk/Desktop/glagallary/glagallery-main/app/api/rewards/[id]/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/rewards/[id]">'.
+  Types of property 'PATCH' are incompatible.
+    Type '(request: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ error: string; }> | NextResponse<{ success: boolean; message: string; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.next/dev/types/validator.ts(841,31): error TS2344: Type 'typeof import("C:/Users/ganuk/Desktop/glagallary/glagallery-main/app/profile/[userId]/layout")' does not satisfy the constraint 'LayoutConfig<"/profile/[userId]">'.
+  Types of property 'default' are incompatible.
+    Type '({ children, params }: ProfileLayoutProps) => Element' is not assignable to type 'ComponentType<LayoutProps<"/profile/[userId]">> | ((props: LayoutProps<"/profile/[userId]">) => void | Promise<void> | ReactNode | Promise<...>)'.
+      Type '({ children, params }: ProfileLayoutProps) => Element' is not assignable to type 'FunctionComponent<LayoutProps<"/profile/[userId]">>'.
+.next/types/validator.ts(783,31): error TS2344: Type 'typeof import("C:/Users/ganuk/Desktop/glagallary/glagallery-main/app/api/rewards/[id]/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/rewards/[id]">'.
+  Types of property 'PATCH' are incompatible.
+    Type '(request: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ error: string; }> | NextResponse<{ success: boolean; message: string; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.next/types/validator.ts(841,31): error TS2344: Type 'typeof import("C:/Users/ganuk/Desktop/glagallary/glagallery-main/app/profile/[userId]/layout")' does not satisfy the constraint 'LayoutConfig<"/profile/[userId]">'.
+  Types of property 'default' are incompatible.
+    Type '({ children, params }: ProfileLayoutProps) => Element' is not assignable to type 'ComponentType<LayoutProps<"/profile/[userId]">> | ((props: LayoutProps<"/profile/[userId]">) => void | Promise<void> | ReactNode | Promise<...>)'.
+      Type '({ children, params }: ProfileLayoutProps) => Element' is not assignable to type 'FunctionComponent<LayoutProps<"/profile/[userId]">>'.
+        Types of parameters '__0' and 'props' are incompatible.
+          Type 'LayoutProps<"/profile/[userId]">' is not assignable to type 'ProfileLayoutProps'.
+            Types of property 'params' are incompatible.
+              Property 'userId' is missing in type 'Promise<{ userId: string; }>' but required in type '{ userId: string; }'.
+app/api/admin/route.ts(26,25): error TS2339: Property 'allowed' does not exist on type 'Promise<{ allowed: boolean; remaining: number; resetAt: number; error?: string | undefined; }>'.
+app/api/admin/route.ts(27,56): error TS2339: Property 'error' does not exist on type 'Promise<{ allowed: boolean; remaining: number; resetAt: number; error?: string | undefined; }>'.
+app/api/notifications/send-email/route.ts(115,25): error TS2339: Property 'allowed' does not exist on type 'Promise<{ allowed: boolean; remaining: number; resetAt: number; error?: string | undefined; }>'.
+app/api/notifications/send-email/route.ts(118,33): error TS2339: Property 'error' does not exist on type 'Promise<{ allowed: boolean; remaining: number; resetAt: number; error?: string | undefined; }>'.
+app/api/notifications/send-email/route.ts(119,37): error TS2339: Property 'remaining' does not exist on type 'Promise<{ allowed: boolean; remaining: number; resetAt: number; error?: string | undefined; }>'.
+app/api/notifications/send-email/route.ts(120,35): error TS2339: Property 'resetAt' does not exist on type 'Promise<{ allowed: boolean; remaining: number; resetAt: number; error?: string | undefined; }>'.
+app/api/notifications/send-email/route.ts(179,9): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+app/api/rewards/seed/route.ts(81,63): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+app/hackathons/[id]/judge/page.tsx(194,24): error TS18048: 'submission.technologies' is possibly 'undefined'.
+app/hackathons/[id]/judge/page.tsx(211,35): error TS2339: Property 'repositoryURL' does not exist on type 'Submission'.
+app/hackathons/[id]/judge/page.tsx(213,44): error TS2339: Property 'repositoryURL' does not exist on type 'Submission'.
+app/hackathons/[id]/submit/page.tsx(103,9): error TS2345: Argument of type '{ teamName: string; projectName: string; projectDescription: string; projectURL: string | undefined; repositoryURL: string | undefined; demoVideoURL: string | undefined; presentationURL: string | undefined; technologies: string[]; screenshots: never[]; }' is not assignable to parameter of type 'Omit<Submission, "id" | "submittedAt" | "hackathonId" | "submittedBy" | "teamId">'.
+  Object literal may only specify known properties, and 'repositoryURL' does not exist in type 'Omit<Submission, "id" | "submittedAt" | "hackathonId" | "submittedBy" | "teamId">'.
+app/hackathons/[id]/team/page.tsx(60,59): error TS18047: 'user' is possibly 'null'.
+app/profile/[userId]/badges/page.tsx(17,99): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(18,92): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(19,90): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(20,87): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(21,98): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(22,87): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(23,88): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(24,108): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(25,90): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(26,98): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(27,92): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(28,86): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(29,90): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(30,91): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(31,94): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(32,107): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(33,93): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(34,105): error TS2322: Type '{ id: string; name: string; description: string; icon: string; tier: string; }' is not assignable to type 'Badge'.
+  Object literal may only specify known properties, and 'tier' does not exist in type 'Badge'.
+app/profile/[userId]/badges/page.tsx(88,42): error TS2339: Property 'tier' does not exist on type 'Badge'.
+app/profile/[userId]/badges/page.tsx(89,44): error TS2339: Property 'tier' does not exist on type 'Badge'.
+app/profile/[userId]/badges/page.tsx(90,44): error TS2339: Property 'tier' does not exist on type 'Badge'.
+components/admin/admin-panel.tsx(20,25): error TS2307: Cannot find module '@/components/ui/spinner' or its corresponding type declarations.
+components/error-boundary.tsx(53,7): error TS2322: Type 'Promise<string>' is not assignable to type 'string'.
+components/error-boundary.tsx(250,47): error TS2345: Argument of type 'ErrorInfo' is not assignable to parameter of type '{ componentStack?: string | undefined; }'.
+  Types of property 'componentStack' are incompatible.
+    Type 'string | null | undefined' is not assignable to type 'string | undefined'.
+      Type 'null' is not assignable to type 'string | undefined'.
+components/events/register-button.tsx(129,42): error TS2339: Property 'eventStats' does not exist on type 'User'.
+components/events/register-button.tsx(130,48): error TS2339: Property 'reliabilityScore' does not exist on type 'User'.
+components/hackathons/winner-announcement.tsx(14,22): error TS7016: Could not find a declaration file for module 'canvas-confetti'. 'C:/Users/ganuk/Desktop/glagallary/glagallery-main/node_modules/.pnpm/canvas-confetti@1.9.4/node_modules/canvas-confetti/src/confetti.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/canvas-confetti` if it exists or add a new declaration (.d.ts) file containing `declare module 'canvas-confetti';`
+components/hackathons/winner-announcement.tsx(63,11): error TS7022: 'interval' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+components/profile/follow-system.tsx(64,21): error TS2345: Argument of type '{}' is not assignable to parameter of type 'string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ... 4 more ... | undefined'.
+lib/ai-providers.ts(178,23): error TS2339: Property 'text' does not exist on type 'ContentBlock'.
+  Property 'text' does not exist on type 'ThinkingBlock'.
+lib/search.ts(20,15): error TS2305: Module '"./types"' has no exported member 'Post'.
+lib/timeline.ts(3,15): error TS2305: Module '"./types"' has no exported member 'Post'.

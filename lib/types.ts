@@ -117,6 +117,9 @@ export type UserProfile = {
   eventRestricted?: boolean // If true, can't register for paid events
   // Faculty/Staff specific
   facultyProfile?: FacultyProfile
+  // Onboarding
+  interests?: string[]
+  onboardingComplete?: boolean
 }
 
 

@@ -16,17 +16,11 @@ function generateOTP(): string {
     return Math.floor(100000 + Math.random() * 900000).toString()
 }
 
-// Hash OTP for storage (simple hash for demo - in production use bcrypt)
+// Hash OTP for storage using HMAC-SHA256
 function hashOTP(otp: string): string {
-    // Simple hash using built-in crypto
-    const encoder = new TextEncoder()
-    const data = encoder.encode(otp + process.env.JWT_SECRET)
-    let hash = 0
-    for (let i = 0; i < data.length; i++) {
-        hash = ((hash << 5) - hash) + data[i]
-        hash |= 0
-    }
-    return Math.abs(hash).toString(16)
+    const crypto = require("crypto")
+    const secret = process.env.JWT_SECRET || "fallback-secret"
+    return crypto.createHmac("sha256", secret).update(otp).digest("hex")
 }
 
 // Send OTP email

@@ -148,7 +148,14 @@ export default function ProfilePage() {
             <div className="flex-1">
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
                 <div>
-                  <h1 className="text-3xl font-bold text-primary mb-2">{currentProfile.name}</h1>
+                  <div className="flex items-center gap-3 mb-2">
+                    <h1 className="text-3xl font-bold text-primary">{currentProfile.name}</h1>
+                    {currentProfile.role === "faculty" && (
+                      <span className="px-2.5 py-1 text-xs font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 rounded-lg whitespace-nowrap">
+                        Faculty Member
+                      </span>
+                    )}
+                  </div>
                   {currentProfile.bio && <p className="text-muted-foreground mb-4 max-w-2xl">{currentProfile.bio}</p>}
                 </div>
                 <div className="flex gap-2">
@@ -165,6 +172,31 @@ export default function ProfilePage() {
               </div>
 
               {/* Social Links */}
+              {currentProfile.role === "faculty" && currentProfile.facultyProfile && (
+                <div className="grid grid-cols-2 gap-3 mb-6 p-4 rounded-xl bg-muted/50 border border-border/50">
+                  <div>
+                    <span className="text-xs text-muted-foreground block mb-0.5">Department</span>
+                    <span className="text-sm font-medium">{currentProfile.facultyProfile.department}</span>
+                  </div>
+                  <div>
+                    <span className="text-xs text-muted-foreground block mb-0.5">Designation</span>
+                    <span className="text-sm font-medium">{currentProfile.facultyProfile.designation}</span>
+                  </div>
+                  {currentProfile.facultyProfile.cabinNumber && (
+                    <div>
+                      <span className="text-xs text-muted-foreground block mb-0.5">Cabin / Room</span>
+                      <span className="text-sm font-medium">{currentProfile.facultyProfile.cabinNumber}</span>
+                    </div>
+                  )}
+                  {currentProfile.facultyProfile.officeHours && (
+                    <div>
+                      <span className="text-xs text-muted-foreground block mb-0.5">Office Hours</span>
+                      <span className="text-sm font-medium">{currentProfile.facultyProfile.officeHours}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {currentProfile.socialLinks && Object.keys(currentProfile.socialLinks).length > 0 && (
                 <div className="flex flex-wrap gap-3 mb-4">
                   {currentProfile.socialLinks.instagram && (

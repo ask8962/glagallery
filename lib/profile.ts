@@ -12,6 +12,7 @@ import {
   limit,
   getDocs,
   Timestamp,
+  documentId,
 } from "firebase/firestore"
 import { getFirebase } from "./firebase"
 import type { UserProfile, SocialLinks, PrivacySettings, Activity, ActivityType } from "./types"
@@ -367,12 +368,6 @@ export async function getUserStatistics(userId: string) {
 
     const userData = userDoc.data() as UserProfile
 
-    // Get posts count - Social Gallery removed, so these are 0
-    // If we want to keep the shape for frontend compatibility:
-    const posts = []
-    const totalLikes = 0
-    const totalComments = 0
-
     return {
       posts: 0,
       likes: 0,
@@ -390,7 +385,7 @@ export async function getUserStatistics(userId: string) {
   }
 }
 
-// Get followers list
+// Get followers list (batched query to avoid N+1)
 export async function getFollowers(userId: string): Promise<UserProfile[]> {
   const { db } = getFirebase()
 
@@ -407,13 +402,20 @@ export async function getFollowers(userId: string): Promise<UserProfile[]> {
       return []
     }
 
+    // Batch fetch using 'in' query (max 30 IDs per query)
     const followerProfiles: UserProfile[] = []
+    const BATCH_SIZE = 30
 
-    for (const followerId of followers) {
-      const followerDoc = await getDoc(doc(db, "users", followerId))
-      if (followerDoc.exists()) {
-        followerProfiles.push(followerDoc.data() as UserProfile)
-      }
+    for (let i = 0; i < followers.length; i += BATCH_SIZE) {
+      const batch = followers.slice(i, i + BATCH_SIZE)
+      const q = query(
+        collection(db, "users"),
+        where(documentId(), "in", batch)
+      )
+      const snapshot = await getDocs(q)
+      snapshot.forEach((doc) => {
+        followerProfiles.push(doc.data() as UserProfile)
+      })
     }
 
     return followerProfiles
@@ -423,7 +425,7 @@ export async function getFollowers(userId: string): Promise<UserProfile[]> {
   }
 }
 
-// Get following list
+// Get following list (batched query to avoid N+1)
 export async function getFollowing(userId: string): Promise<UserProfile[]> {
   const { db } = getFirebase()
 
@@ -440,13 +442,20 @@ export async function getFollowing(userId: string): Promise<UserProfile[]> {
       return []
     }
 
+    // Batch fetch using 'in' query (max 30 IDs per query)
     const followingProfiles: UserProfile[] = []
+    const BATCH_SIZE = 30
 
-    for (const followingId of following) {
-      const followingDoc = await getDoc(doc(db, "users", followingId))
-      if (followingDoc.exists()) {
-        followingProfiles.push(followingDoc.data() as UserProfile)
-      }
+    for (let i = 0; i < following.length; i += BATCH_SIZE) {
+      const batch = following.slice(i, i + BATCH_SIZE)
+      const q = query(
+        collection(db, "users"),
+        where(documentId(), "in", batch)
+      )
+      const snapshot = await getDocs(q)
+      snapshot.forEach((doc) => {
+        followingProfiles.push(doc.data() as UserProfile)
+      })
     }
 
     return followingProfiles

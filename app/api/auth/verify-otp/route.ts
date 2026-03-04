@@ -6,21 +6,16 @@ import { logFailedAuth, logRateLimitExceeded, logSecurityEvent } from "@/lib/sec
 
 // Hash OTP for comparison (must match send-otp route)
 function hashOTP(otp: string): string {
-    const encoder = new TextEncoder()
-    const data = encoder.encode(otp + process.env.JWT_SECRET)
-    let hash = 0
-    for (let i = 0; i < data.length; i++) {
-        hash = ((hash << 5) - hash) + data[i]
-        hash |= 0
-    }
-    return Math.abs(hash).toString(16)
+    const crypto = require("crypto")
+    const secret = process.env.JWT_SECRET || "fallback-secret"
+    return crypto.createHmac("sha256", secret).update(otp).digest("hex")
 }
 
 export async function POST(request: NextRequest) {
     try {
-        // Rate limit: 10 verification attempts per hour per IP
+        // Rate limit: 5 verification attempts per hour per IP
         const clientIp = getClientIP(request)
-        const rateLimitCheck = await checkServerRateLimit(clientIp, "LIKE", 60 * 60 * 1000) // 100/hr
+        const rateLimitCheck = await checkServerRateLimit(clientIp, "OTP", 60 * 60 * 1000)
 
         if (!rateLimitCheck.allowed) {
             // Log rate limit exceeded

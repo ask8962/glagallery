@@ -1,4 +1,10 @@
 /**
+ * @deprecated This module is not imported by any consumer code.
+ * Image compression utilities use CompressorJS.
+ * Consider using image-optimization.ts instead for new code.
+ */
+
+/**
  * Image compression utility using Canvas API
  */
 

@@ -15,10 +15,16 @@ export type NotificationType =
     | "follow"
     | "mention"
     | "hackathon"
+    | "hackathon_update"
     | "club"
+    | "club_event"
+    | "club_announcement"
     | "event"
     | "reward"
     | "system"
+    | "team_invite"
+    | "badge"
+    | "welcome"
 
 interface SendNotificationOptions {
     userId: string

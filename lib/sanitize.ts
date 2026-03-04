@@ -1,4 +1,9 @@
 /**
+ * @deprecated This module is not imported by any consumer code.
+ * All consumers import sanitizeText from validation.ts instead.
+ */
+
+/**
  * Input Sanitization Utility
  * 
  * Prevents XSS (Cross-Site Scripting) attacks by sanitizing user input.

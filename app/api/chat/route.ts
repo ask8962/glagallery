@@ -141,7 +141,7 @@ export async function POST(request: Request) {
                 const resetMinutes = Math.ceil((reset - Date.now()) / 60000)
                 return NextResponse.json(
                     {
-                        error: `You've reached the limit of 8 messages per hour. Please try again in ~${resetMinutes} minute${resetMinutes === 1 ? "" : "s"}.`,
+                        error: `You've reached the message limit. Please try again in ~${resetMinutes} minute${resetMinutes === 1 ? "" : "s"}.`,
                         limit,
                         remaining: 0,
                         resetIn: resetMinutes,

@@ -122,16 +122,16 @@ async function sendEmail(to: string, subject: string, htmlBody: string): Promise
 // Send broadcast
 export async function POST(request: NextRequest) {
     try {
-        // Rate limit - allow only 1 broadcast per hour
+        // Rate limit - allow only 10 broadcasts per hour
         const clientIp = getClientIP(request)
-        // const rateLimitCheck = await checkServerRateLimit(clientIp, "UPLOAD", 60 * 60 * 1000)
+        const rateLimitCheck = await checkServerRateLimit(clientIp, "UPLOAD", 60 * 60 * 1000)
 
-        // if (!rateLimitCheck.allowed) {
-        //     return NextResponse.json(
-        //         { error: "Rate limit exceeded. Only 1 broadcast per hour allowed." },
-        //         { status: 429 }
-        //     )
-        // }
+        if (!rateLimitCheck.allowed) {
+            return NextResponse.json(
+                { error: "Rate limit exceeded. Please try again later." },
+                { status: 429 }
+            )
+        }
 
         const body: BroadcastRequest = await request.json()
         const { subject, body: messageBody, adminEmail, userIds } = body

@@ -11,6 +11,10 @@ import { ErrorBoundaryProvider } from "@/components/error-boundary-provider"
 import { NotificationPermissionBanner } from "@/components/notification-permission-banner"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { Suspense } from "react"
+import { Toaster } from "sonner"
+import { AchievementProvider } from "@/hooks/use-achievement"
+import { AchievementOverlay } from "@/components/achievement-overlay"
+import { OnboardingFlow } from "@/components/onboarding-flow"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -141,17 +145,22 @@ export default function RootLayout({
       <body className={`font-sans ${inter.variable} ${jetbrainsMono.variable}`}>
         <ErrorBoundaryProvider>
           <AuthProvider>
-            <TwoFAGuard>
-              <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
-                <Navbar />
-                <NotificationPermissionBanner />
-                <main className="pt-16">{children}</main>
-                <SiteFooter />
-              </Suspense>
-            </TwoFAGuard>
+            <AchievementProvider>
+              <TwoFAGuard>
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+                  <Navbar />
+                  <NotificationPermissionBanner />
+                  <main className="pt-16">{children}</main>
+                  <SiteFooter />
+                  <AchievementOverlay />
+                  <OnboardingFlow />
+                </Suspense>
+              </TwoFAGuard>
+            </AchievementProvider>
           </AuthProvider>
         </ErrorBoundaryProvider>
         <ScrollToTop />
+        <Toaster position="bottom-right" richColors />
         <Analytics />
       </body>
     </html>

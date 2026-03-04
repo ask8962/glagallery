@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from "next/server"
 import { adminDb } from "@/lib/firebase-admin"
 import { FieldValue } from "firebase-admin/firestore"
+import { verifyAuthToken } from "@/lib/server-auth"
 
 export async function POST(request: NextRequest) {
     try {
+        // Authenticate — only authorized users (admins/organizers) can verify tickets
+        const authResult = await verifyAuthToken(request)
+        if (!authResult.authenticated || !authResult.user) {
+            return NextResponse.json(
+                { error: "Authentication required to verify tickets" },
+                { status: 401 }
+            )
+        }
+
         const body = await request.json()
         const { ticketId, ticketCode } = body
 

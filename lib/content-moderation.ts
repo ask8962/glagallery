@@ -5,10 +5,12 @@
  * Includes profanity filtering, spam detection, and content scoring.
  */
 
-// Extended profanity word list (basic - in production use a comprehensive library)
+// Profanity word list for content moderation
 const PROFANITY_LIST: string[] = [
-  // Add common profanity words here
-  // This is a minimal list for demonstration
+  "fuck", "shit", "ass", "bitch", "damn", "dick", "bastard",
+  "crap", "piss", "slut", "whore", "cock", "cunt", "fag",
+  "nigger", "retard", "motherfucker", "asshole", "bullshit",
+  "dumbass", "jackass", "goddamn", "wtf", "stfu", "lmao",
 ]
 
 // Spam patterns
@@ -248,12 +250,13 @@ export function getModerationAction(result: ModerationResult): "approve" | "revi
  * In production, this would integrate with Google Vision API, AWS Rekognition, etc.
  */
 export async function moderateImage(imageUrl: string): Promise<ModerationResult> {
-  // Placeholder - in production, integrate with image moderation API
+  // TODO: Integrate with Google Vision API, AWS Rekognition, or similar
+  console.warn("moderateImage: Image moderation not implemented — flagging for manual review")
   return {
     allowed: true,
-    flagged: false,
-    score: 0,
-    reasons: [],
+    flagged: true,
+    score: 10,
+    reasons: ["Image moderation pending — manual review required"],
   }
 }
 
