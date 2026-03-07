@@ -387,6 +387,22 @@ export type Event = {
   waitlist?: string[] // Array of user IDs waiting for spots
 }
 
+export type TransactionStatus = "created" | "successful" | "failed" | "refunded"
+
+export type Transaction = {
+  id: string // Razorpay Payment ID or our DB ID
+  orderId: string // Razorpay Order ID
+  eventId: string
+  userId: string
+  amount: number // In paise (or lowest currency denomination)
+  currency: string
+  status: TransactionStatus
+  createdAt: any
+  updatedAt: any
+  receipt?: string
+  paymentMethod?: string
+}
+
 export type TicketStatus = "valid" | "used" | "cancelled" | "expired"
 
 export type EventTicket = {
@@ -409,6 +425,9 @@ export type EventTicket = {
   // Seat/Gate info stub
   gate?: string
   seat?: string
+
+  // Payment Tracking
+  transactionId?: string // Link to the successful payment transaction
 }
 
 export type EventRSVP = {

@@ -93,6 +93,7 @@
     "nodemailer": "latest",
     "openai": "^6.22.0",
     "qrcode.react": "^4.2.0",
+    "razorpay": "^2.9.5",
     "react": "^19",
     "react-day-picker": "latest",
     "react-dom": "^19",

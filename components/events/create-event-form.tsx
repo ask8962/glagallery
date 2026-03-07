@@ -27,6 +27,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner"
 import { Loader2, CalendarIcon, MapPin, ImageIcon, Tag, DollarSign, Users } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { useAuth } from "@/context/auth-context"
 
 export function CreateEventForm() {
     const router = useRouter()
@@ -60,15 +61,22 @@ export function CreateEventForm() {
 
     const isFree = form.watch("isFree")
 
+    // Get the user from context to extract the token
+    const { user } = useAuth()
+
     async function onSubmit(data: EventFormData) {
         setSubmitting(true)
         try {
-            // Ensure dates are ISO strings if simple inputs are used
-            // zod schema expects string, so we pass what inputs give (usually yyyy-MM-ddThh:mm)
+            // Ensure user exists and get token
+            if (!user) throw new Error("You must be logged in to create an event")
+            const token = await user.getIdToken()
 
             const res = await fetch("/api/events", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({
                     ...data,
                     hostedByClubId: clubId || undefined,
