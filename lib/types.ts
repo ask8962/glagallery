@@ -400,6 +400,7 @@ export type Transaction = {
   createdAt: any
   updatedAt: any
   receipt?: string
+  paymentId?: string    // Razorpay Payment ID (set after successful payment)
   paymentMethod?: string
 }
 
