@@ -15,6 +15,7 @@ import { BroadcastEmail } from "@/components/admin/broadcast-email"
 import { FacultyVerification } from "@/components/admin/faculty-verification"
 import { ClubVerificationDashboard } from "@/components/admin/club-verification-dashboard"
 import { AcademicCalendarManager } from "@/components/admin/academic-calendar-manager"
+import { PlatformSettings } from "@/components/admin/platform-settings"
 
 export default function AdminPage() {
   const { user, profile } = useAuth()
@@ -163,6 +164,16 @@ export default function AdminPage() {
             <p className="text-sm text-muted-foreground">Manage student reward claims, verify users, and process payouts.</p>
           </div>
         </div>
+      </motion.section>
+
+      {/* Platform Branding */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 1.1 }}
+      >
+        <h2 className="text-2xl font-semibold text-primary mb-6">Platform Settings</h2>
+        <PlatformSettings />
       </motion.section>
     </motion.main>
   )

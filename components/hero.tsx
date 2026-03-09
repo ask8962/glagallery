@@ -5,8 +5,16 @@ import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { ArrowRight, Users } from "lucide-react"
+import { useConfig } from "@/context/config-context"
 
 export default function Hero() {
+  const { config } = useConfig()
+
+  // Split name to highlight the last word if it has multiple words
+  const nameParts = config.name.split(" ")
+  const lastWord = nameParts.length > 1 ? nameParts.pop() : ""
+  const firstParts = nameParts.join(" ")
+
   return (
     <section className="relative min-h-[80vh] flex items-center overflow-hidden bg-gradient-to-br from-primary via-primary to-primary/90">
       {/* Background Image */}
@@ -37,17 +45,16 @@ export default function Hero() {
               className="flex items-center gap-2 mb-4"
             >
               <div className="h-1 w-12 bg-accent" />
-              <span className="text-sm font-medium text-accent">GLA University</span>
+              <span className="text-sm font-medium text-accent">{config.name}</span>
             </motion.div>
 
             <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
-              Campus
-              <span className="block text-accent">Gallery</span>
+              {firstParts || config.name}
+              {lastWord && <span className="block text-accent">{lastWord}</span>}
             </h1>
 
             <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 leading-relaxed">
-              Discover the vibrant life at GLA University through the eyes of our students.
-              From fests to classrooms, sports to farewells — every moment tells a story.
+              {config.tagline || `Discover the vibrant life at ${config.name} through the eyes of our students.`}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-8">

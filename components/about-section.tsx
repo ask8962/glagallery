@@ -3,8 +3,11 @@
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { GraduationCap, Users, Award, BookOpen } from "lucide-react"
+import { useConfig } from "@/context/config-context"
 
 export default function AboutSection() {
+  const { config } = useConfig()
+
   const stats = [
     { icon: Users, label: "Students", value: "25,000+" },
     { icon: GraduationCap, label: "Programs", value: "100+" },
@@ -25,23 +28,21 @@ export default function AboutSection() {
           >
             <div className="flex items-center gap-2 mb-4">
               <div className="h-1 w-12 bg-accent" />
-              <span className="text-sm font-medium text-accent">About GLA University</span>
+              <span className="text-sm font-medium text-accent">About {config.name}</span>
             </div>
-            
+
             <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">
               Where Excellence Meets
               <span className="block text-accent">Innovation</span>
             </h2>
-            
+
             <p className="text-muted-foreground mb-6 leading-relaxed">
-              GLA University stands as a beacon of academic excellence, fostering innovation, 
-              creativity, and leadership among its diverse student community. Our campus is 
-              a melting pot of cultures, ideas, and aspirations.
+              {config.description || `${config.name} stands as a beacon of academic excellence, fostering innovation, creativity, and leadership among its diverse student community. Our campus is a melting pot of cultures, ideas, and aspirations.`}
             </p>
-            
+
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              From state-of-the-art laboratories to vibrant cultural fests, from competitive 
-              sports events to inspiring farewell ceremonies — every corner of our campus 
+              From state-of-the-art laboratories to vibrant cultural fests, from competitive
+              sports events to inspiring farewell ceremonies — every corner of our campus
               tells a story of growth, learning, and unforgettable memories.
             </p>
 
@@ -82,7 +83,7 @@ export default function AboutSection() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent" />
             </div>
-            
+
             {/* Floating card */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}

@@ -9,6 +9,7 @@ import { ThemeToggle } from "./theme-toggle"
 import { NotificationCenter } from "./notification-center"
 import { Menu, X, ChevronDown, Rocket, Users, ShoppingBag, PlusCircle, Search as SearchIcon, Trophy, Calendar, Command, Bot } from "lucide-react"
 import { useState, useEffect, useCallback } from "react"
+import { useConfig } from "@/context/config-context"
 import { CommandMenu } from "@/components/command-menu"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
@@ -23,6 +24,7 @@ import {
 
 export function Navbar() {
   const { user, profile, signIn, signOut, loading } = useAuth()
+  const { config } = useConfig()
   const pathname = usePathname()
   const isAdmin = profile?.role === "admin"
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -76,10 +78,10 @@ export function Navbar() {
             <div className="flex items-center gap-8">
               <Link href="/" className="flex items-center gap-3">
                 <div className="relative h-9 w-9 overflow-hidden rounded-md ring-1 ring-border shadow-sm">
-                  <Image src="/glalogo.jpg" alt="GLA Logo" fill className="object-cover" />
+                  <Image src={config.logoUrl || "/logo.png"} alt={`${config.name} Logo`} fill className="object-cover" />
                 </div>
                 <div className="hidden sm:block">
-                  <span className="text-lg font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">GLA Gallery</span>
+                  <span className="text-lg font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">{config.name}</span>
                 </div>
               </Link>
             </div>
@@ -102,14 +104,14 @@ export function Navbar() {
             <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-90">
               <div className="relative h-9 w-9 overflow-hidden rounded-md ring-1 ring-border shadow-sm">
                 <Image
-                  src="/glalogo.jpg"
-                  alt="GLA Logo"
+                  src={config.logoUrl || "/logo.png"}
+                  alt={`${config.name} Logo`}
                   fill
                   className="object-cover"
                 />
               </div>
               <div className="hidden sm:block">
-                <span className="text-lg font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">GLA Gallery</span>
+                <span className="text-lg font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">{config.name}</span>
               </div>
             </Link>
 

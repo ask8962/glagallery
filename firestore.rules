@@ -50,6 +50,17 @@ service cloud.firestore {
     }
     
     // ============================================
+    // PLATFORM SETTINGS (Global Configuration)
+    // ============================================
+    match /settings/{document=**} {
+      // Anyone can read the platform settings
+      allow read: if true;
+      
+      // Only admins can update the platform settings
+      allow write: if isSuperAdmin() || isAdminByRole();
+    }
+    
+    // ============================================
     // USERS COLLECTION
     // ============================================
     match /users/{userId} {
@@ -408,6 +419,20 @@ service cloud.firestore {
       // Transactions are immutable for audit trail
       allow update: if false;
       allow delete: if false;
+    }
+    
+    // ============================================
+    // TRANSACTIONS COLLECTION (Razorpay Payments)
+    // ============================================
+    match /transactions/{transactionId} {
+      // Users can read their own transactions
+      allow read: if hasGLAEmail() && isOwner(resource.data.userId);
+      
+      // Admins can read all transactions
+      allow read: if isSuperAdmin() || isAdminByRole();
+      
+      // All writes via Admin SDK only (server-side payment processing)
+      allow create, update, delete: if false;
     }
     
     // ============================================

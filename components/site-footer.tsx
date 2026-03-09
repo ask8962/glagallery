@@ -3,8 +3,16 @@
 import Link from "next/link"
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react"
 import { motion } from "framer-motion"
+import { useConfig } from "@/context/config-context"
 
 export default function SiteFooter() {
+  const { config } = useConfig()
+
+  // Split name to highlight the last word if it has multiple words
+  const nameParts = config.name.split(" ")
+  const lastWord = nameParts.length > 1 ? nameParts.pop() : ""
+  const firstParts = nameParts.join(" ")
+
   return (
     <footer className="mt-20 bg-primary text-primary-foreground">
       <div className="mx-auto max-w-6xl px-4 md:px-6 py-16">
@@ -18,12 +26,11 @@ export default function SiteFooter() {
               viewport={{ once: true }}
             >
               <h3 className="text-2xl font-bold mb-4">
-                GLA University
-                <span className="block text-accent text-lg">Gallery</span>
+                {firstParts || config.name}
+                {lastWord && <span className="block text-accent text-lg">{lastWord}</span>}
               </h3>
               <p className="text-primary-foreground/80 mb-6 leading-relaxed">
-                Celebrating the vibrant campus life at GLA University. From academic achievements
-                to cultural fests, sports events to farewell ceremonies — every moment matters.
+                {config.description || `Celebrating the vibrant campus life at ${config.name}. From academic achievements to cultural fests, sports events to farewell ceremonies — every moment matters.`}
               </p>
 
               {/* Social Links */}
@@ -62,18 +69,24 @@ export default function SiteFooter() {
           >
             <h4 className="text-lg font-semibold mb-4 text-accent">Contact Us</h4>
             <ul className="space-y-3 text-sm">
-              <li className="flex items-center gap-3">
-                <MapPin className="h-4 w-4 text-accent flex-shrink-0" />
-                <span>17km Stone, NH-2, Mathura-Delhi Road, Mathura, UP 281406</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-accent flex-shrink-0" />
-                <span>+91-5662-250900, 250909</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-accent flex-shrink-0" />
-                <span>info@gla.ac.in</span>
-              </li>
+              {config.contactAddress && (
+                <li className="flex items-start gap-3">
+                  <MapPin className="h-4 w-4 text-accent flex-shrink-0 mt-1" />
+                  <span>{config.contactAddress}</span>
+                </li>
+              )}
+              {config.contactPhone && (
+                <li className="flex items-center gap-3">
+                  <Phone className="h-4 w-4 text-accent flex-shrink-0" />
+                  <span>{config.contactPhone}</span>
+                </li>
+              )}
+              {config.contactEmail && (
+                <li className="flex items-center gap-3">
+                  <Mail className="h-4 w-4 text-accent flex-shrink-0" />
+                  <span>{config.contactEmail}</span>
+                </li>
+              )}
             </ul>
           </motion.div>
 
@@ -86,18 +99,20 @@ export default function SiteFooter() {
           >
             <h4 className="text-lg font-semibold mb-4 text-accent">Quick Links</h4>
             <ul className="space-y-3 text-sm">
-              <li>
-                <Link
-                  href="https://www.gla.ac.in"
-                  target="_blank"
-                  className="hover:text-accent transition-colors duration-300 flex items-center gap-2"
-                >
-                  <span>Official GLA University</span>
-                  <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </Link>
-              </li>
+              {config.officialWebsiteUrl && (
+                <li>
+                  <Link
+                    href={config.officialWebsiteUrl}
+                    target="_blank"
+                    className="hover:text-accent transition-colors duration-300 flex items-center gap-2"
+                  >
+                    <span>Official Website</span>
+                    <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link href="/about" className="hover:text-accent transition-colors duration-300">
                   About Us
@@ -137,7 +152,7 @@ export default function SiteFooter() {
       <div className="border-t border-primary-foreground/20">
         <div className="mx-auto max-w-6xl px-4 md:px-6 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-primary-foreground/70">
-            <p>© {new Date().getFullYear()} GLA University Gallery. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} {config.name}. All rights reserved.</p>
             <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
               <Link href="/about" className="hover:text-accent transition-colors duration-300">
                 About

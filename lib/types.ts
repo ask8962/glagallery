@@ -1,3 +1,19 @@
+// Global Platform Configuration
+export type PlatformConfig = {
+  name: string
+  tagline: string
+  description: string
+  logoUrl: string
+  faviconUrl?: string
+  primaryColor?: string
+  contactAddress?: string
+  contactPhone?: string
+  contactEmail?: string
+  officialWebsiteUrl?: string
+  updatedAt?: any
+  updatedBy?: string
+}
+
 // Expanded role hierarchy for institutional support
 export type Role =
   | "student"           // Regular student

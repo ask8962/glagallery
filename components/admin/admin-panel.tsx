@@ -17,7 +17,6 @@ import { getFirebase } from "@/lib/firebase"
 import { useAuth } from "@/context/auth-context"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { Spinner } from "@/components/ui/spinner"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { isAdminEmail } from "@/lib/config"
@@ -34,7 +33,10 @@ import {
   Flag,
   Mail,
   RefreshCw,
+  Settings,
+  Loader2 as Spinner
 } from "lucide-react"
+import { PlatformSettings } from "./platform-settings"
 
 type Post = {
   id: string
@@ -322,6 +324,10 @@ export function AdminPanel() {
             <Users className="h-4 w-4" />
             <span className="hidden sm:inline">Users</span>
           </TabsTrigger>
+          <TabsTrigger value="settings" className="flex items-center gap-2">
+            <Settings className="h-4 w-4" />
+            <span className="hidden sm:inline">Settings</span>
+          </TabsTrigger>
         </TabsList>
 
         {/* Posts Tab */}
@@ -573,6 +579,11 @@ export function AdminPanel() {
               </table>
             </div>
           )}
+        </TabsContent>
+
+        {/* Settings Tab */}
+        <TabsContent value="settings" className="mt-4">
+          <PlatformSettings />
         </TabsContent>
       </Tabs>
     </div>
