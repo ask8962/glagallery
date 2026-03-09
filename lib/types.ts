@@ -279,6 +279,7 @@ export type NotificationType =
   | "follow"
   | "badge"
   | "welcome"
+  | "event_ticket"
 
 export type Notification = {
   id: string

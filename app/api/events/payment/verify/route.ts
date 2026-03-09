@@ -125,6 +125,41 @@ export async function POST(request: NextRequest) {
             ticketIds: result.ticketIds,
         })
 
+        // Fire-and-forget: send ticket confirmation email for paid event
+        try {
+            const eventData = (await eventRef.get()).data()
+            const startDate = eventData?.startDate?.toDate?.() || eventData?.startDate
+            const eventDateStr = startDate ? new Date(startDate).toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" }) : undefined
+            const eventTimeStr = startDate ? new Date(startDate).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }) : undefined
+
+            // Get transaction to find amount
+            const txDoc = await adminDb.collection("transactions").doc(razorpay_order_id).get()
+            const txData = txDoc.data()
+            const amountPaid = txData?.amount ? txData.amount / 100 : eventData?.price || 0 // amount is in paise
+
+            const { buildAppURL } = await import("@/lib/config")
+
+            const emailPayload = {
+                notificationId: `ticket-paid-${result.ticketIds[0]}`,
+                userId: decoded.uid,
+                userEmail: decoded.email || "",
+                type: "event_ticket",
+                title: `Payment Confirmed: ${eventData?.title || "Event"}`,
+                message: `Your payment of ₹${amountPaid} is confirmed and your ticket has been generated. Ticket Code: ${result.ticketIds[0] ? "Check your tickets page" : "N/A"}. Payment ID: ${razorpay_payment_id}`,
+                link: "/events/my-tickets",
+            }
+
+            fetch(buildAppURL("/api/notifications/send-email"), {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(emailPayload),
+            }).catch((err: any) => console.error("Failed to send paid ticket email:", err.message))
+
+        } catch (emailError: any) {
+            console.error("Error preparing paid ticket email:", emailError.message)
+            // Don't fail the registration if email fails
+        }
+
         return NextResponse.json({
             success: true,
             message: "Payment verified. Ticket generated!",

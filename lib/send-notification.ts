@@ -25,6 +25,7 @@ export type NotificationType =
     | "team_invite"
     | "badge"
     | "welcome"
+    | "event_ticket"
 
 interface SendNotificationOptions {
     userId: string

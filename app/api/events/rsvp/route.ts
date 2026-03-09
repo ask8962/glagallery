@@ -132,6 +132,52 @@ export async function POST(request: NextRequest) {
             return { ticketId: ticketRef.id, ticketCode }
         })
 
+        // Fire-and-forget: send ticket confirmation email
+        try {
+            const eventData = (await eventRef.get()).data()
+            const startDate = eventData?.startDate?.toDate?.() || eventData?.startDate
+            const eventDateStr = startDate ? new Date(startDate).toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" }) : undefined
+            const eventTimeStr = startDate ? new Date(startDate).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }) : undefined
+
+            const { generateTicketEmailHTML, generateTicketEmailText } = await import("@/lib/email-templates")
+            const { buildAppURL } = await import("@/lib/config")
+
+            const ticketEmailData = {
+                userName: decoded.name || "User",
+                eventTitle: eventData?.title || "Event",
+                ticketCode: result.ticketCode,
+                eventDate: eventDateStr,
+                eventTime: eventTimeStr,
+                eventVenue: eventData?.venue || eventData?.location || undefined,
+                ticketType: "free" as const,
+                ticketLink: buildAppURL("/events/my-tickets"),
+            }
+
+            const htmlBody = generateTicketEmailHTML(ticketEmailData)
+            const textBody = generateTicketEmailText(ticketEmailData)
+
+            // Use internal send-email API
+            const emailPayload = {
+                notificationId: `ticket-${result.ticketId}`,
+                userId: decoded.uid,
+                userEmail: decoded.email || "",
+                type: "event_ticket",
+                title: `Ticket Confirmed: ${eventData?.title || "Event"}`,
+                message: `Your ticket code is ${result.ticketCode}`,
+                link: "/events/my-tickets",
+            }
+
+            fetch(buildAppURL("/api/notifications/send-email"), {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(emailPayload),
+            }).catch((err: any) => console.error("Failed to send ticket email:", err.message))
+
+        } catch (emailError: any) {
+            console.error("Error preparing ticket email:", emailError.message)
+            // Don't fail the registration if email fails
+        }
+
         return NextResponse.json({
             success: true,
             ticketId: result.ticketId,
