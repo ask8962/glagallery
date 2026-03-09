@@ -111,10 +111,11 @@ export async function POST(request: NextRequest) {
     // Rate limit by IP address — using LIKE limit (100/hr) for higher email throughput
     const clientIp = getClientIP(request)
 
-    // Bypass rate limiting for localhost during development/testing
+    // Bypass rate limiting for localhost during development/testing, or for verified internal server-to-server calls
     const isLocalhost = request.nextUrl.origin.includes("localhost") || clientIp === "127.0.0.1" || clientIp === "::1"
+    const isInternalValid = request.headers.get("x-internal-secret") === process.env.JWT_SECRET
 
-    if (!isLocalhost) {
+    if (!isLocalhost && !isInternalValid) {
       const rateLimitCheck = checkServerRateLimit(clientIp, "LIKE", 60 * 60 * 1000)
 
       if (!rateLimitCheck.allowed) {

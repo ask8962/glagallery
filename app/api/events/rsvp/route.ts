@@ -155,7 +155,10 @@ export async function POST(request: NextRequest) {
 
             fetch(`${origin}/api/notifications/send-email`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-internal-secret": process.env.JWT_SECRET || ""
+                },
                 body: JSON.stringify(emailPayload),
             })
                 .then(res => console.log("📧 Ticket email API response:", res.status))
