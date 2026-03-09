@@ -135,9 +135,7 @@ export async function POST(request: NextRequest) {
             // Get transaction to find amount
             const txDoc = await adminDb.collection("transactions").doc(razorpay_order_id).get()
             const txData = txDoc.data()
-            const amountPaid = txData?.amount ? txData.amount / 100 : eventData?.price || 0 // amount is in paise
-
-            const { buildAppURL } = await import("@/lib/config")
+            const amountPaid = txData?.amount ? txData.amount / 100 : eventData?.price || 0
 
             const emailPayload = {
                 notificationId: `ticket-paid-${result.ticketIds[0]}`,
@@ -145,19 +143,24 @@ export async function POST(request: NextRequest) {
                 userEmail: decoded.email || "",
                 type: "event_ticket",
                 title: `Payment Confirmed: ${eventData?.title || "Event"}`,
-                message: `Your payment of ₹${amountPaid} is confirmed and your ticket has been generated. Ticket Code: ${result.ticketIds[0] ? "Check your tickets page" : "N/A"}. Payment ID: ${razorpay_payment_id}`,
+                message: `Your payment of ₹${amountPaid} is confirmed and your ticket for ${eventData?.title || "the event"} has been generated. Payment ID: ${razorpay_payment_id}. ${eventDateStr ? `Date: ${eventDateStr}.` : ""} ${eventTimeStr ? `Time: ${eventTimeStr}.` : ""} ${eventData?.venue || eventData?.location ? `Venue: ${eventData?.venue || eventData?.location}.` : ""}`,
                 link: "/events/my-tickets",
             }
 
-            fetch(buildAppURL("/api/notifications/send-email"), {
+            // Use the same origin as the current request (works in both dev & prod)
+            const origin = request.nextUrl.origin
+            console.log("📧 Sending paid ticket email to:", decoded.email, "via:", origin)
+
+            fetch(`${origin}/api/notifications/send-email`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(emailPayload),
-            }).catch((err: any) => console.error("Failed to send paid ticket email:", err.message))
+            })
+                .then(res => console.log("📧 Paid ticket email API response:", res.status))
+                .catch((err: any) => console.error("❌ Failed to send paid ticket email:", err.message))
 
         } catch (emailError: any) {
             console.error("Error preparing paid ticket email:", emailError.message)
-            // Don't fail the registration if email fails
         }
 
         return NextResponse.json({
