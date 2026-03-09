@@ -108,19 +108,25 @@ export async function POST(request: NextRequest) {
     // Note: This API is called internally by the app when creating notifications.
     // We validate the request has required fields and use IP for rate limiting.
 
-    // Rate limit by IP address
+    // Rate limit by IP address — using LIKE limit (100/hr) for higher email throughput
     const clientIp = getClientIP(request)
-    const rateLimitCheck = checkServerRateLimit(clientIp, "COMMENT", 60 * 60 * 1000) // Using COMMENT limit (50/hr)
 
-    if (!rateLimitCheck.allowed) {
-      return NextResponse.json(
-        {
-          error: rateLimitCheck.error,
-          remaining: rateLimitCheck.remaining,
-          resetAt: rateLimitCheck.resetAt,
-        },
-        { status: 429 },
-      )
+    // Bypass rate limiting for localhost during development/testing
+    const isLocalhost = request.nextUrl.origin.includes("localhost") || clientIp === "127.0.0.1" || clientIp === "::1"
+
+    if (!isLocalhost) {
+      const rateLimitCheck = checkServerRateLimit(clientIp, "LIKE", 60 * 60 * 1000)
+
+      if (!rateLimitCheck.allowed) {
+        return NextResponse.json(
+          {
+            error: rateLimitCheck.error,
+            remaining: rateLimitCheck.remaining,
+            resetAt: rateLimitCheck.resetAt,
+          },
+          { status: 429 },
+        )
+      }
     }
 
     const body: EmailRequest = await request.json()
