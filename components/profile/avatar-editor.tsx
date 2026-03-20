@@ -111,13 +111,18 @@ export function AvatarEditor({ currentAvatarUrl, userName = "User", onUpdate, ch
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {children || (
-                    <div className="relative group cursor-pointer">
+                    <div className="relative cursor-pointer group">
                         <Avatar className="h-24 w-24 border-4 border-background shadow-md">
                             <AvatarImage src={currentAvatarUrl || ""} alt={userName} />
                             <AvatarFallback className="text-2xl">{userName.charAt(0).toUpperCase()}</AvatarFallback>
                         </Avatar>
+                        {/* Hover Overlay */}
                         <div className="absolute inset-0 bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <Camera className="h-6 w-6 text-white" />
+                        </div>
+                        {/* Persistent Edit Badge */}
+                        <div className="absolute bottom-0 right-0 h-8 w-8 bg-accent rounded-full border-2 border-background flex items-center justify-center shadow-lg transform transition-transform group-hover:scale-110">
+                            <Camera className="h-4 w-4 text-accent-foreground" />
                         </div>
                     </div>
                 )}
