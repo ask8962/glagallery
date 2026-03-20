@@ -13,6 +13,7 @@ import { BadgesShowcase } from "@/components/gamification/badges-showcase"
 import { Flame, Instagram, Twitter, Linkedin, Github, Globe, ArrowLeft } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ProfileCustomization } from "@/components/profile/profile-customization"
+import { AvatarEditor } from "@/components/profile/avatar-editor"
 import { FacultyRegistrationForm } from "@/components/faculty/faculty-registration-form"
 import { PrivacySettings } from "@/components/profile/privacy-settings"
 import { ActivityFeed } from "@/components/profile/activity-feed"
@@ -138,10 +139,18 @@ export default function ProfilePage() {
           <div className="flex flex-col md:flex-row gap-6">
             {/* Avatar */}
             <div className="flex-shrink-0">
-              <Avatar className="h-24 w-24">
-                <AvatarImage src={currentProfile.photoURL || "/placeholder.svg"} alt={currentProfile.name} />
-                <AvatarFallback className="text-2xl">{currentProfile.name.charAt(0).toUpperCase()}</AvatarFallback>
-              </Avatar>
+              {isOwnProfile ? (
+                <AvatarEditor 
+                  currentAvatarUrl={currentProfile.photoURL} 
+                  userName={currentProfile.name} 
+                  onUpdate={handleProfileUpdate} 
+                />
+              ) : (
+                <Avatar className="h-24 w-24 border-4 border-background shadow-md">
+                  <AvatarImage src={currentProfile.photoURL || ""} alt={currentProfile.name} />
+                  <AvatarFallback className="text-2xl">{currentProfile.name.charAt(0).toUpperCase()}</AvatarFallback>
+                </Avatar>
+              )}
             </div>
 
             {/* Profile Info */}
