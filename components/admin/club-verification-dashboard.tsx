@@ -11,10 +11,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Check, X, Download, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import type { Club } from "@/lib/types"
+import { useOrganization } from "@/context/organization-context"
 
 export function ClubVerificationDashboard() {
     const { db } = getFirebase()
     const { user } = useAuth()
+    const { organization } = useOrganization()
     const [clubs, setClubs] = useState<Club[]>([])
     const [loading, setLoading] = useState(true)
 
@@ -28,8 +30,11 @@ export function ClubVerificationDashboard() {
         // Let's try fetching just pending ones for the main view to be efficient if possible.
         // Actually, asking for "verification.status" != "unverified" is hard in Firestore.
         // So let's just listen to "clubs" and filter. Assuming < 100 clubs locally.
+        if (!organization?.id) return;
+
         const q = query(
             collection(db, "clubs"),
+            where("organizationId", "==", organization.id),
             orderBy("updatedAt", "desc")
         )
 
@@ -49,7 +54,7 @@ export function ClubVerificationDashboard() {
         })
 
         return () => unsubscribe()
-    }, [db])
+    }, [db, organization?.id])
 
     async function handleAction(clubId: string, action: "approve" | "reject") {
         try {

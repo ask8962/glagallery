@@ -6,20 +6,22 @@ export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url)
         const category = searchParams.get("category")
+        const orgId = searchParams.get("orgId")
         const limit = parseInt(searchParams.get("limit") || "20", 10)
 
+        if (!orgId) {
+            return NextResponse.json({ error: "Organization ID is required" }, { status: 400 })
+        }
+
         let query = adminDb.collection("clubs")
+            .where("organizationId", "==", orgId)
             .where("status", "==", "active")
-            .orderBy("name", "asc")
-            .limit(limit)
 
         if (category && category !== "all") {
-            query = adminDb.collection("clubs")
-                .where("status", "==", "active")
-                .where("category", "==", category)
-                .orderBy("name", "asc")
-                .limit(limit)
+            query = query.where("category", "==", category)
         }
+
+        query = query.orderBy("name", "asc").limit(limit)
 
         const snapshot = await query.get()
 

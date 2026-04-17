@@ -4,10 +4,18 @@ import { verifyAdminAccess } from "@/lib/server-auth"
 import { Timestamp } from "firebase-admin/firestore"
 
 // GET - Fetch all active rewards
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
+        const url = new URL(request.url)
+        const organizationId = url.searchParams.get("organizationId")
+
+        if (!organizationId) {
+            return NextResponse.json({ error: "Organization ID is required" }, { status: 400 })
+        }
+
         const rewardsRef = adminDb.collection("rewards")
         const snapshot = await rewardsRef
+            .where("organizationId", "==", organizationId)
             .where("isActive", "==", true)
             .orderBy("pointsCost", "asc")
             .get()
@@ -36,9 +44,9 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json()
-        const { name, description, imageURL, category, pointsCost, stock } = body
+        const { name, description, imageURL, category, pointsCost, stock, organizationId } = body
 
-        if (!name || !description || !category || !pointsCost) {
+        if (!name || !description || !category || !pointsCost || !organizationId) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
         }
 
@@ -49,6 +57,7 @@ export async function POST(request: NextRequest) {
             category,
             pointsCost: Number(pointsCost),
             stock: stock !== null ? Number(stock) : null,
+            organizationId,
             isActive: true,
             createdAt: Timestamp.now()
         }

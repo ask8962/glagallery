@@ -33,6 +33,7 @@ import {
 import { toast } from "sonner"
 import { Calendar, Plus, Trash2, Loader2, Pencil } from "lucide-react"
 import type { AcademicEvent, AcademicEventType } from "@/lib/types"
+import { useOrganization } from "@/context/organization-context"
 
 const EVENT_TYPES: { value: AcademicEventType; label: string; color: string }[] = [
     { value: "exam", label: "Examination", color: "bg-red-100 text-red-700" },
@@ -50,6 +51,7 @@ const EVENT_TYPES: { value: AcademicEventType; label: string; color: string }[] 
 
 export function AcademicCalendarManager() {
     const { user } = useAuth()
+    const { organization } = useOrganization()
     const [events, setEvents] = useState<AcademicEvent[]>([])
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
@@ -72,8 +74,9 @@ export function AcademicCalendarManager() {
         if (!user) return
 
         try {
+            if (!organization?.id) return;
             const token = await user.getIdToken()
-            const res = await fetch("/api/academic-calendar?limit=100", {
+            const res = await fetch(`/api/academic-calendar?limit=100&organizationId=${organization.id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             })
 
@@ -105,7 +108,7 @@ export function AcademicCalendarManager() {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({ ...formData, organizationId: organization?.id }),
             })
 
             if (!res.ok) {

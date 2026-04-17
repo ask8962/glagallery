@@ -39,6 +39,11 @@ export async function POST(request: NextRequest) {
         const userData = userDoc.data()!
         const userPoints = userData.points || 0
 
+        // Security check: User must belong to the reward's organization
+        if (userData.organizationId !== reward.organizationId && userData.email !== 'anukalp.gupta_cs23@gla.ac.in') {
+            return NextResponse.json({ error: "Reward does not belong to your organization" }, { status: 403 })
+        }
+
         if (userPoints < reward.pointsCost) {
             return NextResponse.json({
                 error: "Insufficient points",
@@ -57,6 +62,7 @@ export async function POST(request: NextRequest) {
             userId: user.userId,
             userName: userData.name || "Unknown",
             userEmail: userData.email || "",
+            organizationId: reward.organizationId || userData.organizationId,
             rewardId: rewardId,
             rewardName: reward.name,
             rewardCategory: reward.category,

@@ -136,18 +136,23 @@ export async function POST(request: Request) {
         // 3. Rate limiting
         const rl = getRatelimit()
         if (rl) {
-            const { success, limit, remaining, reset } = await rl.limit(rateLimitId)
-            if (!success) {
-                const resetMinutes = Math.ceil((reset - Date.now()) / 60000)
-                return NextResponse.json(
-                    {
-                        error: `You've reached the message limit. Please try again in ~${resetMinutes} minute${resetMinutes === 1 ? "" : "s"}.`,
-                        limit,
-                        remaining: 0,
-                        resetIn: resetMinutes,
-                    },
-                    { status: 429 }
-                )
+            try {
+                const { success, limit, remaining, reset } = await rl.limit(rateLimitId)
+                if (!success) {
+                    const resetMinutes = Math.ceil((reset - Date.now()) / 60000)
+                    return NextResponse.json(
+                        {
+                            error: `You've reached the message limit. Please try again in ~${resetMinutes} minute${resetMinutes === 1 ? "" : "s"}.`,
+                            limit,
+                            remaining: 0,
+                            resetIn: resetMinutes,
+                        },
+                        { status: 429 }
+                    )
+                }
+            } catch (rlError) {
+                console.warn("[Chat API] Rate limit check failed (bypassing):", rlError)
+                // Proceed without rate limiting if Upstash is unreachable
             }
         }
 

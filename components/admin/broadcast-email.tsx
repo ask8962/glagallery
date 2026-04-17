@@ -23,8 +23,9 @@ import { Send, Loader2, Eye, CheckCircle, AlertCircle, User, Mail, Trophy, Star,
 import { toast } from "sonner"
 import { useAuth } from "@/context/auth-context"
 import { getFirebase } from "@/lib/firebase"
-import { collection, getDocs } from "firebase/firestore"
+import { collection, getDocs, query, where } from "firebase/firestore"
 import type { UserProfile } from "@/lib/types"
+import { useOrganization } from "@/context/organization-context"
 
 const PLACEHOLDERS = [
     { tag: "[Name]", label: "Name", icon: User, description: "User's display name" },
@@ -44,6 +45,7 @@ const SAMPLE_USER = {
 export function BroadcastEmail() {
     const { user } = useAuth()
     const { db } = getFirebase()
+    const { organization } = useOrganization()
     const [subject, setSubject] = useState("")
     const [body, setBody] = useState("")
     const [sending, setSending] = useState(false)
@@ -60,8 +62,13 @@ export function BroadcastEmail() {
     // Load users
     useEffect(() => {
         async function loadUsers() {
+            if (!organization?.id) return;
             try {
-                const usersSnap = await getDocs(collection(db, "users"))
+                const q = query(
+                    collection(db, "users"),
+                    where("organizationId", "==", organization.id)
+                )
+                const usersSnap = await getDocs(q)
                 const usersData: UserProfile[] = []
                 usersSnap.forEach((doc) => {
                     usersData.push({ uid: doc.id, ...doc.data() } as UserProfile)
@@ -76,7 +83,7 @@ export function BroadcastEmail() {
             }
         }
         loadUsers()
-    }, [db])
+    }, [db, organization?.id])
 
     // Filter users by search
     const filteredUsers = users.filter(u =>

@@ -128,10 +128,17 @@ export async function GET(req: NextRequest) {
 
         const { searchParams } = new URL(req.url)
         const status = searchParams.get("status") || "pending"
+        const organizationId = searchParams.get("organizationId")
 
-        const requestsSnap = await adminDb
+        let query = adminDb
             .collection("faculty_requests")
             .where("status", "==", status)
+
+        if (organizationId) {
+            query = query.where("organizationId", "==", organizationId)
+        }
+
+        const requestsSnap = await query
             .orderBy("submittedAt", "desc")
             .limit(50)
             .get()

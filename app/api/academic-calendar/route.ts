@@ -15,8 +15,14 @@ export async function GET(req: NextRequest) {
         const endDate = searchParams.get("endDate")
         const type = searchParams.get("type")
         const limit = parseInt(searchParams.get("limit") || "50")
+        const organizationId = searchParams.get("organizationId")
 
         let query = adminDb.collection("academic_calendar").orderBy("startDate", "asc")
+
+        // Filter by organizationId
+        if (organizationId) {
+            query = query.where("organizationId", "==", organizationId)
+        }
 
         // Filter by date range if provided
         if (startDate) {
@@ -76,12 +82,13 @@ export async function POST(req: NextRequest) {
             allDay = true,
             recurring,
             affectedDepartments,
-            color
+            color,
+            organizationId
         } = body
 
-        if (!title || !type || !startDate || !endDate) {
+        if (!title || !type || !startDate || !endDate || !organizationId) {
             return NextResponse.json(
-                { error: "Title, type, startDate, and endDate are required" },
+                { error: "Title, type, startDate, endDate, and organizationId are required" },
                 { status: 400 }
             )
         }
@@ -102,6 +109,7 @@ export async function POST(req: NextRequest) {
         const eventRef = adminDb.collection("academic_calendar").doc()
         await eventRef.set({
             id: eventRef.id,
+            organizationId,
             title,
             description: description || null,
             type,

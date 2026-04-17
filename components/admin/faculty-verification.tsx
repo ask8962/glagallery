@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useAuth } from "@/context/auth-context"
+import { useOrganization } from "@/context/organization-context"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -43,6 +44,7 @@ type FacultyRequest = {
 
 export function FacultyVerification() {
     const { user } = useAuth()
+    const { organization } = useOrganization()
     const [requests, setRequests] = useState<FacultyRequest[]>([])
     const [loading, setLoading] = useState(true)
     const [actionLoading, setActionLoading] = useState<string | null>(null)
@@ -55,11 +57,11 @@ export function FacultyVerification() {
     }, [user])
 
     const fetchRequests = async () => {
-        if (!user) return
+        if (!user || !organization?.id) return
 
         try {
             const token = await user.getIdToken()
-            const res = await fetch("/api/faculty/verify?status=pending", {
+            const res = await fetch(`/api/faculty/verify?status=pending&organizationId=${organization.id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             })
 

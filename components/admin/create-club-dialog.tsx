@@ -25,6 +25,7 @@ import { Plus } from "lucide-react"
 import { useAuth } from "@/context/auth-context"
 import { getFirebase } from "@/lib/firebase"
 import type { UserProfile } from "@/lib/types"
+import { useOrganization } from "@/context/organization-context"
 
 interface CreateClubDialogProps {
     user: UserProfile
@@ -32,6 +33,7 @@ interface CreateClubDialogProps {
 }
 
 export function CreateClubDialog({ user, students }: CreateClubDialogProps) {
+    const { organization } = useOrganization()
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
@@ -50,13 +52,15 @@ export function CreateClubDialog({ user, students }: CreateClubDialogProps) {
             const { auth } = getFirebase()
             const token = await auth.currentUser?.getIdToken()
 
+            if (!organization?.id) throw new Error("Organization is missing")
+
             const res = await fetch("/api/admin/clubs/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({ ...formData, organizationId: organization.id }),
             })
 
             if (!res.ok) throw new Error("Failed to create club")

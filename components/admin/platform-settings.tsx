@@ -9,11 +9,13 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "sonner"
 import { useAuth } from "@/context/auth-context"
+import { useOrganization } from "@/context/organization-context"
 import { Save, Image as ImageIcon, Loader2 as Spinner } from "lucide-react"
 
 export function PlatformSettings() {
     const { config } = useConfig()
     const { user } = useAuth()
+    const { organization } = useOrganization()
 
     const [name, setName] = useState(config.name)
     const [tagline, setTagline] = useState(config.tagline)
@@ -52,7 +54,8 @@ export function PlatformSettings() {
                     contactAddress,
                     contactPhone,
                     contactEmail,
-                    officialWebsiteUrl
+                    officialWebsiteUrl,
+                    organizationId: organization?.id
                 })
             })
 

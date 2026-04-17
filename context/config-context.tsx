@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { doc, onSnapshot } from "firebase/firestore"
 import { db } from "@/lib/firebase"
 import { PlatformConfig } from "@/lib/types"
+import { useOrganization } from "./organization-context"
 
 const defaultConfig: PlatformConfig = {
     name: "GLA Gallery",
@@ -29,11 +30,16 @@ const ConfigContext = createContext<ConfigContextType>({
 export function ConfigProvider({ children }: { children: React.ReactNode }) {
     const [config, setConfig] = useState<PlatformConfig>(defaultConfig)
     const [isLoading, setIsLoading] = useState(true)
+    const { organization } = useOrganization()
 
     useEffect(() => {
         // Listen for real-time updates to the platform settings
+        const docRef = organization?.id
+            ? doc(db, "organizations", organization.id, "settings", "platform")
+            : doc(db, "settings", "platform")
+
         const unsubscribe = onSnapshot(
-            doc(db, "settings", "platform"),
+            docRef,
             (docSnap) => {
                 if (docSnap.exists()) {
                     setConfig({ ...defaultConfig, ...docSnap.data() } as PlatformConfig)
@@ -47,7 +53,7 @@ export function ConfigProvider({ children }: { children: React.ReactNode }) {
         )
 
         return () => unsubscribe()
-    }, [])
+    }, [organization?.id])
 
     return (
         <ConfigContext.Provider value={{ config, isLoading }}>

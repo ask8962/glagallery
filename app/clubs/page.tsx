@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/context/auth-context"
+import { useOrganization } from "@/context/organization-context"
 import { Loader2, Search, Users, Plus, Building2 } from "lucide-react"
 import type { Club, ClubCategory } from "@/lib/types"
 import { VerifiedBadge } from "@/components/clubs/verified-badge"
@@ -20,6 +21,7 @@ const CATEGORIES: (ClubCategory | "all")[] = ["all", "Technical", "Cultural", "S
 
 export default function ClubsPage() {
     const { user } = useAuth()
+    const { organization } = useOrganization()
     const [clubs, setClubs] = useState<Club[]>([])
     const [loading, setLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState("")
@@ -27,15 +29,19 @@ export default function ClubsPage() {
 
     useEffect(() => {
         fetchClubs()
-    }, [selectedCategory])
+    }, [selectedCategory, organization])
 
     const fetchClubs = async () => {
+        if (!organization?.id) return
+        
         setLoading(true)
         try {
             const params = new URLSearchParams()
             if (selectedCategory !== "all") {
                 params.set("category", selectedCategory)
             }
+            params.set("orgId", organization.id)
+            
             const res = await fetch(`/api/clubs?${params.toString()}`)
             const data = await res.json()
             setClubs(data.clubs || [])

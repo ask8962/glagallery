@@ -30,14 +30,18 @@ export async function POST(req: Request) {
         }
 
         const body = await req.json()
-        const { name, tagline, description, logoUrl, contactAddress, contactPhone, contactEmail, officialWebsiteUrl } = body
+        const { name, tagline, description, logoUrl, contactAddress, contactPhone, contactEmail, officialWebsiteUrl, organizationId } = body
 
         if (!name || typeof name !== "string") {
             return NextResponse.json({ error: "Name is required" }, { status: 400 })
         }
 
         // Update settings/platform document
-        await adminDb.collection("settings").doc("platform").set({
+        const docRef = organizationId
+            ? adminDb.collection("organizations").doc(organizationId).collection("settings").doc("platform")
+            : adminDb.collection("settings").doc("platform")
+
+        await docRef.set({
             name,
             tagline: tagline || "",
             description: description || "",

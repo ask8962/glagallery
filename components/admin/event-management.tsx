@@ -2,19 +2,29 @@
 
 import { useEffect, useState } from "react"
 import { getFirebase } from "@/lib/firebase"
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore"
+import { collection, onSnapshot, query, orderBy, where } from "firebase/firestore"
 import type { Event } from "@/lib/types"
 import { NoShowReport } from "@/components/admin/noshow-report"
 import { EventAttendeesList } from "@/components/admin/event-attendees-list"
+import { useOrganization } from "@/context/organization-context"
 
 export function EventManagement() {
     const { db } = getFirebase()
+    const { organization } = useOrganization()
     const [events, setEvents] = useState<Event[]>([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        if (!organization?.id) return;
+
+        const q = query(
+            collection(db, "events"), 
+            where("organizationId", "==", organization.id),
+            orderBy("endDate", "desc")
+        );
+
         const unsub = onSnapshot(
-            query(collection(db, "events"), orderBy("endDate", "desc")),
+            q,
             (snap) => {
                 const list: Event[] = []
                 snap.forEach((d) => list.push({ id: d.id, ...(d.data() as any) }))

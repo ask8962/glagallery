@@ -16,15 +16,10 @@
 ## ✨ Features
 
 ### 📸 Gallery & Social
-- **Photo & Video Uploads** — Share campus memories with automatic compression
-- **Like & Comment System** — Engage with posts, nested replies, and reactions
 - **Stories** — Share ephemeral photo/video stories (24-hour auto-expiry)
 - **User Profiles** — Customizable profiles with social links, badges, and activity
-- **Tagging & Hashtags** — Organize content with tags and trending hashtags
 - **Bookmarks** — Save posts for later viewing
 - **Follow System** — Follow friends and get updates in your feed
-- **Social Share** — One-click share to WhatsApp, Twitter, Facebook, LinkedIn
-- **Image Lightbox** — Full-screen image viewing with navigation
 
 ### 📅 Campus Event Hub
 - **Event Discovery** — Browse upcoming workshops, hackathons, and cultural fests

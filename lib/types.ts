@@ -1,3 +1,21 @@
+// Multi-Tenant Organization
+export type Organization = {
+  id: string
+  name: string
+  domain: string
+  branding: {
+    logoUrl: string
+    primaryColor: string
+  }
+  features: string[]
+  createdAt: any
+}
+
+// Base Entity for tenant isolation
+export interface TenantEntity {
+  organizationId: string
+}
+
 // Global Platform Configuration
 export type PlatformConfig = {
   name: string
@@ -96,7 +114,7 @@ export type NotificationPreferences = {
   mentionNotifications: boolean
 }
 
-export type UserProfile = {
+export interface UserProfile extends TenantEntity {
   uid: string
   name: string
   email: string
@@ -143,7 +161,7 @@ export type UserProfile = {
 // Hackathon Management System Types
 export type HackathonStatus = "upcoming" | "registration" | "active" | "judging" | "completed"
 
-export type Hackathon = {
+export interface Hackathon extends TenantEntity {
   id: string
   title: string
   description: string
@@ -357,7 +375,7 @@ export type EventStatus = "draft" | "published" | "cancelled" | "completed"
 
 export type EventVenueType = "on-campus" | "online" | "hybrid"
 
-export type Event = {
+export interface Event extends TenantEntity {
   id: string
   title: string
   slug: string
@@ -467,7 +485,7 @@ export type ClubSocialLinks = {
   discord?: string
 }
 
-export type Club = {
+export interface Club extends TenantEntity {
   id: string
   name: string
   description: string

@@ -9,11 +9,13 @@ import { Button } from "@/components/ui/button"
 import { Plus, LayoutGrid, Calendar, Ticket } from "lucide-react"
 import Link from "next/link"
 import { useAuth } from "@/context/auth-context"
+import { useOrganization } from "@/context/organization-context"
 
 type ViewMode = "grid" | "calendar"
 
 export default function EventsPage() {
     const { user } = useAuth()
+    const { organization } = useOrganization()
     const [events, setEvents] = useState<Event[]>([])
     const [loading, setLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState("")
@@ -22,13 +24,16 @@ export default function EventsPage() {
 
     useEffect(() => {
         fetchEvents()
-    }, [selectedCategory])
+    }, [selectedCategory, organization])
 
     const fetchEvents = async () => {
+        if (!organization?.id) return; // Wait until organization context is loaded
+        
         setLoading(true)
         try {
             const params = new URLSearchParams()
             if (selectedCategory !== "all") params.append("category", selectedCategory)
+            params.append("orgId", organization.id)
 
             const res = await fetch(`/api/events?${params.toString()}`)
             const data = await res.json()

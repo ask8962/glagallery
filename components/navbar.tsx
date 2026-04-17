@@ -64,6 +64,7 @@ export function Navbar() {
         { href: "/clubs", label: "Clubs", icon: null },
         { href: "/events", label: "Events", icon: <Calendar className="h-4 w-4 mr-2" /> },
         { href: "/hackathons", label: "Hackathons", icon: <Trophy className="h-4 w-4 mr-2" /> },
+        { href: "/calendar", label: "Academic Calendar", icon: <Calendar className="h-4 w-4 mr-2" /> },
       ]
     }
   ]

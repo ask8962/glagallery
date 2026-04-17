@@ -4,505 +4,179 @@ service cloud.firestore {
   match /databases/{database}/documents {
     
     // ============================================
-    // HELPER FUNCTIONS (Optimized - Reduced DB reads)
+    // MULTI-TENANT HELPER FUNCTIONS
     // ============================================
     
-    // Check if user is authenticated
     function isAuthenticated() {
       return request.auth != null;
     }
     
-    // Check if user has GLA email (no DB read)
-    function hasGLAEmail() {
+    // Checks if the user belongs to the requested organization via JWT Custom Claims
+    function isSameOrg(orgId) {
       return isAuthenticated() && 
-             request.auth.token.email != null &&
-             request.auth.token.email.matches('.*@gla\\.ac\\.in$');
+             (request.auth.token.orgId == orgId || 
+              // Fallback for transition period: rely on email matching a super admin or future logic
+              request.auth.token.email == 'anukalp.gupta_cs23@gla.ac.in'); 
+    }
+
+    // Is the user an admin in this specific organization?
+    function isOrgAdmin(orgId) {
+      return isSameOrg(orgId) && request.auth.token.role == 'admin';
     }
     
-    // Check if user is super admin by email (no DB read - fastest)
+    // Is the user a global super admin across all orgs?
     function isSuperAdmin() {
-      return hasGLAEmail() && 
-             request.auth.token.email == 'anukalp.gupta_cs23@gla.ac.in';
+      return isAuthenticated() && request.auth.token.email == 'anukalp.gupta_cs23@gla.ac.in';
     }
     
-    // Check if user is the owner of a resource
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
     }
     
-    // Check if user is admin by role (requires DB read - use sparingly)
-    // Cached helper to avoid multiple reads
-    function isAdminByRole() {
-      return isAuthenticated() && 
-             hasGLAEmail() && 
-             (isSuperAdmin() || 
-              (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-               get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'));
-    }
-    
     // ============================================
-    // COLLECTION GROUP RULES (for cross-collection queries)
+    // ORGANIZATIONS COLLECTION (New)
     // ============================================
-    
-    // Allow admins to query all comments across all posts
-    match /{path=**}/comments/{commentId} {
-      allow read: if hasGLAEmail() && (isSuperAdmin() || isAdminByRole());
-    }
-    
-    // ============================================
-    // PLATFORM SETTINGS (Global Configuration)
-    // ============================================
-    match /settings/{document=**} {
-      // Anyone can read the platform settings
-      allow read: if true;
+    match /organizations/{orgId} {
+      // Anyone in the org can read their org details
+      allow read: if isSameOrg(orgId) || isSuperAdmin();
       
-      // Only admins can update the platform settings
-      allow write: if isSuperAdmin() || isAdminByRole();
+      // Only super admin can provision organizations
+      allow write: if isSuperAdmin();
     }
-    
+
     // ============================================
     // USERS COLLECTION
     // ============================================
     match /users/{userId} {
-      // GLA users can read profiles
-      allow read: if hasGLAEmail();
+      // Users can read profiles in their own organization
+      allow read: if isSameOrg(resource.data.organizationId) || isSuperAdmin();
       
-      // Users can create their own profile with valid data
-      allow create: if hasGLAEmail() && 
+      // Creating Profile ensures they set the correct orgId
+      allow create: if isAuthenticated() && 
                        isOwner(userId) &&
                        request.resource.data.uid == userId &&
-                       request.resource.data.email == request.auth.token.email &&
-                       request.resource.data.role in ['student', 'admin'];
+                       request.resource.data.email == request.auth.token.email;
       
-      // Users can update own profile (no role change) OR admins can update any
-      // Special case: Allow updating followers/following arrays for follow system
-      // Special case: Allow updating fcmTokens for push notifications
-      allow update: if hasGLAEmail() && 
-                       (
-                         // Owner can update their profile (role must stay same)
-                         (isOwner(userId) && 
-                          request.resource.data.role == resource.data.role) ||
-                         // Allow any authenticated user to update ONLY followers array (for follow/unfollow)
-                         (isAuthenticated() && 
-                          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['followers'])) ||
-                         // Allow users to update their own fcmTokens array
-                         (isOwner(userId) && 
-                          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fcmTokens'])) ||
-                         // Super admin can update anything
-                         (isSuperAdmin()) ||
-                         // Admin can update (except super admin)
-                         (isAdminByRole() && 
-                          resource.data.email != 'anukalp.gupta_cs23@gla.ac.in')
-                       );
-      
-      // Only admins can delete (except super admin)
-      allow delete: if isAdminByRole() && 
-                       resource.data.email != 'anukalp.gupta_cs23@gla.ac.in';
-    }
-    
-
-    
-
-    
-
-    
-
-    
-    // ============================================
-    // HACKATHONS
-    // ============================================
-    match /hackathons/{hackathonId} {
-      // All GLA users can read hackathons
-      allow read: if hasGLAEmail();
-      
-      // Only admins can create hackathons
-      allow create: if (isSuperAdmin() || isAdminByRole()) &&
-                       request.resource.data.title is string &&
-                       request.resource.data.title.size() > 0 &&
-                       request.resource.data.status in ['upcoming', 'registration', 'active', 'judging', 'completed'];
-      
-      // Organizer or admin can update
-      allow update: if hasGLAEmail() && 
-                       (isOwner(resource.data.organizerUid) || isSuperAdmin() || isAdminByRole());
-      
-      // Organizer or admin can delete
-      allow delete: if hasGLAEmail() && 
-                       (isOwner(resource.data.organizerUid) || isSuperAdmin() || isAdminByRole());
-      
-      // Teams subcollection
-      match /teams/{teamId} {
-        allow read: if hasGLAEmail();
-        
-        // GLA users can create teams (register)
-        allow create: if hasGLAEmail() &&
-                         request.resource.data.leaderUid == request.auth.uid &&
-                         request.resource.data.name is string &&
-                         request.resource.data.status == "registered";
-        
-        // Team leader or admin can update
-        allow update: if hasGLAEmail() && 
-                         (isOwner(resource.data.leaderUid) || isSuperAdmin() || isAdminByRole());
-        
-        // Team leader or admin can delete
-        allow delete: if hasGLAEmail() && 
-                         (isOwner(resource.data.leaderUid) || isSuperAdmin() || isAdminByRole());
-      }
-      
-      // Submissions subcollection
-      match /submissions/{submissionId} {
-        allow read: if hasGLAEmail();
-        
-        // Team members can create submissions
-        allow create: if hasGLAEmail() &&
-                         request.resource.data.projectName is string &&
-                         request.resource.data.projectName.size() > 0;
-        
-        // Only admins can update/delete submissions
-        allow update, delete: if isSuperAdmin() || isAdminByRole();
-      }
-      
-      // Judging subcollection
-      match /judging/{judgingId} {
-        // Admins and judges can read
-        allow read: if hasGLAEmail() && 
-                       (isSuperAdmin() || isAdminByRole());
-        
-        // Admins can create/update judging
-        allow create, update: if isSuperAdmin() || isAdminByRole();
-        
-        // Only super admin can delete judging
-        allow delete: if isSuperAdmin();
-      }
-      
-      // Team messages subcollection
-      match /teams/{teamId}/messages/{messageId} {
-        allow read: if hasGLAEmail();
-        
-        allow create: if hasGLAEmail() &&
-                         request.resource.data.uid == request.auth.uid &&
-                         request.resource.data.text is string &&
-                         request.resource.data.text.size() > 0 &&
-                         request.resource.data.text.size() <= 2000;
-        
-        allow delete: if hasGLAEmail() && 
-                        (isOwner(resource.data.uid) || isSuperAdmin() || isAdminByRole());
-      }
+      // Users can update own profile, Admins can update users in their org
+      allow update: if isSuperAdmin() ||
+                       (isSameOrg(resource.data.organizationId) && 
+                         (isOwner(userId) || isOrgAdmin(resource.data.organizationId)));
+                         
+      allow delete: if isSuperAdmin() || isOrgAdmin(resource.data.organizationId);
     }
     
     // ============================================
-    // NOTIFICATIONS
-    // ============================================
-    match /notifications/{notificationId} {
-      // Users can read their own notifications
-      allow read: if hasGLAEmail() && isOwner(resource.data.userId);
-      
-      // System/users can create notifications
-      allow create: if hasGLAEmail() &&
-                       request.resource.data.userId is string &&
-                       request.resource.data.type is string &&
-                       request.resource.data.read == false;
-      
-      // Users can update own notifications (mark as read only)
-      allow update: if hasGLAEmail() && 
-                       isOwner(resource.data.userId) &&
-                       request.resource.data.userId == resource.data.userId &&
-                       request.resource.data.type == resource.data.type;
-      
-      // Users can delete own notifications
-      allow delete: if hasGLAEmail() && isOwner(resource.data.userId);
-    }
-    
-    // ============================================
-    // EMAIL LOGS (Admin only)
-    // ============================================
-    match /email_logs/{logId} {
-      allow read: if isSuperAdmin() || isAdminByRole();
-      allow create: if hasGLAEmail();
-      allow update, delete: if isSuperAdmin() || isAdminByRole();
-    }
-    
-    // ============================================
-    // PRESENCE (Online status)
-    // ============================================
-    match /presence/{userId} {
-      allow read: if hasGLAEmail();
-      
-      allow create, update: if hasGLAEmail() &&
-                               request.auth.uid == userId &&
-                               request.resource.data.status in ['online', 'offline', 'away'];
-      
-      allow delete: if hasGLAEmail() && request.auth.uid == userId;
-    }
-    
-    // ============================================
-    // REPORTS
-    // ============================================
-    match /reports/{reportId} {
-      // Users can read own reports, admins can read all
-      allow read: if hasGLAEmail() && 
-                     (isOwner(resource.data.reportedBy) || isSuperAdmin() || isAdminByRole());
-      
-      // GLA users can create reports
-      allow create: if hasGLAEmail() &&
-                       request.resource.data.reportedBy == request.auth.uid &&
-                       request.resource.data.contentType in ['user'] &&
-                       request.resource.data.reason is string &&
-                       request.resource.data.reason.size() > 0 &&
-                       request.resource.data.status == 'pending';
-      
-      // Only admins can update/delete reports
-      allow update, delete: if isSuperAdmin() || isAdminByRole();
-    }
-    
-    // ============================================
-    // OTP CODES (2FA)
-    // ============================================
-    match /otp_codes/{codeId} {
-      // Server-side API creates OTP codes (no auth context on server)
-      // Safe because: 1) OTPs are hashed, 2) API validates requests, 3) 10min expiry
-      allow create: if true;
-      
-      // Users can read/delete their own OTP codes
-      allow read, delete: if hasGLAEmail() && isOwner(resource.data.userId);
-      
-      // No updates allowed (OTPs are immutable)
-      allow update: if false;
-    }
-    
-    // ============================================
-    // ACTIVITIES (User Activity Feed)
-    // ============================================
-    match /activities/{activityId} {
-      // Users can read their own activities
-      allow read: if hasGLAEmail() && isOwner(resource.data.userId);
-      
-      // System can create activities
-      allow create: if hasGLAEmail();
-      
-      // Only admins can delete activities
-      allow delete: if isSuperAdmin() || isAdminByRole();
-    }
-    
-    // ============================================
-    // EVENTS COLLECTION (Campus Event Hub)
+    // EVENTS COLLECTION
     // ============================================
     match /events/{eventId} {
-      // Anyone with GLA email can read published events
-      allow read: if hasGLAEmail() && resource.data.status == 'published';
+      // Users can read published events in their org
+      allow read: if isSameOrg(resource.data.organizationId) || isSuperAdmin();
       
-      // Admins can read all events (including drafts)
-      allow read: if isSuperAdmin() || isAdminByRole();
-      
-      // Only admins can create/update/delete events
-      allow create, update, delete: if isSuperAdmin() || isAdminByRole();
-    }
-    
-    // ============================================
-    // TICKETS COLLECTION (Event Tickets)
-    // ============================================
-    match /tickets/{ticketId} {
-      // Users can read their own tickets
-      allow read: if hasGLAEmail() && isOwner(resource.data.userId);
-      
-      // Admins can read all tickets (for verification)
-      allow read: if isSuperAdmin() || isAdminByRole();
-      
-      // System API creates tickets (via server-side Admin SDK)
-      // Client-side ticket creation is disabled for security
-      allow create: if false;
-      
-      // Only admins can update tickets (mark as used)
-      allow update: if isSuperAdmin() || isAdminByRole();
-      
-      // Only admins can delete tickets
-      allow delete: if isSuperAdmin() || isAdminByRole();
+      // Admins in the org can create/update events for their org
+      allow create: if isSuperAdmin() || isOrgAdmin(request.resource.data.organizationId);
+      allow update, delete: if isSuperAdmin() || isOrgAdmin(resource.data.organizationId);
     }
     
     // ============================================
     // CLUBS COLLECTION
     // ============================================
     match /clubs/{clubId} {
-      // All GLA users can read club profiles
-      allow read: if hasGLAEmail();
+      allow read: if isSameOrg(resource.data.organizationId) || isSuperAdmin();
       
-      // Only admins can create clubs (via approval process)
-      allow create: if isSuperAdmin() || isAdminByRole();
+      allow create: if isSuperAdmin() || isOrgAdmin(request.resource.data.organizationId);
       
-      // Club admins (president or admins array) can update their club
-      allow update: if hasGLAEmail() && 
-                       (isSuperAdmin() || 
-                        isAdminByRole() ||
-                        isOwner(resource.data.presidentUid) ||
-                        request.auth.uid in resource.data.admins);
-      
-      // Only super admin can delete clubs
+      allow update: if isSuperAdmin() || 
+                       isOrgAdmin(resource.data.organizationId) ||
+                       (isSameOrg(resource.data.organizationId) && 
+                        (isOwner(resource.data.presidentUid) || request.auth.uid in resource.data.admins));
+                        
       allow delete: if isSuperAdmin();
     }
     
     // ============================================
-    // CLUB REQUESTS COLLECTION
+    // HACKATHONS
     // ============================================
-    match /club_requests/{requestId} {
-      // Admins can read all requests, users can read their own
-      allow read: if hasGLAEmail() && 
-                     (isSuperAdmin() || 
-                      isAdminByRole() || 
-                      isOwner(resource.data.requesterUid));
+    match /hackathons/{hackathonId} {
+      allow read: if isSameOrg(resource.data.organizationId) || isSuperAdmin();
       
-      // GLA users can create requests (one per user enforced via app logic)
-      allow create: if hasGLAEmail() && 
-                       request.resource.data.requesterUid == request.auth.uid &&
-                       request.resource.data.status == 'pending';
+      allow create: if isSuperAdmin() || isOrgAdmin(request.resource.data.organizationId);
+      allow update, delete: if isSuperAdmin() || 
+                               isOrgAdmin(resource.data.organizationId) ||
+                               (isSameOrg(resource.data.organizationId) && isOwner(resource.data.organizerUid));
+                               
+      match /teams/{teamId} {
+        allow read: if isSuperAdmin() || isAuthenticated(); // Simplified for nested
+        allow create: if isAuthenticated() && request.resource.data.leaderUid == request.auth.uid;
+        allow update, delete: if isSuperAdmin() || isOwner(resource.data.leaderUid);
+      }
       
-      // Only admins can update requests (approve/reject)
-      allow update: if isSuperAdmin() || isAdminByRole();
+      match /submissions/{submissionId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        // Admins can update/delete
+        allow update, delete: if isSuperAdmin(); // Strict fallback
+      }
+    }
+    
+    // ============================================
+    // TICKETS COLLECTION
+    // ============================================
+    match /tickets/{ticketId} {
+      allow read: if isSuperAdmin() || 
+                     isOrgAdmin(resource.data.organizationId) ||
+                     (isSameOrg(resource.data.organizationId) && isOwner(resource.data.userId));
       
-      // Only super admin can delete requests
+      allow create: if false; // Server-side APIs only
+      allow update: if isSuperAdmin() || isOrgAdmin(resource.data.organizationId);
       allow delete: if isSuperAdmin();
     }
     
     // ============================================
-    // REWARDS COLLECTION (Reward Catalog)
+    // SECURE SERVER-ONLY COLLECTIONS (Rewards, Transactions)
     // ============================================
     match /rewards/{rewardId} {
-      // All GLA users can read active rewards
-      allow read: if hasGLAEmail();
-      
-      // Only admins can create rewards
-      allow create: if (isSuperAdmin() || isAdminByRole()) &&
-                       request.resource.data.name is string &&
-                       request.resource.data.pointsCost is number &&
-                       request.resource.data.pointsCost > 0;
-      
-      // Only admins can update rewards
-      allow update: if isSuperAdmin() || isAdminByRole();
-      
-      // Only admins can delete rewards
-      allow delete: if isSuperAdmin() || isAdminByRole();
+      allow read: if isSameOrg(resource.data.organizationId) || isSuperAdmin();
+      allow create, update, delete: if isSuperAdmin() || isOrgAdmin(resource.data.organizationId);
     }
-    
-    // ============================================
-    // REDEMPTIONS COLLECTION (User Redemptions)
-    // ============================================
     match /redemptions/{redemptionId} {
-      // Users can read their own redemptions, admins can read all
-      allow read: if hasGLAEmail() && 
-                     (isOwner(resource.data.userId) || 
-                      isSuperAdmin() || 
-                      isAdminByRole());
-      
-      // Client-side creation disabled (use server-side Admin SDK)
-      // Prevents point manipulation attacks
-      allow create: if false;
-      
-      // Only admins can update redemption status
-      allow update: if isSuperAdmin() || isAdminByRole();
-      
-      // Redemptions are immutable for audit trail
-      allow delete: if false;
+      allow read: if isSuperAdmin() || isOrgAdmin(resource.data.organizationId) || isOwner(resource.data.userId);
+      allow write: if false; // Admin SDK only
     }
-    
-    // ============================================
-    // POINT TRANSACTIONS COLLECTION (Audit Log)
-    // ============================================
-    match /point_transactions/{transactionId} {
-      // Users can read their own transaction history
-      allow read: if hasGLAEmail() && isOwner(resource.data.userId);
-      
-      // Admins can read all transactions for auditing
-      allow read: if isSuperAdmin() || isAdminByRole();
-      
-      // Client-side creation disabled (use server-side Admin SDK)
-      // Prevents point manipulation attacks
-      allow create: if false;
-      
-      // Transactions are immutable for audit trail
-      allow update: if false;
-      allow delete: if false;
+    match /point_transactions/{txId} {
+      allow read: if isSuperAdmin() || isOrgAdmin(resource.data.organizationId) || isOwner(resource.data.userId);
+      allow write: if false; // Admin SDK only
     }
-    
-    // ============================================
-    // TRANSACTIONS COLLECTION (Razorpay Payments)
-    // ============================================
-    match /transactions/{transactionId} {
-      // Users can read their own transactions
-      allow read: if hasGLAEmail() && isOwner(resource.data.userId);
-      
-      // Admins can read all transactions
-      allow read: if isSuperAdmin() || isAdminByRole();
-      
-      // All writes via Admin SDK only (server-side payment processing)
-      allow create, update, delete: if false;
+    match /transactions/{txId} {
+      allow read: if isSuperAdmin() || isOwner(resource.data.userId);
+      allow write: if false; // Admin SDK only
     }
-    
-    // ============================================
-    // SECURITY LOGS COLLECTION (Admin Only)
-    // ============================================
-    match /security_logs/{logId} {
-      // Only admins can read security logs
-      allow read: if isSuperAdmin() || isAdminByRole();
-      
-      // Server-side Admin SDK creates logs (client blocked)
-      allow create: if false;
-      
-      // Security logs are immutable
-      allow update: if false;
-      
-      // Only super admin can delete (for GDPR compliance requests)
-      allow delete: if isSuperAdmin();
-    }
-    
 
-    
     // ============================================
-    // FACULTY REQUESTS COLLECTION
+    // SYSTEM COLLECTIONS
     // ============================================
-    match /faculty_requests/{requestId} {
-      // Users can read their own requests, admins can read all
-      allow read: if hasGLAEmail() && 
-                     (isOwner(resource.data.uid) || isSuperAdmin() || isAdminByRole());
-      
-      // GLA users can create their own request
-      allow create: if hasGLAEmail() && 
-                       request.resource.data.uid == request.auth.uid &&
-                       request.resource.data.status == 'pending';
-      
-      // Only admins can update/delete
-      allow update, delete: if hasGLAEmail() && (isSuperAdmin() || isAdminByRole());
+    match /error_logs/{logId} {
+      allow create: if true;
+      allow read, update, delete: if isSuperAdmin();
     }
     
-    // ============================================
-    // ACADEMIC CALENDAR COLLECTION
-    // ============================================
-    match /academic_calendar/{eventId} {
-      // All GLA users can read calendar
-      allow read: if hasGLAEmail();
-      
-      // Only admins can create/update/delete
-      allow create, update, delete: if hasGLAEmail() && (isSuperAdmin() || isAdminByRole());
+    match /email_logs/{logId} {
+      allow create: if true;
+      allow read, update, delete: if isSuperAdmin();
     }
     
-    // ============================================
-    // CAMPAIGN CLAIMS (Reward Campaign — Server-side only)
-    // ============================================
-    match /campaign_claims/{claimId} {
-      // Users can read their own claim, admins can read all
-      allow read: if hasGLAEmail() && 
-                     (isOwner(claimId) || isSuperAdmin() || isAdminByRole());
-      
-      // ALL writes via Admin SDK only — client writes completely blocked
-      allow create, update, delete: if false;
+    match /presence/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
     }
     
-    // ============================================
-    // REWARD AUDIT LOGS (Fraud Detection — Server-side only)
-    // ============================================
-    match /reward_audit_logs/{logId} {
-      // Only admins can read audit logs
-      allow read: if isSuperAdmin() || isAdminByRole();
-      
-      // ALL writes via Admin SDK only — client writes completely blocked
-      allow create, update, delete: if false;
+    match /notifications/{notificationId} {
+      allow read, update, delete: if isOwner(resource.data.userId);
+      allow create: if isAuthenticated();
+    }
+
+    // Default deny for anything else
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

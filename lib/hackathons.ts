@@ -21,17 +21,17 @@ import type { Hackathon, Team, TeamMember, Submission, HackathonJudging, JudgeSc
 import { validateHackathon, validateTeamName, validateProjectSubmission, sanitizeText } from "./validation"
 
 // Get all hackathons
-export async function getAllHackathons(status?: Hackathon["status"]) {
+export async function getAllHackathons(status?: Hackathon["status"], organizationId?: string) {
   const { db } = getFirebase()
   const hackathonsRef = collection(db, "hackathons")
 
   try {
-    let q
-    if (status) {
-      q = query(hackathonsRef, where("status", "==", status), orderBy("startDate", "desc"))
-    } else {
-      q = query(hackathonsRef, orderBy("startDate", "desc"))
-    }
+    const constraints: any[] = [];
+    if (status) constraints.push(where("status", "==", status));
+    if (organizationId) constraints.push(where("organizationId", "==", organizationId));
+    constraints.push(orderBy("startDate", "desc"));
+    
+    const q = query(hackathonsRef, ...constraints);
 
     const snapshot = await getDocs(q)
     const hackathons: Hackathon[] = []
@@ -50,7 +50,10 @@ export async function getAllHackathons(status?: Hackathon["status"]) {
     if (error.code === "failed-precondition" || error.message?.includes("index")) {
       console.warn("Index missing, fetching without ordering:", error)
       try {
-        const snapshot = await getDocs(query(hackathonsRef))
+        const fallbackConstraints: any[] = [];
+        if (status) fallbackConstraints.push(where("status", "==", status));
+        if (organizationId) fallbackConstraints.push(where("organizationId", "==", organizationId));
+        const snapshot = await getDocs(query(hackathonsRef, ...fallbackConstraints))
         const hackathons: Hackathon[] = []
         snapshot.forEach((doc) => {
           hackathons.push({ id: doc.id, ...(doc.data() as any) })

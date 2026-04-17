@@ -10,32 +10,38 @@ import { Users, Calendar, Trophy, QrCode } from "lucide-react"
 import Link from "next/link"
 import { AdminStatsSkeleton } from "@/components/skeletons/admin-skeleton"
 import type { Event, Hackathon, UserProfile } from "@/lib/types"
+import { useOrganization } from "@/context/organization-context"
+import { where } from "firebase/firestore"
 
 export function AdminStats() {
     const { db } = getFirebase()
+    const { organization } = useOrganization()
     const [usersCount, setUsersCount] = useState(0)
     const [eventsCount, setEventsCount] = useState(0)
     const [hackathonsCount, setHackathonsCount] = useState(0)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        if (!organization?.id) return;
         setLoading(true)
 
         // Users count
-        const unsubUsers = onSnapshot(collection(db, "users"), (snap) => {
+        const qUsers = query(collection(db, "users"), where("organizationId", "==", organization.id))
+        const unsubUsers = onSnapshot(qUsers, (snap) => {
             setUsersCount(snap.size)
         })
 
         // Events count
-        const unsubEvents = onSnapshot(collection(db, "events"), (snap) => {
+        const qEvents = query(collection(db, "events"), where("organizationId", "==", organization.id))
+        const unsubEvents = onSnapshot(qEvents, (snap) => {
             setEventsCount(snap.size)
         })
 
         // Hackathons count
-        // Note: getAllHackathons fetches data, doesn't subscribe. 
-        // Ideally we should use onSnapshot for consistency or just fetch once.
-        // Matching original behavior (fetch) but wrapped in effect
-        getAllHackathons().then(h => setHackathonsCount(h.length)).catch(console.error)
+        const qHackathons = query(collection(db, "hackathons"), where("organizationId", "==", organization.id))
+        const unsubHackathons = onSnapshot(qHackathons, (snap) => {
+            setHackathonsCount(snap.size)
+        })
 
         // We can assume loading finishes when listeners attach, or use a complex state.
         // Simulating loading state for skeleton visualization
@@ -44,9 +50,10 @@ export function AdminStats() {
         return () => {
             unsubUsers()
             unsubEvents()
+            unsubHackathons()
             clearTimeout(timer)
         }
-    }, [db])
+    }, [db, organization?.id])
 
     if (loading) {
         return <AdminStatsSkeleton />

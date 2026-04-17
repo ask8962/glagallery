@@ -29,7 +29,8 @@
     "start": "next start",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "vitest run"
+    "test": "vitest run",
+    "migrate:tenant": "node scripts/migrate-to-multitenant.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.74.0",

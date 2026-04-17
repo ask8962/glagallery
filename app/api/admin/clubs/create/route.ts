@@ -15,9 +15,9 @@ export async function POST(req: Request) {
         // Let's stick to verifyAdminAccess as the single source of truth.
 
         const body = await req.json()
-        const { name, category, description, presidentUid, email } = body
+        const { name, category, description, presidentUid, email, organizationId } = body
 
-        if (!name || !presidentUid) {
+        if (!name || !presidentUid || !organizationId) {
             return NextResponse.json({ error: "Missing fields" }, { status: 400 })
         }
 
@@ -25,6 +25,7 @@ export async function POST(req: Request) {
         const clubRef = adminDb.collection("clubs").doc()
         const clubData = {
             id: clubRef.id,
+            organizationId,
             name,
             category,
             description,

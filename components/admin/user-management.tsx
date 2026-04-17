@@ -2,25 +2,34 @@
 
 import { useEffect, useState } from "react"
 import { getFirebase } from "@/lib/firebase"
-import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore"
+import { collection, doc, onSnapshot, updateDoc, query, where } from "firebase/firestore"
 import type { UserProfile } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { AdminTableSkeleton } from "@/components/skeletons/admin-skeleton"
 import { CreateClubDialog } from "@/components/admin/create-club-dialog"
 import { useAuth } from "@/context/auth-context"
+import { useOrganization } from "@/context/organization-context"
 import { isAdminEmail } from "@/lib/config"
 import { toast } from "sonner"
 
 export function UserManagement() {
     const { profile } = useAuth()
+    const { organization } = useOrganization()
     const { db } = getFirebase()
     const [users, setUsers] = useState<UserProfile[]>([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const unsub = onSnapshot(
+        if (!organization?.id) return;
+        
+        const q = query(
             collection(db, "users"),
+            where("organizationId", "==", organization.id)
+        );
+
+        const unsub = onSnapshot(
+            q,
             (snap) => {
                 const list: UserProfile[] = []
                 snap.forEach((d) => list.push(d.data() as UserProfile))

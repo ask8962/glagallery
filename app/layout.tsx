@@ -16,6 +16,7 @@ import { AchievementProvider } from "@/hooks/use-achievement"
 import { AchievementOverlay } from "@/components/achievement-overlay"
 import { OnboardingFlow } from "@/components/onboarding-flow"
 import { ConfigProvider } from "@/context/config-context"
+import { OrganizationProvider } from "@/context/organization-context"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -144,24 +145,26 @@ export default function RootLayout({
         />
       </head>
       <body className={`font-sans ${inter.variable} ${jetbrainsMono.variable}`}>
-        <ConfigProvider>
           <ErrorBoundaryProvider>
             <AuthProvider>
-              <AchievementProvider>
-                <TwoFAGuard>
-                  <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
-                    <Navbar />
-                    <NotificationPermissionBanner />
-                    <main className="pt-16">{children}</main>
-                    <SiteFooter />
-                    <AchievementOverlay />
-                    <OnboardingFlow />
-                  </Suspense>
-                </TwoFAGuard>
-              </AchievementProvider>
+              <OrganizationProvider>
+                <ConfigProvider>
+                  <AchievementProvider>
+                    <TwoFAGuard>
+                    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+                      <Navbar />
+                      <NotificationPermissionBanner />
+                      <main className="pt-16">{children}</main>
+                      <SiteFooter />
+                      <AchievementOverlay />
+                      <OnboardingFlow />
+                    </Suspense>
+                    </TwoFAGuard>
+                  </AchievementProvider>
+                </ConfigProvider>
+              </OrganizationProvider>
             </AuthProvider>
           </ErrorBoundaryProvider>
-        </ConfigProvider>
         <ScrollToTop />
         <Toaster position="bottom-right" richColors />
         <Analytics />

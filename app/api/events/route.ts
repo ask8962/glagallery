@@ -9,10 +9,16 @@ export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url)
         const category = searchParams.get("category")
+        const orgId = searchParams.get("orgId")
         const limitCount = Number(searchParams.get("limit")) || 20
+
+        if (!orgId) {
+            return NextResponse.json({ error: "Organization ID is required" }, { status: 400 })
+        }
 
         const eventsRef = adminDb.collection("events")
         let query = eventsRef.where("status", "==", "published")
+                             .where("organizationId", "==", orgId)
 
         // Apply category filter if present
         if (category && category !== "all") {
@@ -91,6 +97,7 @@ export async function POST(request: NextRequest) {
         // Firestore prefers Timestamps. Since we use Admin SDK, we use admin.firestore.Timestamp
         const eventData = {
             ...data,
+            organizationId: authCheck.user.organizationId || "org_gla_university_001", // Fallback for transition
             startDate: Timestamp.fromDate(new Date(data.startDate)),
             endDate: Timestamp.fromDate(new Date(data.endDate)),
             registrationDeadline: data.registrationDeadline ? Timestamp.fromDate(new Date(data.registrationDeadline)) : null,

@@ -9,19 +9,24 @@ import Link from "next/link"
 import type { Hackathon } from "@/lib/types"
 import { toast } from "sonner"
 import { AdminTableSkeleton } from "@/components/skeletons/admin-skeleton"
+import { useOrganization } from "@/context/organization-context"
 
 export function HackathonManagement() {
+    const { organization } = useOrganization()
     const [hackathons, setHackathons] = useState<Hackathon[]>([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        loadHackathons()
-    }, [])
+        if (organization?.id) {
+            loadHackathons()
+        }
+    }, [organization?.id])
 
     const loadHackathons = async () => {
+        if (!organization?.id) return;
         try {
             setLoading(true)
-            const data = await getAllHackathons()
+            const data = await getAllHackathons(undefined, organization.id)
             setHackathons(data)
         } catch (error) {
             console.error("Error loading hackathons:", error)

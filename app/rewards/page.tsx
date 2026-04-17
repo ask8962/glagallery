@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "sonner"
 import { useAuth } from "@/context/auth-context"
+import { useOrganization } from "@/context/organization-context"
 import Link from "next/link"
 import type { Reward, RewardCategory } from "@/lib/types"
 
@@ -36,6 +37,7 @@ const categoryColors: Record<RewardCategory, string> = {
 
 export default function RewardsPage() {
     const { user, profile, loading: authLoading } = useAuth()
+    const { organization, loading: orgLoading } = useOrganization()
     const [rewards, setRewards] = useState<Reward[]>([])
     const [loading, setLoading] = useState(true)
     const [selectedCategory, setSelectedCategory] = useState<"all" | RewardCategory>("all")
@@ -46,12 +48,16 @@ export default function RewardsPage() {
     const userPoints = profile?.points || 0
 
     useEffect(() => {
-        fetchRewards()
-    }, [])
+        if (!orgLoading && organization?.id) {
+            fetchRewards()
+        }
+    }, [organization?.id, orgLoading])
 
     const fetchRewards = async () => {
+        if (!organization?.id) return
+        
         try {
-            const res = await fetch("/api/rewards")
+            const res = await fetch(`/api/rewards?organizationId=${organization.id}`)
             const data = await res.json()
             if (data.rewards) {
                 setRewards(data.rewards)
@@ -110,7 +116,7 @@ export default function RewardsPage() {
         ? rewards
         : rewards.filter(r => r.category === selectedCategory)
 
-    if (authLoading || loading) {
+    if (authLoading || orgLoading || loading) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />

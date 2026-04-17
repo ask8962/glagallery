@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useAuth } from "@/context/auth-context"
+import { useOrganization } from "@/context/organization-context"
 import { getAllHackathons, updateHackathonStatus } from "@/lib/hackathons"
 import { getFirebase } from "@/lib/firebase"
 import { collection, query, orderBy, onSnapshot, where } from "firebase/firestore"
@@ -26,22 +27,34 @@ const statusColors = {
 
 export default function HackathonsPage() {
   const { user, profile, loading, signIn } = useAuth()
+  const { organization } = useOrganization()
   const [hackathons, setHackathons] = useState<Hackathon[]>([])
   const [filter, setFilter] = useState<Hackathon["status"] | "all">("all")
   const [loadingHackathons, setLoadingHackathons] = useState(true)
   const isAdmin = profile?.role === "admin"
 
   useEffect(() => {
+    if (!organization?.id) return
+
     setLoadingHackathons(true)
     const { db } = getFirebase()
     const hackathonsRef = collection(db, "hackathons")
 
-    // Build query based on filter
+    // Build query based on filter AND organization
     let q
     if (filter === "all") {
-      q = query(hackathonsRef, orderBy("startDate", "desc"))
+      q = query(
+        hackathonsRef, 
+        where("organizationId", "==", organization.id),
+        orderBy("startDate", "desc")
+      )
     } else {
-      q = query(hackathonsRef, where("status", "==", filter), orderBy("startDate", "desc"))
+      q = query(
+        hackathonsRef, 
+        where("organizationId", "==", organization.id),
+        where("status", "==", filter), 
+        orderBy("startDate", "desc")
+      )
     }
 
     // Real-time listener for hackathons
