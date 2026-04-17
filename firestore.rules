@@ -11,17 +11,19 @@ service cloud.firestore {
       return request.auth != null;
     }
     
-    // Checks if the user belongs to the requested organization via JWT Custom Claims
+    // Checks if the user belongs to the requested organization using a document lookup
     function isSameOrg(orgId) {
       return isAuthenticated() && 
-             (request.auth.token.orgId == orgId || 
+             (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.organizationId == orgId || 
               // Fallback for transition period: rely on email matching a super admin or future logic
               request.auth.token.email == 'anukalp.gupta_cs23@gla.ac.in'); 
     }
 
     // Is the user an admin in this specific organization?
     function isOrgAdmin(orgId) {
-      return isSameOrg(orgId) && request.auth.token.role == 'admin';
+      return isAuthenticated() && 
+             isSameOrg(orgId) && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
     
     // Is the user a global super admin across all orgs?
@@ -48,8 +50,8 @@ service cloud.firestore {
     // USERS COLLECTION
     // ============================================
     match /users/{userId} {
-      // Users can read profiles in their own organization
-      allow read: if isSameOrg(resource.data.organizationId) || isSuperAdmin();
+      // Users can always read their own profile! Otherwise they can read profiles in their own organization
+      allow read: if isOwner(userId) || isSameOrg(resource.data.organizationId) || isSuperAdmin();
       
       // Creating Profile ensures they set the correct orgId
       allow create: if isAuthenticated() && 

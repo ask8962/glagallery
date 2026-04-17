@@ -43,23 +43,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return
       }
 
-      // Validate GLA email for existing users
-      if (!u.email?.endsWith("@gla.ac.in")) {
-        await fbSignOut(auth)
-        setUser(null)
-        setProfile(null)
-        setLoading(false)
-        return
-      }
+      // --- Dynamic Tenant Routing ---
+      // We automatically route users to their organizations based on their email.
+      // Defaulting to the GLA org for testing/legacy, but ideally this comes from DB.
+      const domain = u.email?.split("@")[1] || ""
+      let targetOrgId = "org_gla_university_001" 
+      // Example routing: if (domain === "amity.ac.in") targetOrgId = "org_amity_001"
 
       const userRef = doc(db, "users", u.uid)
       const snap = await getDoc(userRef)
 
       const base: UserProfile = {
         uid: u.uid,
-        name: u.displayName || "GLA Student",
+        name: u.displayName || "Student",
         email: u.email || "",
         role: isAdminEmail(u.email || "") ? "admin" : "student",
+        organizationId: targetOrgId,
         photoURL: u.photoURL || undefined,
         // Initialize gamification
         points: 0,
@@ -86,6 +85,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const role = isAdminEmail(u.email || "") ? "admin" : (data.role ?? "student")
         const finalProfile = { ...data, role }
 
+        // Backfill organizationId for old users
+        if (!finalProfile.organizationId) {
+           finalProfile.organizationId = targetOrgId
+        }
+
         // Initialize gamification if not present
         if (finalProfile.points === undefined) {
           finalProfile.points = 0
@@ -96,7 +100,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         // sync role if changed
-        if (finalProfile.role !== data.role || finalProfile.points === undefined) {
+        if (
+            finalProfile.role !== data.role || 
+            finalProfile.points === undefined ||
+            !data.organizationId
+        ) {
           await setDoc(userRef, finalProfile, { merge: true })
         }
         setProfile(finalProfile)
@@ -145,12 +153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const result = await signInWithPopup(auth, googleProvider)
           const signedInUser = result.user
 
-          // Check if email ends with @gla.ac.in
-          if (!signedInUser.email?.endsWith("@gla.ac.in")) {
-            // Sign out the user immediately if not GLA email
-            await fbSignOut(auth)
-            throw new Error("Only GLA University email addresses (@gla.ac.in) are allowed to sign in.")
-          }
+          // We removed the hardcoded @gla restriction here so you can login with Gmail.
         } catch (error: any) {
           // Re-throw the error to be handled by the UI
           throw error
