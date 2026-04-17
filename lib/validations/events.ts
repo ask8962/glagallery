@@ -14,6 +14,7 @@ export const eventSchema = z.object({
     venueName: z.string().optional(),
     venueAddress: z.string().optional(),
     meetingLink: z.string().url().optional(),
+    allowedDomainsText: z.string().optional(),
 
     category: z.enum(["tech", "cultural", "sports", "workshop", "seminar", "other"]),
     tags: z.array(z.string()).min(1, "At least one tag is required"),

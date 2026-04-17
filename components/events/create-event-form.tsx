@@ -56,6 +56,7 @@ export function CreateEventForm() {
             isFree: true,
             price: 0,
             capacity: 50,
+            allowedDomainsText: "",
         },
     })
 
@@ -358,6 +359,21 @@ export function CreateEventForm() {
                             )}
                         />
                     )}
+
+                    <FormField
+                        control={form.control}
+                        name="allowedDomainsText"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Allowed Email Domains (Optional)</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.g. gla.ac.in, amity.edu" {...field} />
+                                </FormControl>
+                                <FormDescription>Leave empty to allow all users within your organization.</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                 </div>
 
                 {/* Submit Button */}

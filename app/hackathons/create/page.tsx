@@ -42,6 +42,7 @@ export default function CreateHackathonPage() {
   const [rules, setRules] = useState<string[]>([""])
   const [prizes, setPrizes] = useState<string[]>([""])
   const [categories, setCategories] = useState<string[]>([""])
+  const [allowedDomains, setAllowedDomains] = useState("")
   const [submitting, setSubmitting] = useState(false)
 
   if (!loading && !user) {
@@ -216,6 +217,9 @@ export default function CreateHackathonPage() {
           categories.filter((c) => c.trim()).length > 0
             ? categories.filter((c) => c.trim()).map((c) => sanitizeText(c))
             : undefined,
+        allowedDomains: allowedDomains.trim()
+          ? allowedDomains.split(",").map((d) => d.trim().toLowerCase())
+          : [],
         registrationOpen: true,
       }
 
@@ -357,6 +361,19 @@ export default function CreateHackathonPage() {
                     />
                   </div>
                 )}
+
+                <div>
+                  <Label htmlFor="allowedDomains">Allowed Email Domains (Optional)</Label>
+                  <Input
+                    id="allowedDomains"
+                    value={allowedDomains}
+                    onChange={(e) => setAllowedDomains(e.target.value)}
+                    placeholder="e.g., gla.ac.in, amity.edu (Leave empty to allow all within organization)"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Restrict who can see and register for this hackathon by email domain.
+                  </p>
+                </div>
               </div>
             </div>
 

@@ -185,6 +185,7 @@ export interface Hackathon extends TenantEntity {
   bannerURL?: string
   location?: string
   isOnline: boolean
+  allowedDomains?: string[]
   registrationOpen: boolean
   // Detailed Schedule
   schedule?: {
@@ -407,6 +408,7 @@ export interface Event extends TenantEntity {
   price?: number
   capacity: number
   registeredCount: number
+  allowedDomains?: string[]
 
   // Metadata
   status: EventStatus

@@ -26,25 +26,44 @@ export async function GET(request: NextRequest) {
         }
 
         // Apply ordering and limit
-        // Note: This requires a Firestore composite index.
-        // If index is missing, this will throw an error with a link to create it.
         query = query.orderBy("startDate", "asc").limit(limitCount)
 
         const snapshot = await query.get()
 
-        const events = snapshot.docs.map((doc: any) => {
-            const data = doc.data()
-            return {
-                id: doc.id,
-                ...data,
-                // Serialize Firestore Timestamps to ISO strings
-                startDate: data.startDate?.toDate().toISOString() || data.startDate,
-                endDate: data.endDate?.toDate().toISOString() || data.endDate,
-                registrationDeadline: data.registrationDeadline?.toDate().toISOString() || null,
-                createdAt: data.createdAt?.toDate().toISOString() || null,
-                updatedAt: data.updatedAt?.toDate().toISOString() || null,
+        // Extract user domain from token if present
+        const authHeader = request.headers.get("authorization")
+        let userDomain = null
+        if (authHeader) {
+            const token = authHeader.replace("Bearer ", "")
+            try {
+                const { verifyIdToken } = await import("@/lib/auth-utils")
+                const decoded = await verifyIdToken(token)
+                if (decoded && decoded.email) {
+                    userDomain = decoded.email.split('@')[1].toLowerCase()
+                }
+            } catch (e) {
+                console.log("Could not verify token for event filtering", e)
             }
-        }) as Event[]
+        }
+
+        const events = snapshot.docs.reduce((acc: Event[], doc: any) => {
+            const data = doc.data()
+            const domains = data.allowedDomains as string[] | undefined
+            
+            // Domain restriction check
+            if (!domains || domains.length === 0 || (userDomain && domains.includes(userDomain))) {
+                acc.push({
+                    id: doc.id,
+                    ...data,
+                    startDate: data.startDate?.toDate().toISOString() || data.startDate,
+                    endDate: data.endDate?.toDate().toISOString() || data.endDate,
+                    registrationDeadline: data.registrationDeadline?.toDate().toISOString() || null,
+                    createdAt: data.createdAt?.toDate().toISOString() || null,
+                    updatedAt: data.updatedAt?.toDate().toISOString() || null,
+                } as Event)
+            }
+            return acc
+        }, [])
 
         // Convert Timestamp objects to serializable dates/strings if needed for client
         // But Event type expects Timestamp or similar, so we leave it.
@@ -101,6 +120,9 @@ export async function POST(request: NextRequest) {
             startDate: Timestamp.fromDate(new Date(data.startDate)),
             endDate: Timestamp.fromDate(new Date(data.endDate)),
             registrationDeadline: data.registrationDeadline ? Timestamp.fromDate(new Date(data.registrationDeadline)) : null,
+            allowedDomains: data.allowedDomainsText?.trim() 
+                ? data.allowedDomainsText.split(',').map((d: string) => d.trim().toLowerCase()) 
+                : [],
 
             // Club hosting (optional - if created by a club)
             hostedByClubId: body.hostedByClubId || null,

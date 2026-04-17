@@ -62,8 +62,18 @@ export default function HackathonsPage() {
       q,
       (snapshot) => {
         const hackathonsList: Hackathon[] = []
+        const userDomain = profile?.email ? profile.email.split('@')[1].toLowerCase() : null
+        
         snapshot.forEach((doc) => {
-          hackathonsList.push({ id: doc.id, ...(doc.data() as any) })
+          const data = doc.data() as any
+          const domains = data.allowedDomains as string[] | undefined
+          
+          // Domain restriction check
+          // 1. If no domains are configured, it's open to the entire organization
+          // 2. If domains are configured, user MUST have a profile email matching the domain
+          if (!domains || domains.length === 0 || (userDomain && domains.includes(userDomain))) {
+              hackathonsList.push({ id: doc.id, ...data })
+          }
         })
         setHackathons(hackathonsList)
         setLoadingHackathons(false)
