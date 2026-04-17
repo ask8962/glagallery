@@ -45,10 +45,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // --- Dynamic Tenant Routing ---
       // We automatically route users to their organizations based on their email.
-      // Defaulting to the GLA org for testing/legacy, but ideally this comes from DB.
       const domain = u.email?.split("@")[1] || ""
-      let targetOrgId = "org_gla_university_001" 
-      // Example routing: if (domain === "amity.ac.in") targetOrgId = "org_amity_001"
+      let targetOrgId = "" 
+      
+      try {
+         const res = await fetch(`/api/auth/resolve-domain?domain=${domain}`)
+         if (res.ok) {
+             const data = await res.json()
+             if (data.orgId) targetOrgId = data.orgId
+         }
+      } catch (e) {
+         console.warn("Domain resolution failed", e)
+      }
 
       const userRef = doc(db, "users", u.uid)
       const snap = await getDoc(userRef)

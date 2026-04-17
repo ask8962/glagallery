@@ -3,6 +3,7 @@ export type Organization = {
   id: string
   name: string
   domain: string
+  allowedDomains?: string[]
   branding: {
     logoUrl: string
     primaryColor: string

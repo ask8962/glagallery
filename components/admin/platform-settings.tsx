@@ -21,6 +21,8 @@ export function PlatformSettings() {
     const [tagline, setTagline] = useState(config.tagline)
     const [description, setDescription] = useState(config.description)
     const [logoUrl, setLogoUrl] = useState(config.logoUrl)
+    
+    const [allowedDomains, setAllowedDomains] = useState(organization?.allowedDomains?.join(", ") || "")
 
     const [contactAddress, setContactAddress] = useState(config.contactAddress || "")
     const [contactPhone, setContactPhone] = useState(config.contactPhone || "")
@@ -55,7 +57,8 @@ export function PlatformSettings() {
                     contactPhone,
                     contactEmail,
                     officialWebsiteUrl,
-                    organizationId: organization?.id
+                    organizationId: organization?.id,
+                    allowedDomains
                 })
             })
 
@@ -112,6 +115,20 @@ export function PlatformSettings() {
                             placeholder="Detailed description of the platform or the university..."
                             className="min-h-[120px]"
                         />
+                    </div>
+
+                    <div className="space-y-2 pt-4 border-t">
+                        <Label htmlFor="allowed-domains">Allowed Email Domains (Comma Separated)</Label>
+                        <Textarea
+                            id="allowed-domains"
+                            value={allowedDomains}
+                            onChange={(e) => setAllowedDomains(e.target.value)}
+                            placeholder="e.g. gla.ac.in, mycollege.edu"
+                            className="min-h-[60px]"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                            Only users with these email domains will be routed to your organization upon sign in. 
+                        </p>
                     </div>
 
                     <div className="space-y-2 pt-4 border-t">

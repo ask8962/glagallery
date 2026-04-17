@@ -30,7 +30,7 @@ export async function POST(req: Request) {
         }
 
         const body = await req.json()
-        const { name, tagline, description, logoUrl, contactAddress, contactPhone, contactEmail, officialWebsiteUrl, organizationId } = body
+        const { name, tagline, description, logoUrl, contactAddress, contactPhone, contactEmail, officialWebsiteUrl, organizationId, allowedDomains } = body
 
         if (!name || typeof name !== "string") {
             return NextResponse.json({ error: "Name is required" }, { status: 400 })
@@ -53,6 +53,17 @@ export async function POST(req: Request) {
             updatedAt: new Date(),
             updatedBy: decodedToken.uid
         }, { merge: true })
+
+        // Save allowedDomains to the root organization document for auth resolution
+        if (organizationId && allowedDomains !== undefined) {
+             const domainArray = typeof allowedDomains === 'string' 
+                 ? allowedDomains.split(',').map(d => d.trim().toLowerCase()).filter(Boolean)
+                 : Array.isArray(allowedDomains) ? allowedDomains.map(d => d.toLowerCase()) : []
+                 
+             await adminDb.collection("organizations").doc(organizationId).set({
+                 allowedDomains: domainArray
+             }, { merge: true })
+        }
 
         return NextResponse.json({ success: true, message: "Platform settings updated" })
     } catch (error: any) {
