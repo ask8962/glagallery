@@ -28,8 +28,13 @@ import { toast } from "sonner"
 import { Loader2, CalendarIcon, MapPin, ImageIcon, Tag, DollarSign, Users } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "@/context/auth-context"
+import type { Event } from "@/lib/types"
 
-export function CreateEventForm() {
+interface CreateEventFormProps {
+    initialData?: Event
+}
+
+export function CreateEventForm({ initialData }: CreateEventFormProps = {}) {
     const router = useRouter()
     const searchParams = useSearchParams()
     const [submitting, setSubmitting] = useState(false)
@@ -41,7 +46,25 @@ export function CreateEventForm() {
     // Default values for the form
     const form = useForm<EventFormData>({
         resolver: zodResolver(eventSchema),
-        defaultValues: {
+        defaultValues: initialData ? {
+            title: initialData.title,
+            description: initialData.description,
+            shortDescription: initialData.shortDescription,
+            bannerURL: initialData.bannerURL || "",
+            startDate: initialData.startDate ? new Date(initialData.startDate as any).toISOString().slice(0, 16) : "",
+            endDate: initialData.endDate ? new Date(initialData.endDate as any).toISOString().slice(0, 16) : "",
+            registrationDeadline: initialData.registrationDeadline ? new Date(initialData.registrationDeadline as any).toISOString().slice(0, 16) : "",
+            venueType: initialData.venueType as any,
+            venueName: initialData.venueName || "",
+            venueAddress: initialData.venueAddress || "",
+            meetingLink: initialData.meetingLink || "",
+            category: initialData.category as any,
+            tags: initialData.tags,
+            isFree: initialData.isFree,
+            price: initialData.price || 0,
+            capacity: initialData.capacity,
+            allowedDomainsText: initialData.allowedDomains ? initialData.allowedDomains.join(", ") : "",
+        } : {
             title: "",
             shortDescription: "",
             description: "",
@@ -72,8 +95,11 @@ export function CreateEventForm() {
             if (!user) throw new Error("You must be logged in to create an event")
             const token = await user.getIdToken()
 
-            const res = await fetch("/api/events", {
-                method: "POST",
+            const url = initialData ? `/api/events/${initialData.id}` : "/api/events"
+            const method = initialData ? "PUT" : "POST"
+
+            const res = await fetch(url, {
+                method: method,
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
@@ -87,10 +113,10 @@ export function CreateEventForm() {
 
             const result = await res.json()
 
-            if (!res.ok) throw new Error(result.error || "Failed to create event")
+            if (!res.ok) throw new Error(result.error || "Failed to process event")
 
-            toast.success("Event created successfully!")
-            router.push(`/events/${result.eventId}`)
+            toast.success(initialData ? "Event updated successfully!" : "Event created successfully!")
+            router.push(`/events/${initialData ? initialData.id : result.eventId}`)
         } catch (error: any) {
             toast.error(error.message || "Something went wrong. Please try again.")
             console.error(error)
@@ -377,10 +403,11 @@ export function CreateEventForm() {
                 </div>
 
                 {/* Submit Button */}
-                <div className="flex justify-end pt-4">
+                <div className="flex justify-end pt-4 gap-4">
+                    <Button type="button" variant="outline" onClick={() => router.back()}>Cancel</Button>
                     <Button type="submit" size="lg" disabled={submitting} className="min-w-[150px]">
                         {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Publish Event
+                        {initialData ? "Save Changes" : "Publish Event"}
                     </Button>
                 </div>
             </form>

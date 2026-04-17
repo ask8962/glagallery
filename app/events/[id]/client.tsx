@@ -7,10 +7,11 @@ import { EventHero } from "@/components/events/event-hero"
 import { EventInfo } from "@/components/events/event-info"
 import { RegisterButton } from "@/components/events/register-button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2 } from "lucide-react"
+import { Loader2, Edit } from "lucide-react"
 import { useAuth } from "@/context/auth-context"
 import { getFirebase } from "@/lib/firebase"
 import { collection, query, where, getDocs, limit } from "firebase/firestore"
+import Link from "next/link"
 
 export default function EventDetailClient() {
     const params = useParams()
@@ -95,7 +96,15 @@ export default function EventDetailClient() {
 
                     {/* Right Column - Registration Card (Sticky) */}
                     <div className="lg:col-span-1">
-                        <div className="sticky top-24">
+                        <div className="sticky top-24 space-y-4">
+                            {user && profile?.role === "admin" && (
+                                <Link href={`/events/${eventId}/edit`}>
+                                    <Button className="w-full" variant="outline">
+                                        <Edit className="h-4 w-4 mr-2" />
+                                        Edit Event
+                                    </Button>
+                                </Link>
+                            )}
                             <Card className="shadow-lg">
                                 <CardHeader>
                                     <CardTitle className="text-lg">Register for this Event</CardTitle>

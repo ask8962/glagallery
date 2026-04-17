@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Calendar, Users, MapPin, Trophy, Clock, UserPlus, Code, Award } from "lucide-react"
+import { Calendar, Users, MapPin, Trophy, Clock, UserPlus, Code, Award, Edit } from "lucide-react"
 import { format } from "date-fns"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
@@ -285,12 +285,20 @@ export default function HackathonDetailClient() {
               {(isAdmin || isOrganizer || hackathon.judges?.includes(user?.uid || "")) && (
                 <div className="flex flex-col gap-3">
                   {(isAdmin || isOrganizer) && (
-                    <Link href={`/hackathons/${hackathonId}/check-in`}>
-                      <Button variant="outline" className="w-full bg-transparent border-primary/50 text-primary hover:bg-primary/10">
-                        <Users className="h-4 w-4 mr-2" />
-                        Team Check-In
-                      </Button>
-                    </Link>
+                    <>
+                      <Link href={`/hackathons/${hackathonId}/edit`}>
+                        <Button variant="outline" className="w-full bg-transparent border-primary/50 text-primary hover:bg-primary/10 mb-3">
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit Hackathon
+                        </Button>
+                      </Link>
+                      <Link href={`/hackathons/${hackathonId}/check-in`}>
+                        <Button variant="outline" className="w-full bg-transparent border-primary/50 text-primary hover:bg-primary/10">
+                          <Users className="h-4 w-4 mr-2" />
+                          Team Check-In
+                        </Button>
+                      </Link>
+                    </>
                   )}
 
                   <Link href={`/hackathons/${hackathonId}/judge`}>
