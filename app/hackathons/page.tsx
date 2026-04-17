@@ -62,7 +62,7 @@ export default function HackathonsPage() {
       q,
       (snapshot) => {
         const hackathonsList: Hackathon[] = []
-        const userDomain = profile?.email ? profile.email.split('@')[1].toLowerCase() : null
+        const userDomain = user?.email?.split('@')[1]?.toLowerCase() || profile?.email?.split('@')[1]?.toLowerCase() || null
         
         snapshot.forEach((doc) => {
           const data = doc.data() as any

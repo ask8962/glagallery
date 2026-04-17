@@ -68,7 +68,15 @@ export function OrganizationProvider({ children }: { children: React.ReactNode }
                     }
                 }
 
-                // Fallback: No organization found
+                // Fallback: Default to GLA organization for guests
+                const defaultOrgDoc = await getDoc(doc(db, "organizations", "org_gla_university_001"))
+                if (defaultOrgDoc.exists()) {
+                    setOrganization({ id: defaultOrgDoc.id, ...defaultOrgDoc.data() } as Organization)
+                    setLoading(false)
+                    return
+                }
+
+                // Ultimate Fallback: No organization found
                 setOrganization(null)
 
             } catch (error) {
