@@ -83,11 +83,8 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Missing userId or email" }, { status: 400 })
         }
 
-        // SECURITY: Validate GLA email domain
-        if (!email.toLowerCase().endsWith('@gla.ac.in')) {
-            console.log("❌ Invalid email domain:", email)
-            return NextResponse.json({ error: "Only GLA email addresses are allowed" }, { status: 400 })
-        }
+        // Domain validation has been removed here since we handle isolation 
+        // at the organization/tenant level inside the auto-routing system.
 
         // SECURITY: Verify the request is from an authenticated user
         // and the userId matches their actual ID

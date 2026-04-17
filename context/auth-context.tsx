@@ -93,8 +93,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const role = isAdminEmail(u.email || "") ? "admin" : (data.role ?? "student")
         const finalProfile = { ...data, role }
 
-        // Backfill organizationId for old users
-        if (!finalProfile.organizationId) {
+        // Backfill or update organizationId for users based on strict domain matching
+        if (finalProfile.organizationId !== targetOrgId) {
            finalProfile.organizationId = targetOrgId
         }
 
