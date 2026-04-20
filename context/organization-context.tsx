@@ -36,6 +36,26 @@ async function findOrgByDomain(email: string): Promise<Organization | null> {
     return null
 }
 
+// Helper: Find org by exact subdomain/slug matching
+async function findOrgBySlug(slug: string): Promise<Organization | null> {
+    try {
+        const { db } = getFirebase()
+        const q = query(
+            collection(db, "organizations"),
+            where("slug", "==", slug),
+            limit(1)
+        )
+        const snap = await getDocs(q)
+        if (!snap.empty) {
+            const orgDoc = snap.docs[0]
+            return { id: orgDoc.id, ...orgDoc.data() } as Organization
+        }
+    } catch (e) {
+        console.error("Error finding org by slug:", e)
+    }
+    return null
+}
+
 export function OrganizationProvider({ children }: { children: React.ReactNode }) {
     const { user, profile } = useAuth()
     const [organization, setOrganization] = useState<Organization | null>(null)
@@ -48,7 +68,31 @@ export function OrganizationProvider({ children }: { children: React.ReactNode }
             try {
                 const { db } = getFirebase()
 
-                // Strategy 1: User explicitly belongs to an organization (from profile)
+                // Strategy 1: Attempt to load from subdomain (Guest / Standard flow)
+                if (typeof window !== "undefined") {
+                    const hostname = window.location.hostname;
+                    const baseDomains = ['campos.in', 'localhost', 'glagallery.vercel.app'];
+                    
+                    const isBaseDomain = baseDomains.some(d => hostname === d || hostname === `www.${d}`);
+                    
+                    if (!isBaseDomain) {
+                        // Attempt to extract the subdomain part (e.g. 'gla.campos.in' -> 'gla')
+                        const activeBaseDomain = baseDomains.find(d => hostname.endsWith(d));
+                        if (activeBaseDomain) {
+                            const slug = hostname.replace(`.${activeBaseDomain}`, '');
+                            if (slug && slug !== 'www') {
+                                const subdomainOrg = await findOrgBySlug(slug);
+                                if (subdomainOrg) {
+                                    setOrganization(subdomainOrg);
+                                    setLoading(false);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Strategy 2: User explicitly belongs to an organization (from profile)
                 if (profile?.organizationId) {
                     const orgDoc = await getDoc(doc(db, "organizations", profile.organizationId))
                     if (orgDoc.exists()) {
@@ -58,7 +102,7 @@ export function OrganizationProvider({ children }: { children: React.ReactNode }
                     }
                 }
 
-                // Strategy 2: If no org in profile, try to infer from email domain
+                // Strategy 3: If no org in profile or URL, try to infer from user's email domain
                 if (user?.email) {
                     const impliedOrg = await findOrgByDomain(user.email)
                     if (impliedOrg) {

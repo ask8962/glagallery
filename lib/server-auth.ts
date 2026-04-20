@@ -67,7 +67,20 @@ export async function verifyAdminAccess(request: Request): Promise<{
     }
   }
 
-  if (!isAdminEmail(user.email)) {
+  // Ensure organizationId is fetched from the database for security (in case claims are absent/stale)
+  if (!user.organizationId) {
+    try {
+      const userDoc = await adminDb.collection("users").doc(user.userId).get()
+      if (userDoc.exists) {
+        user.organizationId = userDoc.data()?.organizationId
+        user.role = userDoc.data()?.role || "user"
+      }
+    } catch (e) {
+      console.warn("Failed to fetch user org details:", e)
+    }
+  }
+
+  if (user.role !== "admin" && user.role !== "super_admin" && !isAdminEmail(user.email)) {
     return {
       authorized: false,
       error: "Access denied. Admin privileges required.",

@@ -20,7 +20,8 @@ const secret = new TextEncoder().encode(JWT_SECRET)
 export interface TokenPayload extends JWTPayload {
   userId: string
   email: string
-  role: "user" | "moderator" | "admin"
+  role: "user" | "moderator" | "admin" | "super_admin"
+  organizationId?: string
 }
 
 /**
