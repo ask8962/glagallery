@@ -7,7 +7,7 @@ import { doc, getDoc } from "firebase/firestore"
 import type { UserProfile } from "@/lib/types"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { LevelBadge } from "@/components/gamification/level-badge"
+
 import { FollowSystem } from "@/components/profile/follow-system"
 import { ArrowLeft, Grid3X3, Users, Award, Settings } from "lucide-react"
 import Link from "next/link"
@@ -108,7 +108,6 @@ export default function ProfileLayout({ children, params }: ProfileLayoutProps) 
                     <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
                             <h1 className="text-2xl sm:text-3xl font-bold">{profile.name}</h1>
-                            <LevelBadge points={profile.points || 0} />
                         </div>
 
                         {profile.bio && (

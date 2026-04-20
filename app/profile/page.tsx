@@ -8,8 +8,6 @@ import type { UserProfile } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import { GLASignInGuard } from "@/components/gla-signin-guard"
-import { LevelBadge } from "@/components/gamification/level-badge"
-import { BadgesShowcase } from "@/components/gamification/badges-showcase"
 import { Flame, Instagram, Twitter, Linkedin, Github, Globe, ArrowLeft } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ProfileCustomization } from "@/components/profile/profile-customization"
@@ -276,36 +274,7 @@ export default function ProfilePage() {
         </Card>
       </motion.div>
 
-      {/* Gamification Stats - Only show for own profile */}
-      {isOwnProfile && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-2xl p-6 shadow-sm border border-accent/20 mb-8"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <LevelBadge points={currentProfile?.points || 0} showProgress={true} />
 
-              {/* Streak */}
-              {currentProfile?.streak && currentProfile.streak > 0 && (
-                <motion.div
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="mt-4 flex items-center gap-2 bg-background/50 rounded-lg px-4 py-2"
-                >
-                  <Flame className="h-5 w-5 text-orange-500" />
-                  <span className="text-sm font-semibold text-foreground">{currentProfile.streak} Day Streak!</span>
-                </motion.div>
-              )}
-            </div>
-
-            <BadgesShowcase unlockedBadges={currentProfile?.badges || []} />
-          </div>
-        </motion.div>
-      )}
 
       {/* Stats Cards */}
       <motion.div

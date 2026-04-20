@@ -21,7 +21,7 @@ export default function GlaNavbar() {
           {/* Brand */}
           <Link href="/" className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-md bg-[hsl(var(--primary))]" aria-hidden />
-            <span className="text-base md:text-lg font-semibold text-[hsl(var(--primary))]">GLA Gallery</span>
+            <span className="text-base md:text-lg font-semibold text-[hsl(var(--primary))]">CampOS</span>
           </Link>
 
           {/* Nav */}

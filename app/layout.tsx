@@ -12,8 +12,7 @@ import { NotificationPermissionBanner } from "@/components/notification-permissi
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { Suspense } from "react"
 import { Toaster } from "sonner"
-import { AchievementProvider } from "@/hooks/use-achievement"
-import { AchievementOverlay } from "@/components/achievement-overlay"
+
 import { OnboardingFlow } from "@/components/onboarding-flow"
 import { ConfigProvider } from "@/context/config-context"
 import { OrganizationProvider } from "@/context/organization-context"
@@ -29,37 +28,37 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://glagallery.vercel.app"),
+  metadataBase: new URL("https://campos.in"),
   title: {
-    default: "GLA Gallery | Campus Memories & Hackathons",
-    template: "%s | GLA Gallery",
+    default: "CampOS | Campus Operating System",
+    template: "%s | CampOS",
   },
   description:
-    "The official platform for GLA University students to share campus memories, register for hackathons, and track upcoming events.",
-  keywords: ["GLA University", "Campus Gallery", "Hackathons", "Events", "Student Community", "Mathura"],
+    "The official platform for your university to manage clubs, register for hackathons, and track upcoming events.",
+  keywords: ["University", "Campus OS", "Hackathons", "Events", "Student Community"],
   authors: [{ name: "Anukalp Gupta", url: "https://github.com/ask8962" }],
   creator: "Anukalp Gupta",
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://glagallery.vercel.app",
-    title: "GLA Gallery | Campus Memories & Hackathons",
-    description: "Share memories, join hackathons, and explore campus life at GLA University.",
-    siteName: "GLA Gallery",
+    url: "https://campos.in",
+    title: "CampOS | Campus Operating System",
+    description: "Manage clubs, join hackathons, and explore campus life.",
+    siteName: "CampOS",
     images: [
       {
         url: "/og-image.png", // We'll need to ensure this exists or use a default
         width: 1200,
         height: 630,
-        alt: "GLA Gallery Preview",
+        alt: "CampOS Preview",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "GLA Gallery | Campus Memories & Hackathons",
-    description: "The official platform for GLA University students.",
-    creator: "@glagallery",
+    title: "CampOS | Campus Operating System",
+    description: "The holistic operating system for your campus.",
+    creator: "@campos",
     images: ["/og-image.png"],
   },
   robots: {
@@ -149,18 +148,15 @@ export default function RootLayout({
             <AuthProvider>
               <OrganizationProvider>
                 <ConfigProvider>
-                  <AchievementProvider>
                     <TwoFAGuard>
                     <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
                       <Navbar />
                       <NotificationPermissionBanner />
                       <main className="pt-16">{children}</main>
                       <SiteFooter />
-                      <AchievementOverlay />
                       <OnboardingFlow />
                     </Suspense>
                     </TwoFAGuard>
-                  </AchievementProvider>
                 </ConfigProvider>
               </OrganizationProvider>
             </AuthProvider>

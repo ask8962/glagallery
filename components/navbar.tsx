@@ -54,7 +54,6 @@ export function Navbar() {
       icon: <Rocket className="h-4 w-4 mr-2" />,
       items: [
         { href: "/search", label: "Search", icon: <SearchIcon className="h-4 w-4 mr-2" /> },
-        { href: "/assistant", label: "GLA Bot", icon: <Bot className="h-4 w-4 mr-2" /> },
       ]
     },
     {
@@ -142,13 +141,7 @@ export function Navbar() {
                 </DropdownMenu>
               ))}
 
-              {/* Store Link */}
-              <Link href="/rewards">
-                <Button variant="ghost" className={`h-9 px-3 gap-2 ${pathname === '/rewards' ? "text-orange-500 bg-orange-500/10 hover:bg-orange-500/20" : "hover:text-orange-500 hover:bg-orange-500/10"}`}>
-                  <ShoppingBag className="h-4 w-4" />
-                  Store
-                </Button>
-              </Link>
+
 
 
 
@@ -273,17 +266,7 @@ export function Navbar() {
                   </div>
                 ))}
 
-                {/* Mobile Store */}
-                <div className="pt-2 border-t border-border/50">
-                  <Link
-                    href="/rewards"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-2 rounded-md text-sm text-orange-500 hover:bg-orange-500/10 transition-colors"
-                  >
-                    <ShoppingBag className="h-4 w-4" />
-                    Rewards Store
-                  </Link>
-                </div>
+
 
 
 
