@@ -53,14 +53,6 @@ export default function ChangelogPage() {
             ],
         },
         {
-            version: "2.31.0",
-            date: "February 14, 2026",
-            changes: [
-                { type: "feature", title: "GLA Bot (AI Assistant)", description: "Resilient campus guide with multi-provider fallback (Claude/Gemini/Groq) and Redis caching." },
-                { type: "improvement", title: "Documentation Overhaul", description: "Added comprehensive architecture guides, workflow diagrams, and implementation summaries." },
-            ],
-        },
-        {
             version: "2.30.0",
             date: "February 2, 2026",
             changes: [
