@@ -17,16 +17,20 @@ interface BroadcastRequest {
     body: string
     adminEmail: string
     userIds?: string[] // Optional: if provided, only send to these users
+    customEmails?: string[] // Optional: external email addresses not in the system
 }
 
 // Replace placeholders in text
-function replacePlaceholders(text: string, user: UserProfile): string {
-    return text
+function replacePlaceholders(text: any, user: UserProfile): string {
+    const str = typeof text === 'string' ? text : String(text);
+    return str
         .replace(/\[Name\]/gi, user.name || "User")
         .replace(/\[Email\]/gi, user.email || "")
         .replace(/\[Points\]/gi, String(user.points || 0))
-        .replace(/\[Level\]/gi, String(user.level || 1))
+        .replace(/\[Level\]/gi, String(user.level || 1));
 }
+
+
 
 // Generate HTML email template
 function generateBroadcastHTML(subject: string, body: string): string {
@@ -134,8 +138,7 @@ export async function POST(request: NextRequest) {
         }
 
         const body: BroadcastRequest = await request.json()
-        const { subject, body: messageBody, adminEmail, userIds } = body
-
+        const { subject, body: messageBody, adminEmail, userIds, customEmails } = body
         console.log("Broadcast request received from:", adminEmail)
 
         // Validate admin - check centralized config OR check Firestore for admin role
@@ -196,21 +199,37 @@ export async function POST(request: NextRequest) {
             users.push({ uid: doc.id, ...doc.data() } as UserProfile)
         })
 
-        // Filter by selected user IDs if provided
+        // Filter by selected user IDs if provided. 
+        // If no userIds are provided, we don't default to everyone for safety.
         if (userIds && userIds.length > 0) {
             const userIdSet = new Set(userIds)
             users = users.filter(u => userIdSet.has(u.uid))
+        } else {
+            // No specific users selected, so clear the list
+            users = []
         }
 
-        console.log(`Broadcasting email to ${users.length} users...`)
+        // Prepare list of external emails
+        const externalEmails = (body as any).customEmails?.filter((e: string) => e && e.includes('@')) || []
+        const allRecipients: (UserProfile | { email: string })[] = []
+        // Add internal users' full objects
+        users.forEach(u => {
+            if (u.email) allRecipients.push(u)
+        })
+        // Add external emails (no personalization)
+        externalEmails.forEach((e: string) => allRecipients.push({ email: e } as any))
 
-        if (users.length === 0) {
+
+        console.log(`Broadcasting email to ${allRecipients.length} total recipients (${users.length} users + ${externalEmails.length} external)`)
+
+        if (allRecipients.length === 0) {
             return NextResponse.json({
                 success: true,
-                message: "No users selected to send broadcast",
+                message: "No recipients selected to send broadcast",
                 stats: { total: 0, sent: 0, failed: 0 },
             })
         }
+
 
         // Initialize Nodemailer ONCE
         const nodemailer = await import("nodemailer")
@@ -246,28 +265,32 @@ export async function POST(request: NextRequest) {
         let successCount = 0
         let failCount = 0
 
-        // Send emails in batches of 5 to respect pool size
+        // Send emails in batches of 5 (respect pool size)
         const BATCH_SIZE = 5
-        for (let i = 0; i < users.length; i += BATCH_SIZE) {
-            const batch = users.slice(i, i + BATCH_SIZE)
-            const promises = batch.map(async (user) => {
-                if (!user.email) return false
-
+        for (let i = 0; i < allRecipients.length; i += BATCH_SIZE) {
+            const batch = allRecipients.slice(i, i + BATCH_SIZE)
+            const promises = batch.map(async (recipient) => {
+                if (!recipient.email) return false
                 try {
-                    // Replace placeholders for this user
-                    const personalizedSubject = replacePlaceholders(subject, user)
-                    const personalizedBody = replacePlaceholders(messageBody, user)
+                    // For internal users use placeholders, external keep original subject/body
+                    let personalizedSubject = subject
+                    let personalizedBody = messageBody
+                    // If this recipient is a full UserProfile, apply placeholders
+                    if ((recipient as any).uid) {
+                        const user = recipient as UserProfile
+                        personalizedSubject = replacePlaceholders(subject, user)
+                        personalizedBody = replacePlaceholders(messageBody, user)
+                    }
                     const html = generateBroadcastHTML(personalizedSubject, personalizedBody)
-
                     await transporter.sendMail({
                         from: `"${SMTP_FROM_NAME}" <${SMTP_FROM_EMAIL}>`,
-                        to: user.email,
+                        to: recipient.email,
                         subject: personalizedSubject,
                         html: html,
                     })
                     return true
                 } catch (err) {
-                    console.error(`Failed to send to ${user.email}:`, err)
+                    console.error(`Failed to send to ${recipient.email}:`, err)
                     return false
                 }
             })
@@ -276,11 +299,11 @@ export async function POST(request: NextRequest) {
             successCount += results.filter(Boolean).length
             failCount += results.filter(r => !r).length
 
-            // Small delay between batches
-            if (i + BATCH_SIZE < users.length) {
+            if (i + BATCH_SIZE < allRecipients.length) {
                 await new Promise(resolve => setTimeout(resolve, 1000))
             }
         }
+
 
         // Determine absolute success status
         // If at least one email sent, we consider it a partial success at minimum
@@ -307,7 +330,7 @@ export async function POST(request: NextRequest) {
             success: true,
             message: `Broadcast complete. Sent: ${successCount}, Failed: ${failCount}`,
             stats: {
-                total: users.length,
+                total: allRecipients.length,
                 sent: successCount,
                 failed: failCount,
             },

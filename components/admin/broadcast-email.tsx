@@ -55,6 +55,7 @@ export function BroadcastEmail() {
     const [showConfirm, setShowConfirm] = useState(false)
     const [showPreview, setShowPreview] = useState(false)
     const [result, setResult] = useState<{ sent: number; failed: number } | null>(null)
+    const [customEmails, setCustomEmails] = useState("")
 
     // User selection
     const [users, setUsers] = useState<UserProfile[]>([])
@@ -76,8 +77,8 @@ export function BroadcastEmail() {
                     usersData.push({ uid: doc.id, ...doc.data() } as UserProfile)
                 })
                 setUsers(usersData)
-                // Select all by default
-                setSelectedUsers(new Set(usersData.map(u => u.uid)))
+                // Default to no one selected for safety
+                setSelectedUsers(new Set())
             } catch (error) {
                 console.error("Failed to load users:", error)
             } finally {
@@ -138,13 +139,16 @@ export function BroadcastEmail() {
 
     const handleSend = async () => {
         console.log("handleSend started");
+        
+        const customEmailList = customEmails.split(",").map(e => e.trim()).filter(e => e && e.includes("@"));
+
         if (!subject.trim() || !body.trim()) {
             toast.error("Please fill in both subject and body")
             return
         }
 
-        if (selectedUsers.size === 0) {
-            toast.error("Please select at least one user")
+        if (selectedUsers.size === 0 && customEmailList.length === 0) {
+            toast.error("Please select at least one user or enter a custom email")
             return
         }
 
@@ -163,6 +167,7 @@ export function BroadcastEmail() {
                 body,
                 adminEmail: user.email,
                 userIds: Array.from(selectedUsers),
+                customEmails: customEmailList,
             };
             console.log("Sending broadcast payload:", payload);
 
@@ -278,6 +283,20 @@ export function BroadcastEmail() {
                     </ScrollArea>
                 </div>
 
+                {/* Custom Emails */}
+                <div className="space-y-2">
+                    <Label htmlFor="custom-emails">Custom Emails (Optional)</Label>
+                    <Input
+                        id="custom-emails"
+                        placeholder="email1@example.com, email2@example.com"
+                        value={customEmails}
+                        onChange={(e) => setCustomEmails(e.target.value)}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                        Separate multiple emails with commas. Useful for directing to people not in the system.
+                    </p>
+                </div>
+
                 {/* Placeholders */}
                 <div>
                     <Label className="text-sm font-medium mb-2 block">Insert Placeholders</Label>
@@ -379,7 +398,7 @@ Check out the latest features on GLA Gallery..."
                 <div className="flex gap-2">
                     <Button
                         onClick={() => setShowConfirm(true)}
-                        disabled={!subject.trim() || !body.trim() || selectedUsers.size === 0 || sending}
+                        disabled={!subject.trim() || !body.trim() || (selectedUsers.size === 0 && customEmails.trim() === "") || sending}
                         className="gap-2"
                     >
                         {sending ? (
@@ -390,7 +409,7 @@ Check out the latest features on GLA Gallery..."
                         ) : (
                             <>
                                 <Send className="h-4 w-4" />
-                                Send to {selectedUsers.size} User{selectedUsers.size !== 1 ? 's' : ''}
+                                Send Broadcast
                             </>
                         )}
                     </Button>
@@ -405,7 +424,8 @@ Check out the latest features on GLA Gallery..."
                                 Confirm Broadcast
                             </AlertDialogTitle>
                             <AlertDialogDescription>
-                                This will send an email to <strong>{selectedUsers.size} selected user{selectedUsers.size !== 1 ? 's' : ''}</strong>.
+                                This will send an email to <strong>{selectedUsers.size} registered user{selectedUsers.size !== 1 ? 's' : ''}</strong>
+                                {customEmails.trim() !== "" ? ` and your custom email recipients` : ""}.
                                 This action cannot be undone. Are you sure you want to proceed?
                             </AlertDialogDescription>
                         </AlertDialogHeader>
@@ -428,7 +448,7 @@ Check out the latest features on GLA Gallery..."
                                         Sending...
                                     </>
                                 ) : (
-                                    `Yes, Send to ${selectedUsers.size} Users`
+                                    `Yes, Send Broadcast`
                                 )}
                             </Button>
                         </AlertDialogFooter>
