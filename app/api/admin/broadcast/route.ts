@@ -68,7 +68,7 @@ function generateBroadcastHTML(subject: string, body: string): string {
           <tr>
             <td style="padding: 0 30px 30px;">
               <a href="https://campushub.pro" style="display: inline-block; background-color: #ffd700; color: #1a1a2e; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600;">
-                Visit GLA Gallery
+                Visit CampusHub
               </a>
             </td>
           </tr>
