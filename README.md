@@ -1,7 +1,7 @@
-# 🎓 GLA Gallery
-
-> **Campus Memories & Event Management Platform**  
-> A full-stack web application for GLA University students to share campus moments, manage events & hackathons, earn rewards, and build community.
+# 🎓 CampusHub
+![CampusHub Logo](./public/logo.png)
+> **Multi-Tenant Campus Engagement SaaS Platform**  
+> A full-stack web application empowering universities to digitize campus life. Manage events, orchestrate hackathons, run student clubs, generate NAAC reports, and build a thriving campus community with instant self-serve onboarding.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16.1-black?logo=next.js)
 ![Firebase](https://img.shields.io/badge/Firebase-Latest-orange?logo=firebase)
@@ -9,7 +9,7 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38B2AC?logo=tailwind-css)
 ![License](https://img.shields.io/badge/License-MIT-green?logo=opensourceinitiative)
 ![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?logo=github)
-[![GitHub Stars](https://img.shields.io/github/stars/ask8962/glagallery?style=social)](https://github.com/ask8962/glagallery)
+
 
 ---
 
@@ -62,27 +62,29 @@
 - **Points Wallet** — Full transaction history with earnings and spendings
 - **Admin Management** — Create, edit, and manage rewards stock
 
-### 🔔 Notifications
+### 🔔 Notifications & Emails
+- **Automated Welcome Emails** — Beautiful, personalized onboarding emails sent instantly to new users.
 - **Push Notifications** — Real-time browser alerts via Firebase Cloud Messaging
 - **In-App Notifications** — Likes, comments, follows, event reminders
 - **Email Notifications** — Broadcast emails, reward fulfillment, and announcements
 - **Notification Center** — Centralized inbox with read/unread states
 
-### 👨‍💼 Admin Panel
-- **User Management** — View, search, and manage all users with role toggles
-- **Event Management** — Oversee all events, process no-shows, export attendee lists
-- **Hackathon Management** — Monitor hackathons from creation to results
+### 👨‍💼 Super Admin & Organization Panels
+- **Multi-Tenant Architecture** — Super Admins get global visibility; Org Admins see only their institution's data.
+- **Self-Serve College Onboarding** — Institutions can sign up and launch their branded subdomain in under 2 minutes.
+- **NAAC/NBA Report Generator** — One-click PDF export of accreditation-ready reports covering events, clubs, and student engagement metrics.
+- **User Management** — View, search, and manage scoped users with role toggles
+- **Event & Hackathon Management** — Oversee all events, process no-shows, export attendee lists
 - **Club Verification Dashboard** — Approve or reject club verification requests
-- **Faculty Verification** — Verify faculty accounts
 - **Academic Calendar Manager** — Manage university academic dates
-- **Broadcast Emails** — Send targeted announcements to All/Selected users
+- **Broadcast Emails** — Send targeted announcements to All/Selected users within your tenant
 - **Analytics Dashboard** — Visualize platform stats with charts
 - **QR Scanner** — Built-in scanner for event and hackathon check-ins
 - **Health Monitoring** — System health and API status checks
 - **Security Reports** — Audit logs and security event tracking
 
 ### 🔒 Security & Privacy
-- **GLA Email Gate** — Only `@gla.ac.in` emails can sign in
+- **Dynamic Tenant Routing** — Users are automatically routed to their institution's workspace based on their email domain.
 - **2FA Protection** — Optional Email OTP for sensitive actions
 - **Rate Limiting** — Per-IP limits on OTP, uploads, comments, and likes (via Upstash Redis)
 - **CSP & Security Headers** — Strict Content Security Policy, X-Frame-Options, HSTS
@@ -187,7 +189,7 @@
 
 | Protection | Details |
 |-----------|---------|
-| **Email Restriction** | Only `@gla.ac.in` domains allowed |
+| **Tenant Routing** | Domain-based resolution (e.g. `@college.edu`) to isolate organizational data |
 | **2FA (Email OTP)** | 6-digit server-generated codes, 5 req/hr limit |
 | **API Rate Limiting** | Uploads: 10/hr, Comments: 50/hr, Likes: 100/hr per IP |
 | **Security Headers** | CSP, X-Frame-Options, HSTS, Referrer-Policy, Permissions-Policy |
@@ -292,5 +294,5 @@ GLA University, Mathura
 ---
 
 <p align="center">
-  Made with ❤️ for GLA University
+  Made with ❤️ for Campuses Everywhere
 </p>
