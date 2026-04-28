@@ -22,12 +22,12 @@ const GLA_ORG_ID = 'org_gla_university_001';
 async function verifyOrCreateOrg() {
   const orgRef = db.collection('organizations').doc(GLA_ORG_ID);
   const doc = await orgRef.get();
-  
+
   if (!doc.exists) {
-    console.log("Creating default organization: GLA University...");
+    console.log("Creating default organization: CampusHub...");
     await orgRef.set({
       id: GLA_ORG_ID,
-      name: "GLA University",
+      name: "CampusHub",
       domain: "gla.ac.in",
       branding: {
         logoUrl: "/logo.png",
@@ -47,7 +47,7 @@ async function verifyOrCreateOrg() {
  */
 async function migrateCollection(collectionName) {
   console.log(`\n⏳ Starting migration for collection: [${collectionName}]...`);
-  
+
   const snapshot = await db.collection(collectionName).get();
   const total = snapshot.size;
   console.log(`Found ${total} total documents.`);
@@ -58,13 +58,13 @@ async function migrateCollection(collectionName) {
 
   for (const doc of snapshot.docs) {
     const data = doc.data();
-    
+
     // Only migrate if the field is missing
     if (!data.organizationId) {
       batch.update(doc.ref, { organizationId: GLA_ORG_ID });
       migratedCount++;
       batchCount++;
-      
+
       // Firestore batches can handle max 500 writes
       if (batchCount === 450) {
         await batch.commit();
@@ -86,10 +86,10 @@ async function migrateCollection(collectionName) {
 async function runMigration() {
   console.log("🚀 Starting Zero-Downtime Multi-Tenant Migration...");
   console.log("---------------------------------------------------");
-  
+
   try {
     await verifyOrCreateOrg();
-    
+
     await migrateCollection('users');
     await migrateCollection('events');
     await migrateCollection('clubs');
@@ -98,10 +98,10 @@ async function runMigration() {
     await migrateCollection('transactions');
     await migrateCollection('points');
     await migrateCollection('rewards');
-    
+
     console.log("\n🎉 MULTI-TENANT MIGRATION COMPLETE! 🎉");
     console.log("IMPORTANT: You must now update all frontend queries to include: .where('organizationId', '==', orgId)");
-    
+
   } catch (error) {
     console.error("\n❌ MIGRATION FAILED:", error);
   }

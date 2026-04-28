@@ -223,7 +223,7 @@ export function generateCertificateHTML(data: CertificateData): string {
 <body>
   <div class="certificate">
     <div class="header">
-      <div class="logo">GLA University</div>
+      <div class="logo">CampusHub</div>
       <h1 class="title">Certificate</h1>
       <p class="subtitle">of Achievement</p>
     </div>

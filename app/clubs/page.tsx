@@ -35,20 +35,20 @@ export default function ClubsPage() {
     const fetchClubs = async () => {
         const isSuperAdmin = isSuperAdminEmail(user?.email || "")
         if (!organization?.id && !isSuperAdmin) return
-        
+
         setLoading(true)
         try {
             const params = new URLSearchParams()
             if (selectedCategory !== "all") {
                 params.set("category", selectedCategory)
             }
-            
+
             if (isSuperAdmin) {
                 params.set("orgId", "ALL")
             } else if (organization?.id) {
                 params.set("orgId", organization.id)
             }
-            
+
             const res = await fetch(`/api/clubs?${params.toString()}`)
             const data = await res.json()
             setClubs(data.clubs || [])
@@ -83,7 +83,7 @@ export default function ClubsPage() {
                             Clubs & Societies
                         </h1>
                         <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
-                            Discover the vibrant communities at GLA University. Join clubs, participate in events,
+                            Discover the vibrant communities at CampusHub. Join clubs, participate in events,
                             and connect with like-minded students.
                         </p>
                     </motion.div>

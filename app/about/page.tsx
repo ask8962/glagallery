@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = {
     title: "About Us | GLA Gallery",
-    description: "Learn about GLA Gallery - the campus memories and hackathon management platform for GLA University students.",
+    description: "Learn about GLA Gallery - the campus memories and hackathon management platform for CampusHub students.",
 }
 
 export default function AboutPage() {
@@ -70,7 +70,7 @@ export default function AboutPage() {
                         <span className="text-accent block">Memories Forever</span>
                     </h1>
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                        GLA Gallery is the official platform for GLA University students to share,
+                        GLA Gallery is the official platform for CampusHub students to share,
                         discover, and cherish campus moments. Built by students, for students.
                     </p>
                 </div>
@@ -103,7 +103,7 @@ export default function AboutPage() {
                 <div className="bg-accent/5 rounded-2xl p-8 mb-16">
                     <h2 className="text-2xl font-bold mb-4">Our Mission</h2>
                     <p className="text-muted-foreground leading-relaxed">
-                        We believe every moment at GLA University deserves to be remembered.
+                        We believe every moment at CampusHub deserves to be remembered.
                         From the first day of orientation to the final goodbye at farewell,
                         GLA Gallery serves as a digital yearbook where every student can contribute
                         and relive the memories that make college life special.
@@ -117,7 +117,7 @@ export default function AboutPage() {
                         <strong>Anukalp Gupta</strong>
                     </p>
                     <p className="text-sm text-muted-foreground">
-                        B.Tech Computer Science, GLA University (Batch 2023-27)
+                        B.Tech Computer Science, CampusHub (Batch 2023-27)
                     </p>
                     <p className="text-sm text-muted-foreground mt-1">
                         <a href="mailto:ganukalp70@gmail.com" className="text-accent hover:underline">

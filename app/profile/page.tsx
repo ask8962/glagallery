@@ -78,7 +78,7 @@ export default function ProfilePage() {
       <GLASignInGuard
         onSignIn={signIn}
         title="Your Profile"
-        description="View and manage your profile. Sign in with your GLA University email to access your profile."
+        description="View and manage your profile. Sign in with your CampusHub email to access your profile."
       />
     )
   }
@@ -138,10 +138,10 @@ export default function ProfilePage() {
             {/* Avatar */}
             <div className="flex-shrink-0">
               {isOwnProfile ? (
-                <AvatarEditor 
-                  currentAvatarUrl={currentProfile.photoURL} 
-                  userName={currentProfile.name} 
-                  onUpdate={handleProfileUpdate} 
+                <AvatarEditor
+                  currentAvatarUrl={currentProfile.photoURL}
+                  userName={currentProfile.name}
+                  onUpdate={handleProfileUpdate}
                 />
               ) : (
                 <Avatar className="h-24 w-24 border-4 border-background shadow-md">

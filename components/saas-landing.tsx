@@ -93,14 +93,14 @@ export function SaasLanding() {
             </span>
             Now accepting new institutions — 2 min setup
           </div>
-          
+
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1]">
             The Multi-Tenant <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-yellow-200 to-amber-500">
               Campus Operating System
             </span>
           </h1>
-          
+
           <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
             Centralize events, automate hackathons, track student engagement, and generate <strong className="text-white">NAAC/NBA accreditation reports</strong> seamlessly.
           </p>
@@ -143,7 +143,7 @@ export function SaasLanding() {
             { icon: FileText, title: "NAAC Report Generator", desc: "1-click generation of NAAC and NBA formatted PDF reports for extracurricular activities — Criterion 3.4 ready." },
             { icon: Sparkles, title: "Gamification Engine", desc: "Points, levels, leaderboards, and badges to drive student engagement organically." },
           ].map((feature, i) => (
-            <motion.div 
+            <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -204,7 +204,7 @@ export function SaasLanding() {
                   <div className="space-y-2">
                     <Label className="text-sm text-gray-300">College Name *</Label>
                     <Input
-                      placeholder="e.g. GLA University"
+                      placeholder="e.g. CampusHub"
                       value={formData.collegeName}
                       onChange={e => setFormData({ ...formData, collegeName: e.target.value })}
                       required
@@ -333,7 +333,7 @@ export function SaasLanding() {
           <p className="text-gray-400 mb-8 max-w-lg mx-auto">
             Whether you need custom integrations, enterprise pricing, or help migrating your existing data, our team is ready to assist.
           </p>
-          
+
           <div className="flex flex-col items-center justify-center gap-4">
             <div className="flex items-center gap-3 text-lg font-medium bg-white/5 px-6 py-3 rounded-full border border-white/10">
               <Mail className="h-5 w-5 text-accent" />
@@ -345,7 +345,7 @@ export function SaasLanding() {
           </div>
         </div>
       </section>
-      
+
       <footer className="relative z-10 py-8 text-center text-gray-500 text-sm border-t border-white/5">
         <p>© {new Date().getFullYear()} CampusHub. All rights reserved. | <a href="mailto:admin@campushub.pro" className="hover:text-accent">admin@campushub.pro</a></p>
       </footer>

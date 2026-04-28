@@ -357,7 +357,7 @@ export default function CreateHackathonPage() {
                       id="location"
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
-                      placeholder="e.g., GLA University, Mathura"
+                      placeholder="e.g., CampusHub"
                     />
                   </div>
                 )}

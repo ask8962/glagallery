@@ -70,7 +70,7 @@ export default function EditHackathonPage() {
           setCategories(h.categories?.length ? h.categories : [""]);
           setAllowedDomains(h.allowedDomains ? h.allowedDomains.join(', ') : "");
         }
-      } catch(e) {}
+      } catch (e) { }
     };
     fetchIt();
   }, [hackathonId]);
@@ -218,8 +218,8 @@ export default function EditHackathonPage() {
           )
         })
       } else if (bannerPreview && bannerPreview.startsWith("http")) {
-          // If banner hasn't changed
-          bannerURL = bannerPreview;
+        // If banner hasn't changed
+        bannerURL = bannerPreview;
       }
 
       const hackathonData = {
@@ -390,7 +390,7 @@ export default function EditHackathonPage() {
                       id="location"
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
-                      placeholder="e.g., GLA University, Mathura"
+                      placeholder="e.g., CampusHub"
                     />
                   </div>
                 )}

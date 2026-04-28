@@ -1,7 +1,7 @@
 # 🎨 GLA Gallery - App Wireframe Workflow
 
 ## Overview
-GLA Gallery is a campus community platform for GLA University students featuring photo sharing, event management, hackathons, clubs, and rewards.
+GLA Gallery is a campus community platform for CampusHub students featuring photo sharing, event management, hackathons, clubs, and rewards.
 
 ---
 

@@ -51,4 +51,4 @@ Feel free to reach out via [issues](https://github.com/ask8962/glagallery/issues
 
 ---
 
-Made with ❤️ for GLA University
+Made with ❤️ for CampusHub

@@ -405,7 +405,7 @@ export function validateEmail(email: string): { valid: boolean; error?: string }
   }
 
   if (!email.toLowerCase().endsWith("@gla.ac.in")) {
-    return { valid: false, error: "Only GLA University emails are allowed" }
+    return { valid: false, error: "Only CampusHub emails are allowed" }
   }
 
   return { valid: true }

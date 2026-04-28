@@ -13,10 +13,12 @@ import { getFirebase } from "@/lib/firebase"
 import { collection, query, where, getDocs, limit } from "firebase/firestore"
 import Link from "next/link"
 
+import { Button } from "@/components/ui/button"
+
 export default function EventDetailClient() {
     const params = useParams()
     const eventId = params.id as string
-    const { user } = useAuth()
+    const { user, profile } = useAuth()
 
     const [event, setEvent] = useState<Event | null>(null)
     const [loading, setLoading] = useState(true)

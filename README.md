@@ -287,7 +287,7 @@ This project is licensed under the MIT License — see [LICENSE](LICENSE) for de
 ## 👨‍💻 Author
 
 **Anukalp Gupta**  
-GLA University, Mathura  
+CampusHub  
 [ganukalp70@gmail.com](mailto:ganukalp70@gmail.com)  
 [GitHub: @ask8962](https://github.com/ask8962)
 

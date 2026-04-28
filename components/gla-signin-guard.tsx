@@ -11,10 +11,10 @@ interface GLASignInGuardProps {
   description?: string
 }
 
-export function GLASignInGuard({ 
-  onSignIn, 
-  title = "GLA University Access Required",
-  description = "This gallery is exclusively for GLA University students and faculty."
+export function GLASignInGuard({
+  onSignIn,
+  title = "CampusHub Access Required",
+  description = "This gallery is exclusively for CampusHub students and faculty."
 }: GLASignInGuardProps) {
   const [isSigningIn, setIsSigningIn] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -22,11 +22,11 @@ export function GLASignInGuard({
   const handleSignIn = async () => {
     setIsSigningIn(true)
     setError(null)
-    
+
     try {
       await onSignIn()
     } catch (error: any) {
-      setError(error.message || 'Sign in failed. Please use your GLA University email (@gla.ac.in)')
+      setError(error.message || 'Sign in failed. Please use your CampusHub email (@gla.ac.in)')
     } finally {
       setIsSigningIn(false)
     }
@@ -39,7 +39,7 @@ export function GLASignInGuard({
           <div className="h-16 w-16 mx-auto bg-accent/10 rounded-full flex items-center justify-center">
             <Shield className="h-8 w-8 text-accent" />
           </div>
-          
+
           <div>
             <h1 className="text-2xl font-bold text-primary mb-2">{title}</h1>
             <p className="text-muted-foreground leading-relaxed">
@@ -82,7 +82,7 @@ export function GLASignInGuard({
         </div>
 
         <div className="text-xs text-muted-foreground space-y-1">
-          <p>Only verified GLA University email addresses are allowed.</p>
+          <p>Only verified CampusHub email addresses are allowed.</p>
           <p>Contact IT support if you're having trouble accessing your account.</p>
         </div>
       </Card>

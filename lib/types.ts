@@ -72,7 +72,7 @@ export type Role =
   | "admin"             // Platform admin
   | "super_admin"       // Full access
 
-// Department list for GLA University
+// Department list for CampusHub
 export type Department =
   | "Computer Science"
   | "Information Technology"

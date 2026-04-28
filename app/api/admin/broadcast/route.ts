@@ -50,7 +50,7 @@ function generateBroadcastHTML(subject: string, body: string): string {
           <!-- Header -->
           <tr>
             <td style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 30px; text-align: center;">
-              <h1 style="color: #ffd700; margin: 0; font-size: 24px;">GLA University Gallery</h1>
+              <h1 style="color: #ffd700; margin: 0; font-size: 24px;">CampusHub</h1>
             </td>
           </tr>
           
@@ -76,8 +76,8 @@ function generateBroadcastHTML(subject: string, body: string): string {
           <!-- Footer -->
           <tr>
             <td style="background-color: #f9f9f9; padding: 20px 30px; text-align: center; color: #888; font-size: 12px;">
-              <p style="margin: 0 0 10px 0;">GLA University, Mathura</p>
-              <p style="margin: 0;">You're receiving this because you're a registered GLA Gallery user.</p>
+              <p style="margin: 0 0 10px 0;">CampusHub</p>
+              <p style="margin: 0;">You're receiving this because you're a registered CampusHub user.</p>
             </td>
           </tr>
         </table>

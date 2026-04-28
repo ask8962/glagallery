@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
     return {
         name: "GLA Gallery",
         short_name: "GLA Gallery",
-        description: "Campus Memories & Hackathon Management Platform for GLA University",
+        description: "Campus Memories & Hackathon Management Platform for CampusHub",
         start_url: "/",
         display: "standalone",
         background_color: "#ffffff",

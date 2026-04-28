@@ -14,11 +14,11 @@ export default function TermsPage() {
       title: "1. Acceptance of Terms",
       content: `By accessing or using GLA Gallery, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the platform.
 
-GLA Gallery is exclusively for students, faculty, and staff of GLA University with valid @gla.ac.in email addresses.`,
+GLA Gallery is exclusively for students, faculty, and staff of CampusHub with valid @gla.ac.in email addresses.`,
     },
     {
       title: "2. User Account",
-      content: `• You must sign in using your official GLA University Google account
+      content: `• You must sign in using your official CampusHub Google account
 • You are responsible for all activity under your account
 • You must not share your account credentials
 • You must provide accurate profile information
@@ -52,7 +52,7 @@ GLA Gallery is exclusively for students, faculty, and staff of GLA University wi
       content: `• You retain ownership of content you upload
 • By posting, you grant GLA Gallery a license to display your content
 • The GLA Gallery platform, design, and code are protected by copyright
-• GLA University logos and branding are property of GLA University`,
+• CampusHub logos and branding are property of CampusHub`,
     },
     {
       title: "6. Content Moderation",
@@ -100,7 +100,7 @@ GLA Gallery is exclusively for students, faculty, and staff of GLA University wi
     },
     {
       title: "11. Disclaimer",
-      content: `⚠️ GLA Gallery is a personal project created by a student. It is NOT affiliated with, endorsed by, or sponsored by GLA University or any of its departments. Any rewards offered are personal initiatives and are not university-sanctioned.`,
+      content: `⚠️ GLA Gallery is a personal project created by a student. It is NOT affiliated with, endorsed by, or sponsored by CampusHub or any of its departments. Any rewards offered are personal initiatives and are not university-sanctioned.`,
     },
     {
       title: "12. Changes to Terms",

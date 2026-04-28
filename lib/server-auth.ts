@@ -110,7 +110,7 @@ export async function verifyGLAUser(request: Request): Promise<{
   if (!user.email.toLowerCase().endsWith("@gla.ac.in")) {
     return {
       authorized: false,
-      error: "Access denied. Only GLA University emails are allowed.",
+      error: "Access denied. Only CampusHub emails are allowed.",
     }
   }
 

@@ -19,7 +19,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
         }
 
         const title = `${data.name} | GLA Gallery Clubs`
-        const description = data.description?.substring(0, 160) || `Check out ${data.name} at GLA University.`
+        const description = data.description?.substring(0, 160) || `Check out ${data.name} at CampusHub.`
         const imageUrl = data.coverImageURL || data.logoURL || "/placeholder.svg"
 
         return {

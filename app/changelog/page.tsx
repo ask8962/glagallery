@@ -275,7 +275,7 @@ export default function ChangelogPage() {
             date: "August 1, 2023",
             changes: [
                 { type: "feature", title: "Initial Release", description: "Core platform launch with Event listings and User Profiles." },
-                { type: "feature", title: "Google Sign-in", description: "Secure authentication restricted to GLA University email domains." },
+                { type: "feature", title: "Google Sign-in", description: "Secure authentication restricted to CampusHub email domains." },
             ],
         },
     ]

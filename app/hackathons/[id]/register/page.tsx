@@ -100,7 +100,7 @@ export default function RegisterTeamPage() {
       for (const email of memberEmails) {
         if (email.trim()) {
           if (!email.endsWith("@gla.ac.in")) {
-            setError(`All members must have GLA University email addresses (@gla.ac.in)`)
+            setError(`All members must have CampusHub email addresses (@gla.ac.in)`)
             setSubmitting(false)
             return
           }

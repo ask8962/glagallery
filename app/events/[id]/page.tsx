@@ -19,7 +19,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
         }
 
         const title = `${data.title} | GLA Gallery`
-        const description = data.description?.substring(0, 160) || `Join us for ${data.title} at GLA University.`
+        const description = data.description?.substring(0, 160) || `Join us for ${data.title} at CampusHub.`
         const imageUrl = data.imageUrl || "/placeholder.svg" // Fallback to a default generic image if omitted
 
         return {

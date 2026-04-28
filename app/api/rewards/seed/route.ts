@@ -33,7 +33,7 @@ const SAMPLE_REWARDS = [
     },
     {
         name: "GLA Stickers Pack",
-        description: "High-quality vinyl GLA University stickers (pack of 5)",
+        description: "High-quality vinyl CampusHub stickers (pack of 5)",
         imageURL: "",
         category: "physical",
         pointsCost: 500,

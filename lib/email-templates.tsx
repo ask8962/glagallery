@@ -163,17 +163,17 @@ export function generateEmailHTML(data: EmailTemplateData): string {
       
       <p style="font-size: 14px; color: #6b7280; line-height: 1.6;">
         This is an automated notification from ${APP_CONFIG.APP_NAME}. 
-        You received this email because you are registered with your GLA University account.
+        You received this email because you are registered with your CampusHub account.
       </p>
     </div>
     
     <div class="footer">
       <p class="footer-text">
         <a href="${footerLink}" class="footer-link">${APP_CONFIG.APP_NAME}</a> | 
-        GLA University Campus Memories
+        CampusHub Campus Memories
       </p>
       <p class="footer-text" style="font-size: 12px; color: #9ca3af;">
-        © ${new Date().getFullYear()} GLA University. All rights reserved.
+        © ${new Date().getFullYear()} CampusHub. All rights reserved.
       </p>
     </div>
   </div>
@@ -198,7 +198,7 @@ export function generateEmailText(data: EmailTemplateData): string {
 
   text += `${"=".repeat(50)}\n`
   text += `This is an automated notification from ${APP_CONFIG.APP_NAME}.\n`
-  text += `© ${new Date().getFullYear()} GLA University. All rights reserved.`
+  text += `© ${new Date().getFullYear()} CampusHub. All rights reserved.`
 
   return text
 }

@@ -10,10 +10,10 @@ export function OrganizationSchema() {
         "@context": "https://schema.org",
         "@type": "Organization",
         name: "GLA Gallery",
-        alternateName: "GLA University Gallery",
+        alternateName: "CampusHub Gallery",
         url: "https://campushub.pro",
         logo: "https://campushub.pro/logo.png",
-        description: "The official platform for GLA University students to share campus memories, register for hackathons, and track upcoming events.",
+        description: "The official platform for CampusHub students to share campus memories, register for hackathons, and track upcoming events.",
         sameAs: [
             "https://github.com/ask8962/glagallery"
         ],
@@ -57,7 +57,7 @@ export function EducationalOrganizationSchema() {
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "EducationalOrganization",
-        name: "GLA University",
+        name: "CampusHub",
         url: "https://www.gla.ac.in",
         logo: "https://campushub.pro/logo.png",
         address: {
@@ -111,7 +111,7 @@ export function EventSchema({ name, description, startDate, endDate, location, i
         image: imageUrl || "https://campushub.pro/og-image.png",
         organizer: {
             "@type": "Organization",
-            name: "GLA University",
+            name: "CampusHub",
             url: "https://www.gla.ac.in"
         },
         url

@@ -28,7 +28,7 @@ export default function EventsPage() {
 
     const fetchEvents = async () => {
         if (!organization?.id) return; // Wait until organization context is loaded
-        
+
         setLoading(true)
         try {
             const params = new URLSearchParams()
@@ -64,7 +64,7 @@ export default function EventsPage() {
                 <div>
                     <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-2">Campus Events.</h1>
                     <p className="text-lg text-muted-foreground">
-                        Discover workshops, hackathons, and activities at GLA University.
+                        Discover workshops, hackathons, and activities at CampusHub.
                     </p>
                 </div>
 

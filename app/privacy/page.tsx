@@ -45,7 +45,7 @@ export default function PrivacyPage() {
 • **Firebase/Google Cloud**: Industry-standard encryption and security
 • **HTTPS**: All data transmitted is encrypted
 • **Access Controls**: Strict Firestore security rules limit data access
-• **GLA Email Restriction**: Only verified GLA University emails can access the platform`,
+• **GLA Email Restriction**: Only verified CampusHub emails can access the platform`,
     },
     {
       title: "5. Your Rights",

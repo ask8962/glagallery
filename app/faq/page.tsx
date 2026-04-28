@@ -21,11 +21,11 @@ export default function FAQPage() {
             faqs: [
                 {
                     question: "How do I sign in to GLA Gallery?",
-                    answer: "Click 'Sign in with Google' on the homepage and use your official GLA University email (@gla.ac.in). Only GLA emails are allowed to access the platform.",
+                    answer: "Click 'Sign in with Google' on the homepage and use your official CampusHub email (@gla.ac.in). Only GLA emails are allowed to access the platform.",
                 },
                 {
                     question: "Why can't I access the platform?",
-                    answer: "GLA Gallery is exclusive to GLA University members. Make sure you're using your @gla.ac.in email address. If you're still having issues, try clearing your browser cache or using an incognito window.",
+                    answer: "GLA Gallery is exclusive to CampusHub members. Make sure you're using your @gla.ac.in email address. If you're still having issues, try clearing your browser cache or using an incognito window.",
                 },
                 {
                     question: "Is there a mobile app?",
@@ -55,7 +55,7 @@ export default function FAQPage() {
             faqs: [
                 {
                     question: "Who can see my posts?",
-                    answer: "Your posts are visible to all authenticated GLA University users. We don't allow public access to ensure campus privacy.",
+                    answer: "Your posts are visible to all authenticated CampusHub users. We don't allow public access to ensure campus privacy.",
                 },
                 {
                     question: "How do I report inappropriate content?",

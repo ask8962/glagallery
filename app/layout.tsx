@@ -90,7 +90,7 @@ export default function RootLayout({
               name: "GLA Gallery",
               url: "https://campushub.pro",
               logo: "https://campushub.pro/logo.png",
-              description: "The official platform for GLA University students to share campus memories, register for hackathons, and track upcoming events.",
+              description: "The official platform for CampusHub students to share campus memories, register for hackathons, and track upcoming events.",
               sameAs: ["https://github.com/ask8962/glagallery"]
             })
           }}
@@ -117,7 +117,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "EducationalOrganization",
-              name: "GLA University",
+              name: "CampusHub",
               url: "https://www.gla.ac.in",
               address: {
                 "@type": "PostalAddress",
