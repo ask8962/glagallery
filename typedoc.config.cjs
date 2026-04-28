@@ -4,7 +4,7 @@ module.exports = {
     out: "docs",
     plugin: ["typedoc-plugin-markdown"],
     readme: "README.md",
-    name: "GLA Gallery API Documentation",
+    name: "CampusHub API Documentation",
     excludePrivate: true,
     excludeProtected: true,
     skipErrorChecking: true,

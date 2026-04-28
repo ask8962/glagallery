@@ -1,6 +1,6 @@
 # Loading States & Skeletons
 
-This document describes the loading states and skeleton loaders implemented throughout the GLA Gallery application.
+This document describes the loading states and skeleton loaders implemented throughout the CampusHub application.
 
 ## Overview
 

@@ -134,9 +134,9 @@ export async function PATCH(request: NextRequest) {
                     }
 
                     await transporter.sendMail({
-                        from: `"GLA Gallery Support" <${process.env.SMTP_USER}>`,
+                        from: `"CampusHub Support" <${process.env.SMTP_USER}>`,
                         to: userEmail,
-                        subject: "💰 Payment Successful - GLA Gallery Details",
+                        subject: "💰 Payment Successful - CampusHub Details",
                         html: `
                         <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
                             <h2 style="color: #16a34a;">Payment Processed Successfully!</h2>

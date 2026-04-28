@@ -9,7 +9,7 @@ export function OrganizationSchema() {
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Organization",
-        name: "GLA Gallery",
+        name: "CampusHub",
         alternateName: "CampusHub Gallery",
         url: "https://campushub.pro",
         logo: "https://campushub.pro/logo.png",
@@ -36,7 +36,7 @@ export function WebsiteSchema() {
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        name: "GLA Gallery",
+        name: "CampusHub",
         url: "https://campushub.pro",
         potentialAction: {
             "@type": "SearchAction",

@@ -12,6 +12,10 @@ export const POINTS = {
   CHALLENGE_COMPLETE: 50,
   FIRST_POST: 20,
   PROFILE_COMPLETE: 10,
+  // Confessions
+  CONFESSION_POST: 5,
+  CONFESSION_UPVOTE_RECEIVED: 1,
+  CONFESSION_REPLY: 2,
 }
 
 // Level thresholds
@@ -87,6 +91,25 @@ export const BADGES: Record<string, Omit<Badge, "unlockedAt">> = {
     name: "Challenge Champion",
     description: "Completed 5 weekly challenges",
     icon: "🏆",
+  },
+  // Confession badges
+  CAMPUS_VOICE: {
+    id: "campus_voice",
+    name: "Campus Voice",
+    description: "Posted 10 confessions",
+    icon: "🗣️",
+  },
+  TRUTH_TELLER: {
+    id: "truth_teller",
+    name: "Truth Teller",
+    description: "Got 100 upvotes on confessions",
+    icon: "💯",
+  },
+  POLL_MASTER: {
+    id: "poll_master",
+    name: "Poll Master",
+    description: "Created 5 polls",
+    icon: "📊",
   },
 }
 

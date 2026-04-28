@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/accordion"
 
 export const metadata: Metadata = {
-    title: "FAQ | GLA Gallery",
-    description: "Frequently Asked Questions about GLA Gallery - Get answers to common questions.",
+    title: "FAQ | CampusHub",
+    description: "Frequently Asked Questions about CampusHub - Get answers to common questions.",
 }
 
 export default function FAQPage() {
@@ -20,16 +20,16 @@ export default function FAQPage() {
             name: "Getting Started",
             faqs: [
                 {
-                    question: "How do I sign in to GLA Gallery?",
+                    question: "How do I sign in to CampusHub?",
                     answer: "Click 'Sign in with Google' on the homepage and use your official CampusHub email (@gla.ac.in). Only GLA emails are allowed to access the platform.",
                 },
                 {
                     question: "Why can't I access the platform?",
-                    answer: "GLA Gallery is exclusive to CampusHub members. Make sure you're using your @gla.ac.in email address. If you're still having issues, try clearing your browser cache or using an incognito window.",
+                    answer: "CampusHub is exclusive to CampusHub members. Make sure you're using your @gla.ac.in email address. If you're still having issues, try clearing your browser cache or using an incognito window.",
                 },
                 {
                     question: "Is there a mobile app?",
-                    answer: "GLA Gallery is a web app that works on all devices. You can add it to your home screen for an app-like experience. Go to your browser menu and select 'Add to Home Screen'.",
+                    answer: "CampusHub is a web app that works on all devices. You can add it to your home screen for an app-like experience. Go to your browser menu and select 'Add to Home Screen'.",
                 },
             ],
         },
@@ -141,7 +141,7 @@ export default function FAQPage() {
                         Frequently Asked Questions
                     </h1>
                     <p className="text-muted-foreground max-w-2xl mx-auto">
-                        Find answers to common questions about GLA Gallery. Can't find what you're looking for?
+                        Find answers to common questions about CampusHub. Can't find what you're looking for?
                         Contact us at the bottom of this page.
                     </p>
                 </div>

@@ -4,8 +4,8 @@ import { ArrowLeft, Shield } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | GLA Gallery",
-  description: "Privacy Policy for GLA Gallery - Learn how we collect, use, and protect your data.",
+  title: "Privacy Policy | CampusHub",
+  description: "Privacy Policy for CampusHub - Learn how we collect, use, and protect your data.",
 }
 
 export default function PrivacyPage() {
@@ -107,7 +107,7 @@ This data is used exclusively for verified reward distribution and anti-fraud de
         {/* Introduction */}
         <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
           <p className="text-muted-foreground text-lg">
-            GLA Gallery ("we", "our", or "us") is committed to protecting your privacy.
+            CampusHub ("we", "our", or "us") is committed to protecting your privacy.
             This Privacy Policy explains how we collect, use, and safeguard your information
             when you use our platform.
           </p>

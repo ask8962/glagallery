@@ -126,7 +126,7 @@ service cloud.firestore {
     match /tickets/{ticketId} {
       allow read: if isSuperAdmin() || 
                      isOrgAdmin(resource.data.organizationId) ||
-                     (isSameOrg(resource.data.organizationId) && isOwner(resource.data.userId));
+                     isOwner(resource.data.userId);
       
       allow create: if false; // Server-side APIs only
       allow update: if isSuperAdmin() || isOrgAdmin(resource.data.organizationId);
@@ -183,6 +183,42 @@ service cloud.firestore {
     match /notifications/{notificationId} {
       allow read, update, delete: if isOwner(resource.data.userId);
       allow create: if isAuthenticated();
+    }
+
+    // ============================================
+    // CONFESSIONS FEED (Anonymous but Admin-controlled)
+    // ============================================
+    match /confessions/{confessionId} {
+      // Any authenticated user can read active confessions; super admin can read all
+      allow read: if isAuthenticated() && 
+                     (resource.data.status == 'active' || isSuperAdmin());
+      
+      // Authenticated users can create confessions
+      allow create: if isAuthenticated() &&
+                       request.resource.data.authorUid == request.auth.uid;
+      
+      // Only super admin can update (moderate, remove, reveal identity)
+      allow update: if isSuperAdmin();
+      
+      // Only super admin can delete
+      allow delete: if isSuperAdmin();
+      
+      // Replies subcollection
+      match /replies/{replyId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated() &&
+                         request.resource.data.authorUid == request.auth.uid;
+        allow update, delete: if isSuperAdmin();
+      }
+    }
+
+    // Vote tracking (prevent double-voting)
+    match /confession_votes/{voteId} {
+      allow read: if isAuthenticated() && resource.data.odcUid == request.auth.uid;
+      allow create: if isAuthenticated() && 
+                       request.resource.data.odcUid == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.odcUid == request.auth.uid;
+      allow delete: if isSuperAdmin();
     }
 
     // Default deny for anything else

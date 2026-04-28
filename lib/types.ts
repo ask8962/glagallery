@@ -682,3 +682,66 @@ export type AcademicYear = {
   }[]
   isActive: boolean
 }
+
+// ============================================
+// CONFESSIONS FEED TYPES
+// ============================================
+
+export type ConfessionCategory = "confession" | "meme" | "poll" | "hot_take" | "marketplace" | "question"
+
+export type ConfessionStatus = "active" | "hidden" | "removed" | "pending_review"
+
+export interface Confession extends TenantEntity {
+  id: string
+  body: string
+  category: ConfessionCategory
+  authorUid: string
+  authorEmail: string
+  anonymousAlias: string
+  upvotes: number
+  downvotes: number
+  replyCount: number
+  viewCount: number
+  status: ConfessionStatus
+  moderationScore: number
+  moderationFlags: string[]
+  reportCount: number
+  reportedBy: string[]
+  removedBy?: string
+  removedReason?: string
+  identityRevealedBy?: string
+  identityRevealedAt?: any
+  pollOptions?: PollOption[]
+  pollExpiresAt?: any
+  createdAt: any
+  updatedAt?: any
+  expiresAt?: any
+}
+
+export interface PollOption {
+  id: string
+  text: string
+  votes: number
+  voterUids: string[]
+}
+
+export interface ConfessionReply {
+  id: string
+  confessionId: string
+  body: string
+  authorUid: string
+  authorEmail: string
+  anonymousAlias: string
+  upvotes: number
+  downvotes: number
+  status: ConfessionStatus
+  createdAt: any
+}
+
+export interface ConfessionVote {
+  odcId: string
+  odcType: "confession" | "reply"
+  odcUid: string
+  voteType: "up" | "down"
+  createdAt: any
+}

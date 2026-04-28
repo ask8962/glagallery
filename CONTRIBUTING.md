@@ -1,6 +1,6 @@
-# Contributing to GLA Gallery
+# Contributing to CampusHub
 
-Thank you for your interest in contributing to GLA Gallery! 🎉
+Thank you for your interest in contributing to CampusHub! 🎉
 
 ## How to Contribute
 

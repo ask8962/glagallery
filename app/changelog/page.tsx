@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
 export const metadata: Metadata = {
-    title: "Changelog | GLA Gallery",
-    description: "See what's new in GLA Gallery - Latest updates, features, and improvements.",
+    title: "Changelog | CampusHub",
+    description: "See what's new in CampusHub - Latest updates, features, and improvements.",
 }
 
 type ChangeType = "feature" | "fix" | "improvement" | "security"
@@ -211,7 +211,7 @@ export default function ChangelogPage() {
             version: "2.0.8",
             date: "May 14, 2025",
             changes: [
-                { type: "feature", title: "PWA Support", description: "Install GLA Gallery on home screen with offline caching support." },
+                { type: "feature", title: "PWA Support", description: "Install CampusHub on home screen with offline caching support." },
             ],
         },
         {
@@ -303,7 +303,7 @@ export default function ChangelogPage() {
                     </div>
                     <h1 className="text-3xl md:text-4xl font-bold mb-4">Changelog</h1>
                     <p className="text-muted-foreground max-w-2xl mx-auto">
-                        Stay up to date with all the latest features, improvements, and fixes in GLA Gallery.
+                        Stay up to date with all the latest features, improvements, and fixes in CampusHub.
                     </p>
                 </div>
 

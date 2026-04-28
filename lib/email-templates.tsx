@@ -33,11 +33,11 @@ export function getEmailSubject(type: NotificationType, title?: string): string 
     mention: "You were mentioned",
     follow: "New follower",
     badge: "Badge unlocked!",
-    welcome: "Welcome to GLA Gallery",
+    welcome: "Welcome to CampusHub",
     event_ticket: "Your Event Ticket Confirmation 🎟️",
   }
 
-  return title || subjects[type] || "New notification from GLA Gallery"
+  return title || subjects[type] || "New notification from CampusHub"
 }
 
 /**

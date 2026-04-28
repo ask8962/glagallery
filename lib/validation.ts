@@ -1,7 +1,7 @@
 /**
  * Data Validation & Sanitization Utilities
  *
- * Centralized validation and sanitization functions for the GLA Gallery application.
+ * Centralized validation and sanitization functions for the CampusHub application.
  * Includes XSS prevention, file validation, profanity filtering, and rate limiting.
  */
 

@@ -14,11 +14,11 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
         if (!data) {
             return {
-                title: "Club Not Found | GLA Gallery",
+                title: "Club Not Found | CampusHub",
             }
         }
 
-        const title = `${data.name} | GLA Gallery Clubs`
+        const title = `${data.name} | CampusHub Clubs`
         const description = data.description?.substring(0, 160) || `Check out ${data.name} at CampusHub.`
         const imageUrl = data.coverImageURL || data.logoURL || "/placeholder.svg"
 
@@ -41,7 +41,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     } catch (error) {
         console.error("Error generating club metadata:", error)
         return {
-            title: "Club Profile | GLA Gallery",
+            title: "Club Profile | CampusHub",
         }
     }
 }

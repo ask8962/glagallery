@@ -22,7 +22,7 @@ export function TicketCard({ ticket }: TicketCardProps) {
         <Card className="max-w-md mx-auto overflow-hidden bg-gradient-to-br from-primary/5 to-background border-2">
             {/* Ticket Header */}
             <div className="bg-primary text-primary-foreground p-4 text-center">
-                <h2 className="text-xl font-bold">GLA Gallery Events</h2>
+                <h2 className="text-xl font-bold">CampusHub Events</h2>
                 <p className="text-sm opacity-90">Entry Pass</p>
             </div>
 
@@ -75,7 +75,7 @@ export function TicketCard({ ticket }: TicketCardProps) {
                 <div className="text-center text-xs text-muted-foreground">
                     <p>Present this QR code at the venue entrance</p>
                     <p>This ticket is non-transferable</p>
-                    <p className="mt-4 font-semibold text-primary/80">Powered by GLA Gallery</p>
+                    <p className="mt-4 font-semibold text-primary/80">Powered by CampusHub</p>
                 </div>
             </CardContent>
         </Card>

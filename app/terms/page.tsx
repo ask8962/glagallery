@@ -4,17 +4,17 @@ import { ArrowLeft, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = {
-  title: "Terms of Service | GLA Gallery",
-  description: "Terms of Service for GLA Gallery - Rules and guidelines for using the platform.",
+  title: "Terms of Service | CampusHub",
+  description: "Terms of Service for CampusHub - Rules and guidelines for using the platform.",
 }
 
 export default function TermsPage() {
   const sections = [
     {
       title: "1. Acceptance of Terms",
-      content: `By accessing or using GLA Gallery, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the platform.
+      content: `By accessing or using CampusHub, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the platform.
 
-GLA Gallery is exclusively for students, faculty, and staff of CampusHub with valid @gla.ac.in email addresses.`,
+CampusHub is exclusively for students, faculty, and staff of CampusHub with valid @gla.ac.in email addresses.`,
     },
     {
       title: "2. User Account",
@@ -50,8 +50,8 @@ GLA Gallery is exclusively for students, faculty, and staff of CampusHub with va
     {
       title: "5. Intellectual Property",
       content: `• You retain ownership of content you upload
-• By posting, you grant GLA Gallery a license to display your content
-• The GLA Gallery platform, design, and code are protected by copyright
+• By posting, you grant CampusHub a license to display your content
+• The CampusHub platform, design, and code are protected by copyright
 • CampusHub logos and branding are property of CampusHub`,
     },
     {
@@ -75,7 +75,7 @@ GLA Gallery is exclusively for students, faculty, and staff of CampusHub with va
     },
     {
       title: "8. Disclaimer",
-      content: `GLA Gallery is provided "as is" without warranties. We do not guarantee:
+      content: `CampusHub is provided "as is" without warranties. We do not guarantee:
 
 • Continuous, uninterrupted service
 • Accuracy of user-generated content
@@ -84,7 +84,7 @@ GLA Gallery is exclusively for students, faculty, and staff of CampusHub with va
     },
     {
       title: "9. Limitation of Liability",
-      content: `GLA Gallery and its creator shall not be liable for any indirect, incidental, or consequential damages arising from your use of the platform.`,
+      content: `CampusHub and its creator shall not be liable for any indirect, incidental, or consequential damages arising from your use of the platform.`,
     },
     {
       title: "10. Reward Campaign Terms",
@@ -100,7 +100,7 @@ GLA Gallery is exclusively for students, faculty, and staff of CampusHub with va
     },
     {
       title: "11. Disclaimer",
-      content: `⚠️ GLA Gallery is a personal project created by a student. It is NOT affiliated with, endorsed by, or sponsored by CampusHub or any of its departments. Any rewards offered are personal initiatives and are not university-sanctioned.`,
+      content: `⚠️ CampusHub is a personal project created by a student. It is NOT affiliated with, endorsed by, or sponsored by CampusHub or any of its departments. Any rewards offered are personal initiatives and are not university-sanctioned.`,
     },
     {
       title: "12. Changes to Terms",

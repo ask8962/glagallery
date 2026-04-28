@@ -33,7 +33,7 @@ export function ShareButton({
     const [copied, setCopied] = useState(false)
 
     const shareUrl = buildAppURL(`/gallery?post=${postId}`)
-    const shareText = `Check out "${postTitle}" on GLA Gallery! 🎓📸`
+    const shareText = `Check out "${postTitle}" on CampusHub! 🎓📸`
     const fullShareText = postDescription
         ? `${shareText}\n\n${postDescription.slice(0, 100)}${postDescription.length > 100 ? "..." : ""}`
         : shareText

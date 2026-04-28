@@ -48,7 +48,7 @@ export function BroadcastEmail() {
     const { db } = getFirebase()
     const { organization } = useOrganization()
     const isSuperAdmin = profile?.role === "super_admin" || isSuperAdminEmail(user?.email || "")
-    
+
     const [subject, setSubject] = useState("")
     const [body, setBody] = useState("")
     const [sending, setSending] = useState(false)
@@ -139,7 +139,7 @@ export function BroadcastEmail() {
 
     const handleSend = async () => {
         console.log("handleSend started");
-        
+
         const customEmailList = customEmails.split(",").map(e => e.trim()).filter(e => e && e.includes("@"));
 
         if (!subject.trim() || !body.trim()) {
@@ -324,7 +324,7 @@ export function BroadcastEmail() {
                     <Label htmlFor="broadcast-subject">Subject *</Label>
                     <Input
                         id="broadcast-subject"
-                        placeholder="Hey [Name], exciting news from GLA Gallery!"
+                        placeholder="Hey [Name], exciting news from CampusHub!"
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
                     />
@@ -339,7 +339,7 @@ export function BroadcastEmail() {
 
 We have an exciting update for you! Your current points: [Points]
 
-Check out the latest features on GLA Gallery..."
+Check out the latest features on CampusHub..."
                         value={body}
                         onChange={(e) => setBody(e.target.value)}
                         rows={8}

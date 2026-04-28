@@ -1,7 +1,7 @@
-# 🎨 GLA Gallery - App Wireframe Workflow
+# 🎨 CampusHub - App Wireframe Workflow
 
 ## Overview
-GLA Gallery is a campus community platform for CampusHub students featuring photo sharing, event management, hackathons, clubs, and rewards.
+CampusHub is a campus community platform for CampusHub students featuring photo sharing, event management, hackathons, clubs, and rewards.
 
 ---
 
@@ -242,4 +242,4 @@ flowchart LR
 
 ---
 
-*This workflow represents the complete user experience across GLA Gallery.*
+*This workflow represents the complete user experience across CampusHub.*

@@ -19,6 +19,7 @@ import { FacultyVerification } from "@/components/admin/faculty-verification"
 import { ClubVerificationDashboard } from "@/components/admin/club-verification-dashboard"
 import { AcademicCalendarManager } from "@/components/admin/academic-calendar-manager"
 import { PlatformSettings } from "@/components/admin/platform-settings"
+import { ConfessionModeration } from "@/components/admin/confession-moderation"
 
 export default function AdminPage() {
   const { user, profile } = useAuth()
@@ -144,6 +145,15 @@ export default function AdminPage() {
             transition={{ duration: 0.6, delay: 0.6 }}
           >
             <BroadcastEmail />
+          </motion.section>
+
+          {/* Confessions Moderation */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.65 }}
+          >
+            <ConfessionModeration />
           </motion.section>
 
           {/* Faculty Verification */}

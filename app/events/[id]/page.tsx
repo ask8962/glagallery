@@ -14,11 +14,11 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
         if (!data) {
             return {
-                title: "Event Not Found | GLA Gallery",
+                title: "Event Not Found | CampusHub",
             }
         }
 
-        const title = `${data.title} | GLA Gallery`
+        const title = `${data.title} | CampusHub`
         const description = data.description?.substring(0, 160) || `Join us for ${data.title} at CampusHub.`
         const imageUrl = data.imageUrl || "/placeholder.svg" // Fallback to a default generic image if omitted
 
@@ -41,7 +41,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     } catch (error) {
         console.error("Error generating event metadata:", error)
         return {
-            title: "Event Details | GLA Gallery",
+            title: "Event Details | CampusHub",
         }
     }
 }

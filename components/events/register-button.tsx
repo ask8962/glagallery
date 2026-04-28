@@ -145,7 +145,7 @@ export function RegisterButton({ event, isRegistered = false, onSuccess }: Regis
                 key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
                 amount: orderData.amount,
                 currency: orderData.currency,
-                name: "GLA Gallery",
+                name: "CampusHub",
                 description: `Ticket for: ${event.title}`,
                 order_id: orderData.orderId,
                 prefill: {

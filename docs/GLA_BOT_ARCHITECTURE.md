@@ -1,6 +1,6 @@
 # GLA Bot Architecture
 
-This document details the architecture of the **GLA Bot** (Campus AI Assistant), a resilient and cost-effective AI chat system integrated into GLA Gallery.
+This document details the architecture of the **GLA Bot** (Campus AI Assistant), a resilient and cost-effective AI chat system integrated into CampusHub.
 
 ## 🎯 Overview
 
@@ -50,7 +50,7 @@ To ensure 99.9% availability despite individual provider outages or rate limits,
 - **Key Strategy**: Improving speed and reducing API costs.
 - **Cache Key**: `chat:{userId}:{hash(lastMessage + historyContext)}`
 - **TTL**: 24 hours.
-- **Impact**: Common questions like "What is GLA Gallery?" are served instantly from cache without hitting AI APIs.
+- **Impact**: Common questions like "What is CampusHub?" are served instantly from cache without hitting AI APIs.
 
 ### 3. Rate Limiting (`app/api/chat/route.ts`)
 
@@ -63,7 +63,7 @@ To prevent abuse and manage costs:
 
 The bot operates with a strict persona and knowledge base:
 - **Persona**: Friendly senior student/guide.
-- **Knowledge**: Hardcoded context about GLA Gallery features, navigation, and mock campus data.
+- **Knowledge**: Hardcoded context about CampusHub features, navigation, and mock campus data.
 - **Guardrails**:
     - "I cannot do your homework."
     - "I cannot reveal personal information of other students."

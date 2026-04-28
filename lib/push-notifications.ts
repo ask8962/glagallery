@@ -182,7 +182,7 @@ export async function setupForegroundListener(
         console.log("Foreground message received:", payload)
 
         // Extract notification data
-        const title = payload.notification?.title || "GLA Gallery"
+        const title = payload.notification?.title || "CampusHub"
         const body = payload.notification?.body || "You have a new notification"
         const link = payload.data?.link
 

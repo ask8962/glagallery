@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
         const icsContent = [
             "BEGIN:VCALENDAR",
             "VERSION:2.0",
-            "PRODID:-//GLA Gallery//Events//EN",
+            "PRODID:-//CampusHub//Events//EN",
             "CALSCALE:GREGORIAN",
             "METHOD:PUBLISH",
             "BEGIN:VEVENT",
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
             `DESCRIPTION:${escapeICSText(event.shortDescription || event.description || "")}`,
             location ? `LOCATION:${escapeICSText(location)}` : "",
             `URL:https://campushub.pro/events/${eventId}`,
-            `ORGANIZER;CN=${escapeICSText(event.organizer?.name || "GLA Gallery")}:mailto:${event.organizer?.email || "events@gla.ac.in"}`,
+            `ORGANIZER;CN=${escapeICSText(event.organizer?.name || "CampusHub")}:mailto:${event.organizer?.email || "events@gla.ac.in"}`,
             "STATUS:CONFIRMED",
             "END:VEVENT",
             "END:VCALENDAR"

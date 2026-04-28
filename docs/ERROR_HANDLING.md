@@ -1,6 +1,6 @@
 # Error Handling & Error Boundaries
 
-This document describes the error handling system implemented in the GLA Gallery application.
+This document describes the error handling system implemented in the CampusHub application.
 
 ## Overview
 

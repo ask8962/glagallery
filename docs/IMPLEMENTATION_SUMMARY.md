@@ -1,6 +1,6 @@
 # Implementation Summary - P0 & P1 Tasks
 
-This document summarizes the implementation of critical P0 and P1 tasks for the GLA Gallery project.
+This document summarizes the implementation of critical P0 and P1 tasks for the CampusHub project.
 
 ## ✅ Completed Tasks
 

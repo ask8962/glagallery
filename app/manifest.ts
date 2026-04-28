@@ -2,8 +2,8 @@ import { MetadataRoute } from "next"
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: "GLA Gallery",
-        short_name: "GLA Gallery",
+        name: "CampusHub",
+        short_name: "CampusHub",
         description: "Campus Memories & Hackathon Management Platform for CampusHub",
         start_url: "/",
         display: "standalone",

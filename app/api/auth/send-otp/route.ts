@@ -41,7 +41,7 @@ async function sendOTPEmail(email: string, otp: string): Promise<{ success: bool
         await transporter.sendMail({
             from: `"${SMTP_FROM_NAME}" <${SMTP_FROM_EMAIL}>`,
             to: email,
-            subject: "Your GLA Gallery Verification Code",
+            subject: "Your CampusHub Verification Code",
             text: `Your verification code is: ${otp}\n\nThis code expires in 10 minutes.\n\nIf you didn't request this code, please ignore this email.`,
             html: `
         <div style="font-family: Arial, sans-serif; max-width: 400px; margin: 0 auto; padding: 20px;">

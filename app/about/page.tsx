@@ -4,8 +4,8 @@ import { ArrowLeft, Users, Camera, Trophy, Heart, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = {
-    title: "About Us | GLA Gallery",
-    description: "Learn about GLA Gallery - the campus memories and hackathon management platform for CampusHub students.",
+    title: "About Us | CampusHub",
+    description: "Learn about CampusHub - the campus memories and hackathon management platform for CampusHub students.",
 }
 
 export default function AboutPage() {
@@ -63,14 +63,14 @@ export default function AboutPage() {
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-2 rounded-full mb-6">
                         <Sparkles className="h-4 w-4" />
-                        <span className="text-sm font-medium">About GLA Gallery</span>
+                        <span className="text-sm font-medium">About CampusHub</span>
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold mb-6">
                         Preserving Campus
                         <span className="text-accent block">Memories Forever</span>
                     </h1>
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                        GLA Gallery is the official platform for CampusHub students to share,
+                        CampusHub is the official platform for CampusHub students to share,
                         discover, and cherish campus moments. Built by students, for students.
                     </p>
                 </div>
@@ -105,7 +105,7 @@ export default function AboutPage() {
                     <p className="text-muted-foreground leading-relaxed">
                         We believe every moment at CampusHub deserves to be remembered.
                         From the first day of orientation to the final goodbye at farewell,
-                        GLA Gallery serves as a digital yearbook where every student can contribute
+                        CampusHub serves as a digital yearbook where every student can contribute
                         and relive the memories that make college life special.
                     </p>
                 </div>

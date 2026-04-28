@@ -1,4 +1,4 @@
-export const APP_NAME = "GLA Gallery"
+export const APP_NAME = "CampusHub"
 export const APP_DESCRIPTION = "Campus Memories & Hackathon Management Platform for CampusHub"
 export const APP_URL = "https://campushub.pro"
 export const CREATOR_NAME = "Anukalp Gupta"

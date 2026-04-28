@@ -122,7 +122,7 @@ export default function ClubRegisterPage() {
                     </div>
                     <h1 className="text-3xl font-bold mb-2">Start Your Community</h1>
                     <p className="text-muted-foreground">
-                        Fill out the form below to register your club or society on GLA Gallery.
+                        Fill out the form below to register your club or society on CampusHub.
                     </p>
                 </motion.div>
 

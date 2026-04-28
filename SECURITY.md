@@ -9,7 +9,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in GLA Gallery, please report it responsibly:
+If you discover a security vulnerability in CampusHub, please report it responsibly:
 
 1. **Email**: Send details to [ganukalp70@gmail.com](mailto:ganukalp70@gmail.com)
 2. **Subject**: Use "SECURITY: [Brief Description]"
@@ -46,4 +46,4 @@ We follow responsible disclosure practices. We ask that you:
 2. Do not access data that doesn't belong to you
 3. Act in good faith
 
-Thank you for helping keep GLA Gallery secure! 🔒
+Thank you for helping keep CampusHub secure! 🔒

@@ -42,7 +42,7 @@ const SAMPLE_REWARDS = [
     },
     {
         name: "GLA T-Shirt",
-        description: "Premium cotton t-shirt with GLA Gallery logo",
+        description: "Premium cotton t-shirt with CampusHub logo",
         imageURL: "",
         category: "physical",
         pointsCost: 1500,

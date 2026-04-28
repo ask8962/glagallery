@@ -1,6 +1,6 @@
 Firebase to Supabase Migration Feasibility Analysis
 Executive Summary
-Migrating GLA Gallery from Firebase to Supabase is FEASIBLE. The application architecture (Next.js + Client-side logic) aligns well with Supabase's architecture. However, the migration effort is MEDIUM-HIGH because Firebase is deeply integrated into the frontend code (~43 files).
+Migrating CampusHub from Firebase to Supabase is FEASIBLE. The application architecture (Next.js + Client-side logic) aligns well with Supabase's architecture. However, the migration effort is MEDIUM-HIGH because Firebase is deeply integrated into the frontend code (~43 files).
 
 Recommendation: Perform a full cut-over migration. Incremental migration is not recommended due to Authentication dependencies.
 

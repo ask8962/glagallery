@@ -14,11 +14,11 @@
 export const APP_CONFIG = {
   // Production URL - MUST be set to your actual domain
   // This is the ONLY source of truth for email links
-  APP_URL: process.env.NEXT_PUBLIC_APP_URL || "https://gla-gallery.vercel.app",
+  APP_URL: process.env.NEXT_PUBLIC_APP_URL || "https://campushub.pro",
 
   // App metadata
-  APP_NAME: "GLA Gallery",
-  APP_DESCRIPTION: "Campus Memories & Hackathons",
+  APP_NAME: "CampusHub",
+  APP_DESCRIPTION: "The Multi-Tenant Campus Operating System",
 
   // Email settings
   EMAIL_FROM_NAME: process.env.SMTP_FROM_NAME || "CampusHub",

@@ -1,6 +1,6 @@
 # Data Validation & Sanitization
 
-This document describes the data validation and sanitization system implemented in the GLA Gallery application.
+This document describes the data validation and sanitization system implemented in the CampusHub application.
 
 ## Overview
 

@@ -14,11 +14,11 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
         if (!data) {
             return {
-                title: "Hackathon Not Found | GLA Gallery",
+                title: "Hackathon Not Found | CampusHub",
             }
         }
 
-        const title = `${data.title} | GLA Gallery`
+        const title = `${data.title} | CampusHub`
         const description = data.description?.substring(0, 160) || `Join this exciting hackathon at CampusHub.`
         const imageUrl = data.bannerURL || data.logoURL || "/placeholder.svg"
 
@@ -41,7 +41,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     } catch (error) {
         console.error("Error generating hackathon metadata:", error)
         return {
-            title: "Hackathon | GLA Gallery",
+            title: "Hackathon | CampusHub",
         }
     }
 }

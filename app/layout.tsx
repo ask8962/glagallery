@@ -87,7 +87,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              name: "GLA Gallery",
+              name: "CampusHub",
               url: "https://campushub.pro",
               logo: "https://campushub.pro/logo.png",
               description: "The official platform for CampusHub students to share campus memories, register for hackathons, and track upcoming events.",
@@ -101,7 +101,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              name: "GLA Gallery",
+              name: "CampusHub",
               url: "https://campushub.pro",
               potentialAction: {
                 "@type": "SearchAction",

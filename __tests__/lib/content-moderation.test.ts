@@ -4,7 +4,7 @@ import { moderateContent, getModerationAction, moderateImage, moderateContentBat
 describe('Content Moderation', () => {
     describe('moderateContent', () => {
         it('should allow clean text', () => {
-            const result = moderateContent('Hello! Welcome to GLA Gallery.')
+            const result = moderateContent('Hello! Welcome to CampusHub.')
             expect(result.allowed).toBe(true)
             expect(result.flagged).toBe(false)
             expect(result.score).toBeLessThan(20)

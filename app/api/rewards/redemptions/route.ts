@@ -146,12 +146,12 @@ export async function PATCH(request: NextRequest) {
                                     View Redemption History
                                 </a>
                             </p>
-                            <p style="color: #666; font-size: 12px; margin-top: 30px;">— GLA Gallery Team</p>
+                            <p style="color: #666; font-size: 12px; margin-top: 30px;">— CampusHub Team</p>
                         </div>
                     `
 
                     await transporter.sendMail({
-                        from: `"GLA Gallery" <${process.env.SMTP_USER}>`,
+                        from: `"CampusHub" <${process.env.SMTP_USER}>`,
                         to: redemptionData.userEmail,
                         subject,
                         html: htmlBody,

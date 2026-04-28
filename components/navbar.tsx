@@ -54,6 +54,7 @@ export function Navbar() {
       icon: <Rocket className="h-4 w-4 mr-2" />,
       items: [
         { href: "/search", label: "Search", icon: <SearchIcon className="h-4 w-4 mr-2" /> },
+        { href: "/confessions", label: "Confessions", icon: <Flame className="h-4 w-4 text-orange-500 mr-2" /> },
       ]
     },
     {

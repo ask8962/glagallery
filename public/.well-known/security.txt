@@ -1,4 +1,4 @@
-# Security Policy for GLA Gallery
+# Security Policy for CampusHub
 # https://securitytxt.org/
 
 Contact: mailto:ganukalp70@gmail.com
