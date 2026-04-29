@@ -59,6 +59,25 @@ export async function POST(request: NextRequest) {
 
     const docRef = await adminDb.collection("organizations").add(orgData)
 
+    // Programmatically add the new domain to Firebase Auth Authorized Domains
+    const { getAuth } = await import("firebase-admin/auth")
+    const auth = getAuth()
+    try {
+      const currentConfig = await auth.projectConfigManager().getProjectConfig()
+      const currentDomains = currentConfig.authorizedDomains || []
+      const newDomain = `${orgSlug}.campushub.pro`
+
+      if (!currentDomains.includes(newDomain)) {
+        await auth.projectConfigManager().updateProjectConfig({
+          authorizedDomains: [...currentDomains, newDomain]
+        })
+        console.log(`Successfully added ${newDomain} to Firebase Auth authorized domains.`)
+      }
+    } catch (authErr) {
+      console.error("Failed to add authorized domain to Firebase Auth:", authErr)
+      // We don't fail the entire onboarding process if this fails, but we log it
+    }
+
     // Also add to billing CRM as a new lead
     await adminDb.collection("billing_crm").add({
       orgId: docRef.id,
