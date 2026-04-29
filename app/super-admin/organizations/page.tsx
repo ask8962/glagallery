@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Building2, Plus, Settings } from "lucide-react"
+import Link from "next/link"
 
 export default function SuperAdminOrganizations() {
     const [organizations, setOrganizations] = useState<Organization[]>([])
@@ -155,18 +156,15 @@ export default function SuperAdminOrganizations() {
                                 <div className="flex justify-between items-center text-muted-foreground mb-4">
                                     <span>Subdomain: <span className="font-medium text-foreground">{org.slug}.campushub.pro</span></span>
                                 </div>
-                                <Button 
-                                    variant="outline" 
-                                    size="sm" 
-                                    className="w-full gap-2 text-xs"
-                                    onClick={() => {
-                                        import("sonner").then(({ toast }) => {
-                                            toast.info("Tenant management dashboard coming soon.")
-                                        })
-                                    }}
-                                >
-                                    <Settings className="h-3.5 w-3.5" /> Manage Tenant
-                                </Button>
+                                <Link href={`/super-admin/organizations/${org.id}`}>
+                                    <Button 
+                                        variant="outline" 
+                                        size="sm" 
+                                        className="w-full gap-2 text-xs"
+                                    >
+                                        <Settings className="h-3.5 w-3.5" /> Manage Tenant
+                                    </Button>
+                                </Link>
                             </CardContent>
                         </Card>
                     ))
