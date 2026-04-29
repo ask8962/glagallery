@@ -35,25 +35,6 @@ export async function POST(request: NextRequest) {
         // 3. Save to Firestore
         const docRef = await adminDb.collection("organizations").add(orgData)
 
-        // 4. Programmatically add the new domain to Firebase Auth Authorized Domains
-        const { getAuth } = await import("firebase-admin/auth")
-        const auth = getAuth()
-        try {
-            const currentConfig = await auth.projectConfigManager().getProjectConfig()
-            const currentDomains = currentConfig.authorizedDomains || []
-            const newDomain = domain // usually e.g., 'neworg.campushub.pro'
-
-            if (!currentDomains.includes(newDomain)) {
-                await auth.projectConfigManager().updateProjectConfig({
-                    authorizedDomains: [...currentDomains, newDomain]
-                })
-                console.log(`Successfully added ${newDomain} to Firebase Auth authorized domains.`)
-            }
-        } catch (authErr) {
-            console.error("Failed to add authorized domain to Firebase Auth:", authErr)
-            // We don't fail the entire creation process if this fails, but we log it
-        }
-
         return NextResponse.json({
             success: true,
             organizationId: docRef.id,
