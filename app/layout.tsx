@@ -16,6 +16,7 @@ import { Toaster } from "sonner"
 import { OnboardingFlow } from "@/components/onboarding-flow"
 import { ConfigProvider } from "@/context/config-context"
 import { OrganizationProvider } from "@/context/organization-context"
+import { SessionExpiredModal } from "@/components/auth/session-expired-modal"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -155,6 +156,7 @@ export default function RootLayout({
                     <main className="pt-16">{children}</main>
                     <SiteFooter />
                     <OnboardingFlow />
+                    <SessionExpiredModal />
                   </Suspense>
                 </TwoFAGuard>
               </ConfigProvider>

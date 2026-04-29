@@ -9,11 +9,15 @@ import { doc, getDoc, setDoc } from "firebase/firestore"
 import type { UserProfile } from "@/lib/types"
 import { isAdminEmail } from "@/lib/config"
 
+import { useInactivityTimer } from "@/hooks/use-inactivity-timer"
+
 type AuthContextType = {
   user: User | null
   profile: UserProfile | null
   loading: boolean
   needs2FA: boolean // true if 2FA enabled but not verified this session
+  sessionExpired: boolean
+  sessionExpiryReason: "inactivity" | "invalid_token" | "concurrent_login" | null
   signIn: () => Promise<void>
   signOut: () => Promise<void>
 }
@@ -23,6 +27,8 @@ const AuthContext = createContext<AuthContextType>({
   profile: null,
   loading: true,
   needs2FA: false,
+  sessionExpired: false,
+  sessionExpiryReason: null,
   signIn: async () => { },
   signOut: async () => { },
 })
@@ -33,6 +39,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [needs2FA, setNeeds2FA] = useState(false)
+  const [sessionExpired, setSessionExpired] = useState(false)
+  const [sessionExpiryReason, setSessionExpiryReason] = useState<"inactivity" | "invalid_token" | "concurrent_login" | null>(null)
+
+  // Inactivity Timer
+  useInactivityTimer({
+    timeoutMs: 30 * 60 * 1000, // 30 minutes
+    isActive: !!user && !sessionExpired,
+    onTimeout: async () => {
+      console.log("Session expired due to inactivity")
+      setSessionExpiryReason("inactivity")
+      setSessionExpired(true)
+      const { signOut: fbSignOut } = await import("firebase/auth")
+      await fbSignOut(auth)
+    },
+  })
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (u) => {
@@ -40,8 +61,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!u) {
         setProfile(null)
         setLoading(false)
+        // If not manually triggered by session expiration, maybe token invalidated
         return
       }
+
+      // Reset session expiration on fresh login
+      setSessionExpired(false)
+      setSessionExpiryReason(null)
 
       // --- Dynamic Tenant Routing ---
       // We automatically route users to their organizations based on their email.
@@ -162,6 +188,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       profile,
       loading,
       needs2FA,
+      sessionExpired,
+      sessionExpiryReason,
       signIn: async () => {
         const { auth } = getFirebase()
         try {
@@ -186,7 +214,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await fbSignOut(auth)
       },
     }),
-    [user, profile, loading, needs2FA],
+    [user, profile, loading, needs2FA, sessionExpired, sessionExpiryReason],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
