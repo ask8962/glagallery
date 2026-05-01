@@ -21,6 +21,13 @@
 - **Bookmarks** — Save posts for later viewing
 - **Follow System** — Follow friends and get updates in your feed
 
+### 🗣️ Campus Confessions Feed
+- **Anonymous Feed** — Endless scrolling viral social feed for campus secrets and stories
+- **Reddit-style Voting** — Upvote/downvote system for hot takes and confessions
+- **Interactive Polls** — Real-time progress bars for campus-wide opinions
+- **Threaded Replies** — Anonymous threaded conversations
+- **Lenient Moderation** — Automated content scoring with Super Admin identity reveal capabilities
+
 ### 📅 Campus Event Hub
 - **Event Discovery** — Browse upcoming workshops, hackathons, and cultural fests
 - **Digital Ticketing** — QR-coded tickets generated instantly upon registration
@@ -71,6 +78,7 @@
 
 ### 👨‍💼 Super Admin & Organization Panels
 - **Multi-Tenant Architecture** — Super Admins get global visibility; Org Admins see only their institution's data.
+- **Tenant Management Dashboard** — Provision new tenants, configure subdomains, customize primary brand colors, and suspend/activate tenants instantly.
 - **Self-Serve College Onboarding** — Institutions can sign up and launch their branded subdomain in under 2 minutes.
 - **NAAC/NBA Report Generator** — One-click PDF export of accreditation-ready reports covering events, clubs, and student engagement metrics.
 - **User Management** — View, search, and manage scoped users with role toggles
@@ -196,6 +204,7 @@
 | **Input Sanitization** | DOMPurify for all user-generated content |
 | **Firebase Rules** | Granular read/write rules per collection |
 | **RBAC** | Student, Admin, Super Admin role segregation |
+| **Session Security** | Inactivity timeout, concurrent login detection, and forced auto-logout |
 
 ---
 
@@ -222,6 +231,7 @@ glagallery/
 │   │   └── rewards/            # Rewards & redemptions
 │   ├── changelog/              # Release notes
 │   ├── clubs/                  # Club directory & management
+│   ├── confessions/            # Anonymous campus feed
 │   ├── events/                 # Campus events
 │   ├── hackathons/             # Hackathon platform
 │   ├── profile/                # User profile & resume builder
@@ -230,6 +240,7 @@ glagallery/
 ├── components/                 # Reusable UI components
 │   ├── admin/                  # Admin-specific components
 │   ├── clubs/                  # Club components
+│   ├── confessions/            # Confession feed components
 │   ├── events/                 # Event components
 │   ├── hackathons/             # Hackathon components
 │   ├── profile/                # Profile components
@@ -288,7 +299,8 @@ This project is licensed under the MIT License — see [LICENSE](LICENSE) for de
 
 **Anukalp Gupta**  
 CampusHub  
-[ganukalp70@gmail.com](mailto:ganukalp70@gmail.com)  
+Website: [https://campushub.pro/](https://campushub.pro/)  
+Email: [admin@campushub.pro](mailto:admin@campushub.pro)  
 [GitHub: @ask8962](https://github.com/ask8962)
 
 ---
