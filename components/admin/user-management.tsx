@@ -33,7 +33,7 @@ export function UserManagement() {
             q,
             (snap) => {
                 const list: UserProfile[] = []
-                snap.forEach((d) => list.push(d.data() as UserProfile))
+                snap.forEach((d) => list.push({ uid: d.id, ...d.data() } as UserProfile))
                 setUsers(list)
                 setLoading(false)
             },
