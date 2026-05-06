@@ -472,7 +472,7 @@ export function BroadcastEmail() {
                                     Campaign Delivered
                                 </p>
                                 <p className="text-sm text-green-600/80 dark:text-green-400/80">
-                                    Successfully sent to {result.sent} recipients. {result.failed > 0 && \`(\${result.failed} failed)\`}
+                                    Successfully sent to {result.sent} recipients. {result.failed > 0 && `(${result.failed} failed)`}
                                 </p>
                             </div>
                         </div>
