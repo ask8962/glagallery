@@ -34,56 +34,153 @@ function replacePlaceholders(text: any, user: UserProfile): string {
 
 // Generate HTML email template
 function generateBroadcastHTML(subject: string, body: string): string {
+    // Basic markdown-like handling for newlines
+    const formattedBody = body
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/\n/g, '<br>');
+
     return `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${subject}</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f4f4f5;
+      color: #18181b;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrapper {
+      width: 100%;
+      table-layout: fixed;
+      background-color: #f4f4f5;
+      padding: 40px 0;
+    }
+    .main {
+      background-color: #ffffff;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 600px;
+      border-radius: 12px;
+      border: 1px solid #e4e4e7;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    .header {
+      background: linear-gradient(135deg, #09090b 0%, #27272a 100%);
+      padding: 32px 40px;
+      text-align: center;
+    }
+    .header h1 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+    }
+    .header span {
+      color: #3b82f6;
+    }
+    .content {
+      padding: 40px;
+    }
+    .subject {
+      color: #09090b;
+      margin: 0 0 24px 0;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.025em;
+    }
+    .body-text {
+      color: #3f3f46;
+      font-size: 16px;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .body-text p {
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+    .cta-container {
+      padding: 0 40px 40px 40px;
+      text-align: left;
+    }
+    .button {
+      display: inline-block;
+      background-color: #09090b;
+      color: #ffffff !important;
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .footer {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 32px 20px;
+      text-align: center;
+      color: #71717a;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .footer a {
+      color: #52525b;
+      text-decoration: underline;
+    }
+    @media screen and (max-width: 600px) {
+      .main { border-radius: 0; border: none; }
+      .wrapper { padding: 0; }
+      .content, .header, .cta-container { padding: 30px 20px; }
+    }
+  </style>
 </head>
-<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 40px 20px;">
-    <tr>
-      <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-          <!-- Header -->
-          <tr>
-            <td style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 30px; text-align: center;">
-              <h1 style="color: #ffd700; margin: 0; font-size: 24px;">CampusHub</h1>
-            </td>
-          </tr>
-          
-          <!-- Content -->
-          <tr>
-            <td style="padding: 40px 30px;">
-              <h2 style="color: #1a1a2e; margin: 0 0 20px 0; font-size: 22px;">${subject}</h2>
-              <div style="color: #4a4a4a; font-size: 16px; line-height: 1.6;">
-                ${body.replace(/\n/g, "<br>")}
-              </div>
-            </td>
-          </tr>
-          
-          <!-- CTA -->
-          <tr>
-            <td style="padding: 0 30px 30px;">
-              <a href="https://campushub.pro" style="display: inline-block; background-color: #ffd700; color: #1a1a2e; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600;">
-                Visit CampusHub
-              </a>
-            </td>
-          </tr>
-          
-          <!-- Footer -->
-          <tr>
-            <td style="background-color: #f9f9f9; padding: 20px 30px; text-align: center; color: #888; font-size: 12px;">
-              <p style="margin: 0 0 10px 0;">CampusHub</p>
-              <p style="margin: 0;">You're receiving this because you're a registered CampusHub user.</p>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+<body>
+  <div class="wrapper">
+    <table class="main" cellpadding="0" cellspacing="0" align="center">
+      <!-- Header -->
+      <tr>
+        <td class="header">
+          <h1>Campus<span>Hub</span></h1>
+        </td>
+      </tr>
+      
+      <!-- Content -->
+      <tr>
+        <td class="content">
+          <h2 class="subject">${subject}</h2>
+          <div class="body-text">
+            <p>${formattedBody}</p>
+          </div>
+        </td>
+      </tr>
+      
+      <!-- CTA -->
+      <tr>
+        <td class="cta-container">
+          <a href="https://campushub.pro" class="button">
+            Open CampusHub &rarr;
+          </a>
+        </td>
+      </tr>
+    </table>
+    
+    <!-- Footer -->
+    <div class="footer">
+      <p>&copy; ${new Date().getFullYear()} CampusHub. The ultimate campus operating system.</p>
+      <p>You received this email because you are a registered user of CampusHub.</p>
+      <p>
+        <a href="https://campushub.pro">Visit Platform</a> &nbsp;&bull;&nbsp; 
+        <a href="mailto:admin@campushub.pro">Contact Support</a>
+      </p>
+    </div>
+  </div>
 </body>
 </html>`
 }
