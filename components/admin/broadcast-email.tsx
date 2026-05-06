@@ -305,7 +305,7 @@ export function BroadcastEmail() {
             }
 
             setResult({ sent: data.stats.sent, failed: data.stats.failed })
-            toast.success(\`Broadcast sent to \${data.stats.sent} users!\`)
+            toast.success(`Broadcast sent to ${data.stats.sent} users!`)
 
             setSubject("")
             setBody("")
@@ -554,7 +554,7 @@ export function BroadcastEmail() {
                         </AlertDialogTitle>
                         <AlertDialogDescription className="text-base">
                             You are about to broadcast this email to <strong>{selectedUsers.size} registered user{selectedUsers.size !== 1 ? 's' : ''}</strong>
-                            {customEmails.trim() !== "" ? \` and your custom recipients\` : ""}.
+                            {customEmails.trim() !== "" ? ` and your custom recipients` : ""}.
                             This action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
