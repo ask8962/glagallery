@@ -357,7 +357,7 @@ export default function ChangelogPage() {
                                                     key={i}
                                                     className="flex items-start gap-4 p-5 md:p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300 backdrop-blur-sm group/card"
                                                 >
-                                                    <div className={\`p-2.5 rounded-xl border \${config.color} shadow-lg shrink-0 group-hover/card:scale-110 transition-transform duration-300\`}>
+                                                    <div className={`p-2.5 rounded-xl border ${config.color} shadow-lg shrink-0 group-hover/card:scale-110 transition-transform duration-300`}>
                                                         <Icon className="h-5 w-5" />
                                                     </div>
                                                     <div className="space-y-2">
