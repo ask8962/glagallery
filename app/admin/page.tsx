@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import { isAdminEmail, isSuperAdminEmail } from "@/lib/config"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ShieldAlert } from "lucide-react"
+import { ShieldAlert, TerminalSquare, Activity, Zap, Server } from "lucide-react"
 
 // Components
 import { AdminStats } from "@/components/admin/admin-stats"
@@ -45,59 +45,78 @@ export default function AdminPage() {
 
   if (!hasAccess) {
     return (
-      <main className="mx-auto max-w-2xl px-4 py-10 text-center">
-        <h1 className="text-2xl font-bold text-primary">Admin only</h1>
-        <p className="text-sm text-muted-foreground">This area is restricted.</p>
+      <main className="min-h-[80vh] flex flex-col items-center justify-center text-center px-4">
+        <ShieldAlert className="w-16 h-16 text-destructive mb-4 opacity-50" />
+        <h1 className="text-3xl font-bold tracking-tight mb-2">Access Denied</h1>
+        <p className="text-muted-foreground max-w-sm">
+          You do not have the required permissions to view the command center.
+        </p>
       </main>
     )
   }
 
   return (
-    <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mx-auto max-w-6xl px-4 py-8 space-y-12">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-12 relative"
+    <div className="min-h-screen bg-[#0a0a0c] relative selection:bg-primary/30">
+      {/* Background ambient light */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
+      <div className="absolute top-[20%] right-[-10%] w-[30%] h-[50%] rounded-full bg-blue-500/5 blur-[120px] pointer-events-none" />
+
+      <motion.main 
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1 }} 
+        className="mx-auto max-w-7xl px-4 py-12 space-y-16 relative z-10"
       >
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <div className="h-1 w-12 bg-accent" />
-          <span className="text-sm font-medium text-accent">
-            {isSuperAdmin ? "Global Super Admin Panel" : "Admin Panel"}
-          </span>
-        </div>
-        
-        {isSuperAdmin && (
-            <div className="absolute top-0 right-0">
-              <Link href="/super-admin">
-                <Button variant="destructive" className="flex items-center gap-2 shadow-lg hover:shadow-xl transition-all">
-                  <ShieldAlert className="w-4 h-4" />
-                  Enter Super Admin Zone
-                </Button>
-              </Link>
+        {/* Command Center Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="relative flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-12 border-b border-white/5"
+        >
+          <div className="space-y-4 max-w-2xl">
+            <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-muted-foreground backdrop-blur-md">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              </span>
+              System Online • {isSuperAdmin ? "Global Super Admin" : "Tenant Admin"}
             </div>
-        )}
+            
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-white">
+              Command <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">Center</span>
+            </h1>
+            
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              {isSuperAdmin 
+                ? "Global terminal for managing all tenants, users, events, and platform configurations."
+                : "Manage your users, events, clubs, and oversee community interactions."}
+            </p>
+          </div>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-primary mb-4">
-          Content
-          <span className="block text-accent">Management</span>
-        </h1>
-        <p className="text-muted-foreground max-w-lg mx-auto leading-relaxed">
-          {isSuperAdmin 
-            ? "Global control over all tenants, users, events, clubs, and platform settings."
-            : "Manage users, events, clubs, and oversee community interactions."}
-        </p>
-      </motion.div>
+          {isSuperAdmin && (
+            <Link href="/super-admin">
+              <Button 
+                variant="outline" 
+                className="group relative overflow-hidden border-destructive/30 hover:border-destructive/80 bg-destructive/5 hover:bg-destructive/10 text-destructive-foreground transition-all duration-300 h-12 px-6"
+              >
+                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-destructive/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                <ShieldAlert className="w-4 h-4 mr-2" />
+                <span className="font-semibold tracking-wide">ENTER TENANT MANAGER</span>
+              </Button>
+            </Link>
+          )}
+        </motion.div>
 
-      {/* Stats Overview */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-      >
-        <AdminStats />
-      </motion.div>
+        {/* Stats Dashboard */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="relative"
+        >
+          <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 to-blue-500/10 rounded-2xl blur-xl opacity-50 pointer-events-none" />
+          <AdminStats />
+        </motion.div>
 
       {/* Users Management */}
       <motion.section
@@ -212,11 +231,12 @@ export default function AdminPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1.1 }}
           >
-            <h2 className="text-2xl font-semibold text-primary mb-6">Global Platform Settings</h2>
+            <h2 className="text-2xl font-semibold text-white/90 mb-6">Global Platform Settings</h2>
             <PlatformSettings />
           </motion.section>
         </>
       )}
-    </motion.main>
+      </motion.main>
+    </div>
   )
 }

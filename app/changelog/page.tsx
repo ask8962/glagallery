@@ -24,10 +24,10 @@ interface Release {
 }
 
 const typeConfig = {
-    feature: { icon: Sparkles, label: "New Feature", color: "bg-green-500/10 text-green-500" },
-    fix: { icon: Bug, label: "Bug Fix", color: "bg-red-500/10 text-red-500" },
-    improvement: { icon: Zap, label: "Improvement", color: "bg-blue-500/10 text-blue-500" },
-    security: { icon: Shield, label: "Security", color: "bg-yellow-500/10 text-yellow-500" },
+    feature: { icon: Sparkles, label: "New Feature", color: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20" },
+    fix: { icon: Bug, label: "Bug Fix", color: "text-rose-400 bg-rose-400/10 border-rose-400/20" },
+    improvement: { icon: Zap, label: "Improvement", color: "text-blue-400 bg-blue-400/10 border-blue-400/20" },
+    security: { icon: Shield, label: "Security", color: "text-amber-400 bg-amber-400/10 border-amber-400/20" },
 }
 
 export default function ChangelogPage() {
@@ -281,12 +281,17 @@ export default function ChangelogPage() {
     ]
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen bg-[#0a0a0c] selection:bg-primary/30 relative">
+            {/* Ambient Background Effects */}
+            <div className="fixed top-0 inset-x-0 h-[500px] bg-gradient-to-b from-primary/10 via-primary/5 to-transparent pointer-events-none" />
+            <div className="fixed -top-[20%] -right-[10%] w-[50%] h-[50%] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none" />
+            <div className="fixed -bottom-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-purple-500/10 blur-[120px] pointer-events-none" />
+
             {/* Header */}
-            <div className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10">
-                <div className="max-w-4xl mx-auto px-4 py-4">
+            <div className="border-b border-white/5 bg-background/50 backdrop-blur-xl sticky top-0 z-50">
+                <div className="max-w-4xl mx-auto px-6 py-4">
                     <Link href="/">
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" className="hover:bg-white/5 text-muted-foreground hover:text-white transition-colors">
                             <ArrowLeft className="h-4 w-4 mr-2" />
                             Back to Home
                         </Button>
@@ -294,44 +299,55 @@ export default function ChangelogPage() {
                 </div>
             </div>
 
-            <div className="max-w-4xl mx-auto px-4 py-12">
+            <div className="max-w-4xl mx-auto px-6 py-20 relative z-10">
                 {/* Hero */}
-                <div className="text-center mb-12">
-                    <div className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-2 rounded-full mb-6">
+                <div className="text-center mb-24 relative">
+                    <div className="inline-flex items-center gap-2 bg-primary/10 text-primary border border-primary/20 px-4 py-2 rounded-full mb-8 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
                         <Gift className="h-4 w-4" />
-                        <span className="text-sm font-medium">What&apos;s New</span>
+                        <span className="text-sm font-semibold tracking-wide">WHAT'S NEW</span>
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-bold mb-4">Changelog</h1>
-                    <p className="text-muted-foreground max-w-2xl mx-auto">
-                        Stay up to date with all the latest features, improvements, and fixes in CampusHub.
+                    <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter mb-6 text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">
+                        Changelog
+                    </h1>
+                    <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                        Track the evolution of CampusHub. New features, improvements, and fixes driving the ultimate campus experience.
                     </p>
                 </div>
 
-                {/* Timeline */}
+                {/* Glowing Timeline */}
                 <div className="relative">
-                    {/* Timeline line */}
-                    <div className="absolute left-4 top-0 bottom-0 w-px bg-border hidden md:block" />
+                    {/* Continuous glowing line */}
+                    <div className="absolute left-6 md:left-8 top-4 bottom-4 w-[2px] bg-gradient-to-b from-primary via-primary/50 to-transparent hidden md:block" />
 
-                    <div className="space-y-12">
+                    <div className="space-y-16 md:space-y-24">
                         {releases.map((release, index) => (
-                            <div key={release.version} className="relative">
-                                {/* Timeline dot */}
-                                <div className="absolute left-2 w-5 h-5 bg-accent rounded-full border-4 border-background hidden md:block" />
+                            <div key={release.version} className="relative group">
+                                {/* Timeline glow dot */}
+                                <div className="absolute left-4 md:left-[23px] top-6 w-5 h-5 hidden md:flex items-center justify-center">
+                                    <div className="absolute w-3 h-3 bg-primary rounded-full group-hover:scale-150 transition-transform duration-500" />
+                                    <div className="absolute w-5 h-5 bg-primary/40 rounded-full animate-ping" />
+                                </div>
 
-                                <div className="md:ml-12">
-                                    {/* Version header */}
-                                    <div className="flex flex-wrap items-center gap-3 mb-4">
-                                        <h2 className="text-2xl font-bold">v{release.version}</h2>
-                                        <Badge variant="outline" className="text-muted-foreground">
-                                            {release.date}
-                                        </Badge>
-                                        {index === 0 && (
-                                            <Badge className="bg-accent text-accent-foreground">Latest</Badge>
-                                        )}
+                                <div className="md:ml-20">
+                                    {/* Version Header Box */}
+                                    <div className="flex flex-col md:flex-row md:items-center gap-4 mb-8 sticky top-24 z-20 backdrop-blur-md bg-[#0a0a0c]/80 py-4 -mx-4 px-4 md:mx-0 md:px-0 rounded-xl">
+                                        <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
+                                            v{release.version}
+                                        </h2>
+                                        <div className="flex items-center gap-3">
+                                            <Badge variant="outline" className="text-muted-foreground border-white/10 bg-white/5 backdrop-blur-sm px-3 py-1 text-sm">
+                                                {release.date}
+                                            </Badge>
+                                            {index === 0 && (
+                                                <Badge className="bg-primary text-primary-foreground shadow-[0_0_15px_rgba(59,130,246,0.5)] border-none">
+                                                    Latest Release
+                                                </Badge>
+                                            )}
+                                        </div>
                                     </div>
 
-                                    {/* Changes */}
-                                    <div className="space-y-3">
+                                    {/* Glassmorphism Changes Cards */}
+                                    <div className="space-y-4">
                                         {release.changes.map((change, i) => {
                                             const config = typeConfig[change.type]
                                             const Icon = config.icon
@@ -339,17 +355,19 @@ export default function ChangelogPage() {
                                             return (
                                                 <div
                                                     key={i}
-                                                    className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
+                                                    className="flex items-start gap-4 p-5 md:p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300 backdrop-blur-sm group/card"
                                                 >
-                                                    <div className={`p-1.5 rounded-md ${config.color}`}>
-                                                        <Icon className="h-4 w-4" />
+                                                    <div className={\`p-2.5 rounded-xl border \${config.color} shadow-lg shrink-0 group-hover/card:scale-110 transition-transform duration-300\`}>
+                                                        <Icon className="h-5 w-5" />
                                                     </div>
-                                                    <div>
-                                                        <div className="font-medium">{change.title}</div>
+                                                    <div className="space-y-2">
+                                                        <div className="flex items-center gap-3">
+                                                            <h3 className="font-semibold text-lg text-white/90">{change.title}</h3>
+                                                        </div>
                                                         {change.description && (
-                                                            <div className="text-sm text-muted-foreground">
+                                                            <p className="text-base text-muted-foreground leading-relaxed">
                                                                 {change.description}
-                                                            </div>
+                                                            </p>
                                                         )}
                                                     </div>
                                                 </div>

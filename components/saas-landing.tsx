@@ -79,29 +79,29 @@ export function SaasLanding() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative z-10 pt-24 pb-20 px-4 md:px-6 max-w-7xl mx-auto flex flex-col items-center text-center">
+      <section className="relative z-10 pt-32 pb-24 px-4 md:px-6 max-w-[90rem] mx-auto flex flex-col items-center text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="space-y-6 max-w-4xl"
+          className="space-y-8 max-w-5xl"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-accent backdrop-blur-md">
-            <span className="relative flex h-2 w-2">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-accent backdrop-blur-md">
+            <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent"></span>
             </span>
-            Now accepting new institutions — 2 min setup
+            CampusHub 3.0 • Now accepting new institutions
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1]">
+          <h1 className="text-6xl md:text-8xl lg:text-[7.5rem] font-black tracking-tighter leading-[0.95] text-white">
             The Multi-Tenant <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-yellow-200 to-amber-500">
-              Campus Operating System
+              Campus OS.
             </span>
           </h1>
 
-          <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed font-medium">
             Centralize events, automate hackathons, track student engagement, and generate <strong className="text-white">NAAC/NBA accreditation reports</strong> seamlessly.
           </p>
 
@@ -128,10 +128,10 @@ export function SaasLanding() {
       </section>
 
       {/* Features Grid */}
-      <section id="features" className="relative z-10 py-24 px-4 md:px-6 max-w-7xl mx-auto border-t border-white/5">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">Everything your campus needs.</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">Replace fragmented WhatsApp groups, messy Google Forms, and manual spreadsheets with one unified platform.</p>
+      <section id="features" className="relative z-10 py-32 px-4 md:px-6 max-w-[90rem] mx-auto border-t border-white/5">
+        <div className="text-center mb-20 space-y-6">
+          <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight">Everything your campus needs.</h2>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">Replace fragmented WhatsApp groups, messy Google Forms, and manual spreadsheets with one unified, premium platform.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -145,17 +145,17 @@ export function SaasLanding() {
           ].map((feature, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
               viewport={{ once: true }}
-              className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all group"
+              transition={{ delay: i * 0.1, duration: 0.6 }}
+              className="p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300 backdrop-blur-sm group"
             >
-              <div className="h-12 w-12 rounded-2xl bg-accent/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <feature.icon className="h-6 w-6 text-accent" />
+              <div className="w-14 h-14 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <feature.icon className="h-7 w-7 text-accent" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">{feature.desc}</p>
+              <h3 className="text-2xl font-bold mb-3">{feature.title}</h3>
+              <p className="text-gray-400 leading-relaxed text-lg">{feature.desc}</p>
             </motion.div>
           ))}
         </div>
