@@ -104,6 +104,7 @@
     "react-resizable-panels": "latest",
     "recharts": "latest",
     "remark-gfm": "^4.0.1",
+    "resend": "^6.12.3",
     "sonner": "latest",
     "tailwind-merge": "^3.4.1",
     "tailwindcss-animate": "^1.0.7",

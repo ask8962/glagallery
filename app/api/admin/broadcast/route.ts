@@ -3,21 +3,19 @@ import { adminDb } from "@/lib/firebase-admin"
 import type { UserProfile } from "@/lib/types"
 import { APP_CONFIG, getAdminEmails, isAdminEmail } from "@/lib/config"
 import { getClientIP, checkServerRateLimit } from "@/lib/server-auth"
+import { Resend } from "resend"
 
-// SMTP configuration
-const SMTP_HOST = process.env.SMTP_HOST
-const SMTP_PORT = Number.parseInt(process.env.SMTP_PORT || "587")
-const SMTP_USER = process.env.SMTP_USER
-const SMTP_PASSWORD = process.env.SMTP_PASSWORD
-const SMTP_FROM_EMAIL = APP_CONFIG.EMAIL_FROM_ADDRESS
-const SMTP_FROM_NAME = APP_CONFIG.EMAIL_FROM_NAME
+// Resend configuration
+const resend = new Resend(process.env.RESEND_API_KEY)
+const FROM_EMAIL = APP_CONFIG.EMAIL_FROM_ADDRESS || "team@campushub.pro"
+const FROM_NAME = APP_CONFIG.EMAIL_FROM_NAME || "CampusHub"
 
 interface BroadcastRequest {
     subject: string
     body: string
     adminEmail: string
-    userIds?: string[] // Optional: if provided, only send to these users
-    customEmails?: string[] // Optional: external email addresses not in the system
+    userIds?: string[]
+    customEmails?: string[]
 }
 
 // Replace placeholders in text
@@ -30,11 +28,8 @@ function replacePlaceholders(text: any, user: UserProfile): string {
         .replace(/\[Level\]/gi, String(user.level || 1));
 }
 
-
-
 // Generate HTML email template
 function generateBroadcastHTML(subject: string, body: string): string {
-    // Basic markdown-like handling for newlines
     const formattedBody = body
         .replace(/\n\n/g, '</p><p>')
         .replace(/\n/g, '<br>');
@@ -56,40 +51,46 @@ function generateBroadcastHTML(subject: string, body: string): string {
       -webkit-font-smoothing: antialiased;
     }
     .wrapper {
-      width: 100%;
-      table-layout: fixed;
-      background-color: #f4f4f5;
-      padding: 40px 0;
+      padding: 40px 20px;
     }
     .main {
       background-color: #ffffff;
       margin: 0 auto;
-      width: 100%;
       max-width: 600px;
-      border-radius: 12px;
-      border: 1px solid #e4e4e7;
+      border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
     }
     .header {
-      background: linear-gradient(135deg, #09090b 0%, #27272a 100%);
-      padding: 32px 40px;
+      background: linear-gradient(135deg, #09090b 0%, #18181b 50%, #27272a 100%);
+      padding: 36px 40px;
       text-align: center;
     }
     .header h1 {
       color: #ffffff;
       margin: 0;
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 800;
-      letter-spacing: -0.025em;
+      letter-spacing: -0.03em;
     }
     .header span {
-      color: #3b82f6;
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header p {
+      color: #71717a;
+      margin: 8px 0 0;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
     .content {
       padding: 40px;
     }
-    .subject {
+    .subject-line {
       color: #09090b;
       margin: 0 0 24px 0;
       font-size: 22px;
@@ -100,124 +101,88 @@ function generateBroadcastHTML(subject: string, body: string): string {
     .body-text {
       color: #3f3f46;
       font-size: 16px;
-      line-height: 1.6;
+      line-height: 1.7;
       margin: 0;
     }
     .body-text p {
       margin-top: 0;
       margin-bottom: 16px;
     }
-    .cta-container {
+    .cta-section {
       padding: 0 40px 40px 40px;
       text-align: left;
     }
-    .button {
+    .cta-button {
       display: inline-block;
-      background-color: #09090b;
+      background: linear-gradient(135deg, #09090b, #27272a);
       color: #ffffff !important;
       text-decoration: none;
       padding: 14px 28px;
-      border-radius: 8px;
+      border-radius: 10px;
       font-weight: 600;
       font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #e4e4e7, transparent);
+      margin: 0 40px;
     }
     .footer {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 32px 20px;
+      padding: 32px 40px;
       text-align: center;
-      color: #71717a;
+    }
+    .footer p {
+      color: #a1a1aa;
       font-size: 13px;
       line-height: 1.6;
+      margin: 4px 0;
     }
     .footer a {
-      color: #52525b;
+      color: #71717a;
       text-decoration: underline;
-    }
-    @media screen and (max-width: 600px) {
-      .main { border-radius: 0; border: none; }
-      .wrapper { padding: 0; }
-      .content, .header, .cta-container { padding: 30px 20px; }
     }
   </style>
 </head>
 <body>
   <div class="wrapper">
-    <table class="main" cellpadding="0" cellspacing="0" align="center">
-      <!-- Header -->
+    <table class="main" cellpadding="0" cellspacing="0" align="center" width="100%">
       <tr>
         <td class="header">
           <h1>Campus<span>Hub</span></h1>
+          <p>The Campus Operating System</p>
         </td>
       </tr>
-      
-      <!-- Content -->
       <tr>
         <td class="content">
-          <h2 class="subject">${subject}</h2>
+          <h2 class="subject-line">${subject}</h2>
           <div class="body-text">
             <p>${formattedBody}</p>
           </div>
         </td>
       </tr>
-      
-      <!-- CTA -->
       <tr>
-        <td class="cta-container">
-          <a href="https://campushub.pro" class="button">
-            Open CampusHub &rarr;
-          </a>
+        <td class="cta-section">
+          <a href="https://campushub.pro" class="cta-button">Open CampusHub &rarr;</a>
+        </td>
+      </tr>
+      <tr>
+        <td><div class="divider"></div></td>
+      </tr>
+      <tr>
+        <td class="footer">
+          <p>&copy; ${new Date().getFullYear()} CampusHub. The ultimate campus operating system.</p>
+          <p>You received this email because you are a registered member of CampusHub.</p>
+          <p>
+            <a href="https://campushub.pro">Visit CampusHub</a> &bull;
+            <a href="mailto:team@campushub.pro">Contact Support</a>
+          </p>
         </td>
       </tr>
     </table>
-    
-    <!-- Footer -->
-    <div class="footer">
-      <p>&copy; ${new Date().getFullYear()} CampusHub. The ultimate campus operating system.</p>
-      <p>You received this email because you are a registered user of CampusHub.</p>
-      <p>
-        <a href="https://campushub.pro">Visit Platform</a> &nbsp;&bull;&nbsp; 
-        <a href="mailto:team@campushub.pro">Contact Support</a>
-      </p>
-    </div>
   </div>
 </body>
 </html>`
-}
-
-// Send single email
-async function sendEmail(to: string, subject: string, htmlBody: string): Promise<boolean> {
-    if (!SMTP_HOST || !SMTP_USER || !SMTP_PASSWORD) {
-        console.error("SMTP not configured")
-        return false
-    }
-
-    try {
-        const nodemailer = await import("nodemailer")
-        const transporter = nodemailer.createTransport({
-            host: SMTP_HOST,
-            port: SMTP_PORT,
-            secure: SMTP_PORT === 465,
-            auth: {
-                user: SMTP_USER,
-                pass: SMTP_PASSWORD,
-            },
-            connectionTimeout: 10000,
-            greetingTimeout: 10000,
-        })
-
-        await transporter.sendMail({
-            from: `"${SMTP_FROM_NAME}" <${SMTP_FROM_EMAIL}>`,
-            to,
-            subject,
-            html: htmlBody,
-        })
-
-        return true
-    } catch (error: any) {
-        console.error(`Failed to send email to ${to}:`, error.message)
-        return false
-    }
 }
 
 // Send broadcast
@@ -238,45 +203,37 @@ export async function POST(request: NextRequest) {
         const { subject, body: messageBody, adminEmail, userIds, customEmails } = body
         console.log("Broadcast request received from:", adminEmail)
 
-        // Validate admin - check centralized config OR check Firestore for admin role
+        // Validate admin
         let isAdmin = false
 
         if (adminEmail) {
             const normalizedEmail = adminEmail.toLowerCase().trim()
 
-            // Check centralized config list first
             if (isAdminEmail(normalizedEmail)) {
                 console.log("Admin found in config list")
                 isAdmin = true
             } else {
-                console.log("Checking Firestore (Admin SDK) for role...")
-                // Check Firestore for admin role using Admin SDK (bypasses rules)
                 try {
                     const usersRef = adminDb.collection("users")
-                    const query = usersRef.where("email", "==", normalizedEmail).limit(1)
-                    const userSnap = await query.get()
+                    const snapshot = await usersRef.where("email", "==", normalizedEmail).limit(1).get()
 
-                    if (!userSnap.empty) {
-                        const userData = userSnap.docs[0].data()
-                        if (userData.role === "admin") {
-                            console.log("Admin role confirmed in Firestore")
+                    if (!snapshot.empty) {
+                        const userData = snapshot.docs[0].data()
+                        if (userData.role === "admin" || userData.role === "super_admin") {
+                            console.log("Admin found in Firestore with role:", userData.role)
                             isAdmin = true
-                        } else {
-                            console.log("User found but role is:", userData.role)
                         }
-                    } else {
-                        console.log("User not found in Firestore")
                     }
-                } catch (e: unknown) {
-                    console.error("Error checking Firestore admin status:", e)
+                } catch (dbError) {
+                    console.error("Failed to check admin status in Firestore:", dbError)
                 }
             }
         }
 
         if (!isAdmin) {
-            console.log("Admin check failed for email:", adminEmail)
+            console.warn("Unauthorized broadcast attempt by:", adminEmail)
             return NextResponse.json(
-                { error: `Unauthorized. Email '${adminEmail}' is not an admin.` },
+                { error: "Unauthorized: Admin access required" },
                 { status: 403 }
             )
         }
@@ -289,33 +246,52 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        // Fetch all users using Admin SDK
+        // Fetch users using Admin SDK
         const usersSnap = await adminDb.collection("users").get()
         let users: UserProfile[] = []
         usersSnap.forEach((doc) => {
             users.push({ uid: doc.id, ...doc.data() } as UserProfile)
         })
 
-        // Filter by selected user IDs if provided. 
-        // If no userIds are provided, we don't default to everyone for safety.
+        // Filter by selected user IDs if provided
         if (userIds && userIds.length > 0) {
             const userIdSet = new Set(userIds)
             users = users.filter(u => userIdSet.has(u.uid))
         } else {
-            // No specific users selected, so clear the list
             users = []
         }
 
         // Prepare list of external emails
-        const externalEmails = (body as any).customEmails?.filter((e: string) => e && e.includes('@')) || []
-        const allRecipients: (UserProfile | { email: string })[] = []
-        // Add internal users' full objects
-        users.forEach(u => {
-            if (u.email) allRecipients.push(u)
-        })
-        // Add external emails (no personalization)
-        externalEmails.forEach((e: string) => allRecipients.push({ email: e } as any))
+        const externalEmails = customEmails?.filter((e: string) => e && e.includes('@')) || []
 
+        // Build all recipient entries
+        interface Recipient {
+            email: string;
+            personalizedSubject: string;
+            personalizedBody: string;
+        }
+
+        const allRecipients: Recipient[] = []
+
+        // Internal users with personalization
+        users.forEach(u => {
+            if (u.email) {
+                allRecipients.push({
+                    email: u.email,
+                    personalizedSubject: replacePlaceholders(subject, u),
+                    personalizedBody: replacePlaceholders(messageBody, u),
+                })
+            }
+        })
+
+        // External emails (no personalization)
+        externalEmails.forEach((e: string) => {
+            allRecipients.push({
+                email: e,
+                personalizedSubject: subject,
+                personalizedBody: messageBody,
+            })
+        })
 
         console.log(`Broadcasting email to ${allRecipients.length} total recipients (${users.length} users + ${externalEmails.length} external)`)
 
@@ -327,64 +303,27 @@ export async function POST(request: NextRequest) {
             })
         }
 
-
-        // Initialize Nodemailer ONCE
-        const nodemailer = await import("nodemailer")
-
-        if (!SMTP_HOST || !SMTP_USER || !SMTP_PASSWORD) {
-            throw new Error("SMTP configuration missing on server")
-        }
-
-        const transporter = nodemailer.createTransport({
-            host: SMTP_HOST,
-            port: SMTP_PORT,
-            secure: SMTP_PORT === 465,
-            auth: {
-                user: SMTP_USER,
-                pass: SMTP_PASSWORD,
-            },
-            connectionTimeout: 20000, // Increased timeout
-            greetingTimeout: 20000,
-            pool: true, // Use pooled connections for better performance
-            maxConnections: 5,
-            maxMessages: 100,
-        })
-
-        // Verify connection
-        try {
-            await transporter.verify()
-            console.log("SMTP connection verified")
-        } catch (verifyError) {
-            console.error("SMTP verify failed:", verifyError)
-            throw new Error("Failed to connect to email server")
-        }
-
         let successCount = 0
         let failCount = 0
 
-        // Send emails in batches of 5 (respect pool size)
-        const BATCH_SIZE = 5
+        // Send emails in batches of 10
+        const BATCH_SIZE = 10
         for (let i = 0; i < allRecipients.length; i += BATCH_SIZE) {
             const batch = allRecipients.slice(i, i + BATCH_SIZE)
             const promises = batch.map(async (recipient) => {
-                if (!recipient.email) return false
                 try {
-                    // For internal users use placeholders, external keep original subject/body
-                    let personalizedSubject = subject
-                    let personalizedBody = messageBody
-                    // If this recipient is a full UserProfile, apply placeholders
-                    if ((recipient as any).uid) {
-                        const user = recipient as UserProfile
-                        personalizedSubject = replacePlaceholders(subject, user)
-                        personalizedBody = replacePlaceholders(messageBody, user)
-                    }
-                    const html = generateBroadcastHTML(personalizedSubject, personalizedBody)
-                    await transporter.sendMail({
-                        from: `"${SMTP_FROM_NAME}" <${SMTP_FROM_EMAIL}>`,
-                        to: recipient.email,
-                        subject: personalizedSubject,
+                    const html = generateBroadcastHTML(recipient.personalizedSubject, recipient.personalizedBody)
+                    const { error } = await resend.emails.send({
+                        from: `${FROM_NAME} <${FROM_EMAIL}>`,
+                        to: [recipient.email],
+                        subject: recipient.personalizedSubject,
                         html: html,
                     })
+
+                    if (error) {
+                        console.error(`Resend error for ${recipient.email}:`, error)
+                        return false
+                    }
                     return true
                 } catch (err) {
                     console.error(`Failed to send to ${recipient.email}:`, err)
@@ -396,19 +335,15 @@ export async function POST(request: NextRequest) {
             successCount += results.filter(Boolean).length
             failCount += results.filter(r => !r).length
 
+            // Small delay between batches
             if (i + BATCH_SIZE < allRecipients.length) {
-                await new Promise(resolve => setTimeout(resolve, 1000))
+                await new Promise(resolve => setTimeout(resolve, 500))
             }
         }
 
-
-        // Determine absolute success status
-        // If at least one email sent, we consider it a partial success at minimum
-        // If NO emails sent and we had users, it's a failure
-
         console.log(`Broadcast complete: ${successCount} sent, ${failCount} failed`)
 
-        // Log broadcast using Admin SDK
+        // Log broadcast
         try {
             await adminDb.collection("broadcast_logs").add({
                 subject,
@@ -417,6 +352,7 @@ export async function POST(request: NextRequest) {
                 totalUsers: users.length,
                 successCount,
                 failCount,
+                provider: "resend",
                 createdAt: new Date(),
             })
         } catch (logError) {
