@@ -416,7 +416,7 @@ export default function NaacReportsPage() {
         "",
         `Report generated on ${format(new Date(), "PPPp")}`,
         "",
-        "For verification, contact: admin@campushub.pro",
+        "For verification, contact: team@campushub.pro",
       ]
       disclaimer.forEach(line => {
         doc.text(line, margin + 2, y)

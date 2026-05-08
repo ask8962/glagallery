@@ -337,8 +337,8 @@ export function SaasLanding() {
           <div className="flex flex-col items-center justify-center gap-4">
             <div className="flex items-center gap-3 text-lg font-medium bg-white/5 px-6 py-3 rounded-full border border-white/10">
               <Mail className="h-5 w-5 text-accent" />
-              <a href="mailto:admin@campushub.pro" className="hover:text-accent transition-colors">
-                admin@campushub.pro
+              <a href="mailto:team@campushub.pro" className="hover:text-accent transition-colors">
+                team@campushub.pro
               </a>
             </div>
             <p className="text-sm text-gray-500 mt-2">We typically reply within 2 hours.</p>
@@ -347,7 +347,7 @@ export function SaasLanding() {
       </section>
 
       <footer className="relative z-10 py-8 text-center text-gray-500 text-sm border-t border-white/5">
-        <p>© {new Date().getFullYear()} CampusHub. All rights reserved. | <a href="mailto:admin@campushub.pro" className="hover:text-accent">admin@campushub.pro</a></p>
+        <p>© {new Date().getFullYear()} CampusHub. All rights reserved. | <a href="mailto:team@campushub.pro" className="hover:text-accent">team@campushub.pro</a></p>
       </footer>
     </div>
   )

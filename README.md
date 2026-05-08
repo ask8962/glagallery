@@ -300,7 +300,7 @@ This project is licensed under the MIT License — see [LICENSE](LICENSE) for de
 **Anukalp Gupta**  
 CampusHub  
 Website: [https://campushub.pro/](https://campushub.pro/)  
-Email: [admin@campushub.pro](mailto:admin@campushub.pro)  
+Email: [team@campushub.pro](mailto:team@campushub.pro)  
 [GitHub: @ask8962](https://github.com/ask8962)
 
 ---

@@ -177,7 +177,7 @@ function generateBroadcastHTML(subject: string, body: string): string {
       <p>You received this email because you are a registered user of CampusHub.</p>
       <p>
         <a href="https://campushub.pro">Visit Platform</a> &nbsp;&bull;&nbsp; 
-        <a href="mailto:admin@campushub.pro">Contact Support</a>
+        <a href="mailto:team@campushub.pro">Contact Support</a>
       </p>
     </div>
   </div>

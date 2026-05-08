@@ -22,7 +22,7 @@ export const APP_CONFIG = {
 
   // Email settings
   EMAIL_FROM_NAME: process.env.SMTP_FROM_NAME || "CampusHub",
-  EMAIL_FROM_ADDRESS: process.env.SMTP_FROM_EMAIL || "admin@campushub.pro",
+  EMAIL_FROM_ADDRESS: process.env.SMTP_FROM_EMAIL || "team@campushub.pro",
 
   // Feature flags
   FEATURES: {

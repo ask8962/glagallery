@@ -13,7 +13,7 @@ const defaultConfig: PlatformConfig = {
     logoUrl: "https://ui-avatars.com/api/?name=CampOS&background=0D1117&color=fff&size=512&font-size=0.33",
     contactAddress: "CampOS Headquarters, Mathura, UP, India",
     contactPhone: "+91-5662-250900", // Defaulting to something acceptable
-    contactEmail: "admin@campushub.pro",
+    contactEmail: "team@campushub.pro",
     officialWebsiteUrl: "https://main.campushub.pro",
 }
 
