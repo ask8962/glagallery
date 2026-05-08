@@ -62,7 +62,7 @@
 - **Login Streaks** — Maintain daily login streaks for bonus points
 - **Leaderboard** — Campus-wide competition rankings
 
-### 🎁 Rewards Store
+### 🎁   
 - **Redeem Points** — Exchange earned points for digital/physical rewards
 - **Catalog System** — Browse rewards by category (Digital, Physical, Privilege)
 - **Redemption Tracking** — Track status of orders (Pending → Fulfilled)
@@ -235,7 +235,7 @@ glagallery/
 │   ├── events/                 # Campus events
 │   ├── hackathons/             # Hackathon platform
 │   ├── profile/                # User profile & resume builder
-│   ├── rewards/                # Rewards store & wallet
+│   ├── rewards/                #    & wallet
 │   └── search/                 # User search
 ├── components/                 # Reusable UI components
 │   ├── admin/                  # Admin-specific components

@@ -162,14 +162,14 @@ export default function ChangelogPage() {
             version: "2.15.0",
             date: "August 6, 2025",
             changes: [
-                { type: "feature", title: "Rewards Store (Beta)", description: "Experimental release of the campus point redemption system." },
+                { type: "feature", title: "   (Beta)", description: "Experimental release of the campus point redemption system." },
             ],
         },
         {
             version: "2.14.0",
             date: "July 25, 2025",
             changes: [
-                { type: "feature", title: "Rewards Store", description: "Redeem points for merch, skip-the-line passes, and more." },
+                { type: "feature", title: "  ", description: "Redeem points for merch, skip-the-line passes, and more." },
             ],
         },
         {

@@ -583,7 +583,7 @@ export type ClubRequest = {
   processedAt?: any
 }
 
-// Rewards Store Types
+//    Types
 export type RewardCategory = "digital" | "physical" | "privilege"
 
 export type Reward = {
@@ -695,10 +695,10 @@ export interface AcademicResource extends TenantEntity {
   title: string
   description?: string
   type: ResourceType
-  department: string 
-  semester: string   
-  subject: string    
-  driveLink: string  
+  department: string
+  semester: string
+  subject: string
+  driveLink: string
   authorUid: string
   authorName: string
   upvotes: number

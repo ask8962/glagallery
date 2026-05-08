@@ -33,7 +33,7 @@ export function AdminQuickLinks() {
                 <Card className="p-6 hover:shadow-md transition-shadow cursor-pointer border-accent/20 hover:border-accent/40">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h3 className="text-lg font-semibold text-primary mb-1">Rewards Store</h3>
+                            <h3 className="text-lg font-semibold text-primary mb-1">  </h3>
                             <p className="text-sm text-muted-foreground">Manage rewards and redemptions</p>
                         </div>
                         <ShoppingBag className="h-8 w-8 text-accent" />

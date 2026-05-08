@@ -68,7 +68,7 @@ flowchart TB
     end
     
     subgraph RewardsModule["🎁 Rewards"]
-        REWARDS[Rewards Store] --> REWARD_ITEM[View Reward]
+        REWARDS[  ] --> REWARD_ITEM[View Reward]
         REWARD_ITEM --> REDEEM[Redeem Points]
         REWARDS --> POINTS_HISTORY[Transaction History]
     end
@@ -128,7 +128,7 @@ graph TD
         B13["/hackathons/:id"] --> B14["Hack Detail + Team"]
         B15["/clubs"] --> B16["Club Directory"]
         B17["/clubs/:id"] --> B18["Club Profile"]
-        B19["/rewards"] --> B20["Rewards Store"]
+        B19["/rewards"] --> B20["  "]
         B21["/profile"] --> B22["User Profile"]
         B23["/profile/:uid"] --> B24["Other User Profile"]
         B25["/search"] --> B26["Global Search"]
@@ -177,7 +177,7 @@ Clubs → Search Club → View Profile → Join → Access Documents → View An
 
 ### Journey 6: Redeem Rewards
 ```
-Profile → View Points → Rewards Store → Select Reward → Confirm Redemption → Collect
+Profile → View Points →    → Select Reward → Confirm Redemption → Collect
 ```
 
 ---

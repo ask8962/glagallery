@@ -49,7 +49,6 @@ export function CommandMenu({ open, onOpenChange }: CommandMenuProps) {
         { icon: Building2, label: "Clubs", href: "/clubs" },
         { icon: Trophy, label: "Hackathons", href: "/hackathons" },
         { icon: Flame, label: "Confessions Feed", href: "/confessions" },
-        { icon: Gift, label: "Rewards Store", href: "/rewards" },
         { icon: GraduationCap, label: "Academic Calendar", href: "/calendar" },
     ]
 

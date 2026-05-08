@@ -83,7 +83,7 @@ function generateWelcomeHTML(name: string, email: string): string {
                     <div style="background: #1c2333; border-radius: 12px; padding: 20px; border: 1px solid #30363d;">
                       <div style="font-size: 28px; margin-bottom: 8px;">🏅</div>
                       <h4 style="color: #facc15; margin: 0 0 6px 0; font-size: 15px;">Earn Rewards</h4>
-                      <p style="color: #8b949e; margin: 0; font-size: 13px; line-height: 1.5;">Collect points for every activity. Level up, unlock badges, and redeem from the rewards store.</p>
+                      <p style="color: #8b949e; margin: 0; font-size: 13px; line-height: 1.5;">Collect points for every activity. Level up, unlock badges, and redeem from the   .</p>
                     </div>
                   </td>
                   <td width="50%" style="padding: 8px 0 8px 8px; vertical-align: top;">
