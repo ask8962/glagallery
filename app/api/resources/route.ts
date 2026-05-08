@@ -164,7 +164,7 @@ export async function POST(request: NextRequest) {
                     userId: authorUid,
                     amount: 20,
                     type: "resource_upload",
-                    description: \`Uploaded \${selectedType}: \${title}\`,
+                    description: `Uploaded ${selectedType}: ${title}`,
                     referenceId: docRef.id,
                     createdAt: new Date().toISOString()
                 })
