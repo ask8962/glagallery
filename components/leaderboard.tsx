@@ -141,16 +141,16 @@ export function Leaderboard({
             </div>
             
             <Avatar className="h-10 w-10">
-              <AvatarImage src={entry.user.photoURL} alt={entry.user.name} />
+              <AvatarImage src={entry.user.photoURL} alt={entry.user.name || "User"} />
               <AvatarFallback className="bg-accent text-accent-foreground">
-                {entry.user.name[0]}
+                {entry.user.name ? entry.user.name[0] : "?"}
               </AvatarFallback>
             </Avatar>
             
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-primary truncate">
-                  {entry.user.name}
+                  {entry.user.name || "Anonymous User"}
                 </span>
                 {showOnlineStatus && (
                   <OnlineIndicator userId={entry.user.uid} size="sm" />

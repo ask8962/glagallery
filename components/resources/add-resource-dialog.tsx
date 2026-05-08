@@ -31,7 +31,7 @@ const SEMESTERS = [
 ]
 
 export function AddResourceDialog({ open, onClose, onAdded }: AddResourceDialogProps) {
-    const { user } = useAuth()
+    const { user, profile } = useAuth()
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
         title: "",
@@ -63,8 +63,8 @@ export function AddResourceDialog({ open, onClose, onAdded }: AddResourceDialogP
                 body: JSON.stringify({
                     ...formData,
                     authorUid: user.uid,
-                    authorName: user.name || "Anonymous Student",
-                    organizationId: user.organizationId || "gla",
+                    authorName: profile?.name || user.name || "Anonymous Student",
+                    organizationId: profile?.organizationId || user.organizationId || "gla",
                 }),
             })
 
