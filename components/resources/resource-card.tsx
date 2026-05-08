@@ -2,9 +2,10 @@ import { type AcademicResource } from "@/lib/types"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { BookOpen, FileText, DownloadCloud, ExternalLink, ThumbsUp, Clock, FileType, Trash2 } from "lucide-react"
+import { BookOpen, FileText, DownloadCloud, ExternalLink, ThumbsUp, Clock, FileType, Trash2, Share2 } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 import { useAuth } from "@/context/auth-context"
+import { toast } from "sonner"
 
 interface ResourceCardProps {
     resource: Partial<AcademicResource>
@@ -19,6 +20,16 @@ export function ResourceCard({ resource, onDelete }: ResourceCardProps) {
     const isAuthor = user?.uid === resource.authorUid
     const canDelete = isAdmin || isAuthor
     
+    const handleShare = async () => {
+        const url = `${window.location.origin}/resources/${resource.id}`
+        try {
+            await navigator.clipboard.writeText(url)
+            toast.success("Link copied to clipboard!")
+        } catch (err) {
+            toast.error("Failed to copy link")
+        }
+    }
+
     const getIcon = () => {
         switch (resource.type) {
             case "notes": return <FileText className="h-5 w-5 text-blue-500" />
@@ -89,6 +100,16 @@ export function ResourceCard({ resource, onDelete }: ResourceCardProps) {
                         </a>
                     </Button>
                     
+                    <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="h-9 w-9 rounded-full text-blue-500 hover:text-blue-600 hover:bg-blue-50 border-blue-500/20"
+                        onClick={handleShare}
+                        title="Copy direct link"
+                    >
+                        <Share2 className="h-4 w-4" />
+                    </Button>
+
                     {canDelete && onDelete && (
                         <Button 
                             variant="outline" 
