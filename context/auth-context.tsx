@@ -158,6 +158,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setLoading(false)
 
+      // 🔐 Send login alert email (fire-and-forget)
+      try {
+        const ua = navigator.userAgent
+        // Detect browser name
+        let browserName = "Unknown Browser"
+        if (ua.includes("Edg/")) browserName = "Microsoft Edge"
+        else if (ua.includes("OPR/") || ua.includes("Opera")) browserName = "Opera"
+        else if (ua.includes("Chrome/") && !ua.includes("Edg/")) browserName = "Google Chrome"
+        else if (ua.includes("Firefox/")) browserName = "Mozilla Firefox"
+        else if (ua.includes("Safari/") && !ua.includes("Chrome")) browserName = "Safari"
+
+        // Detect OS
+        let osName = "Unknown OS"
+        if (ua.includes("Windows NT 10")) osName = "Windows 10/11"
+        else if (ua.includes("Windows")) osName = "Windows"
+        else if (ua.includes("Mac OS X")) osName = "macOS"
+        else if (ua.includes("Android")) osName = "Android"
+        else if (ua.includes("iPhone") || ua.includes("iPad")) osName = "iOS"
+        else if (ua.includes("Linux")) osName = "Linux"
+
+        fetch("/api/auth/login-alert", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: u.displayName || "User",
+            email: u.email,
+            browser: browserName,
+            os: osName,
+          }),
+        }).catch((err) => console.warn("Login alert email failed:", err))
+      } catch (alertErr) {
+        console.warn("Login alert detection failed:", alertErr)
+      }
+
       // Check if 2FA is required
       const snapData = snap.exists() ? (snap.data() as UserProfile) : null
       if (snapData?.twoFactorEnabled) {

@@ -1,12 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { APP_CONFIG } from "@/lib/config"
+import { Resend } from "resend"
 
-const SMTP_HOST = process.env.SMTP_HOST
-const SMTP_PORT = Number.parseInt(process.env.SMTP_PORT || "587")
-const SMTP_USER = process.env.SMTP_USER
-const SMTP_PASSWORD = process.env.SMTP_PASSWORD
-const SMTP_FROM_EMAIL = APP_CONFIG.EMAIL_FROM_ADDRESS
-const SMTP_FROM_NAME = APP_CONFIG.EMAIL_FROM_NAME
+const resend = new Resend(process.env.RESEND_API_KEY)
+const FROM_EMAIL = "team@campushub.pro"
+const FROM_NAME = "CampusHub"
 
 function generateWelcomeHTML(name: string, email: string): string {
   const firstName = name.split(" ")[0] || "there"
@@ -218,32 +215,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 })
     }
 
-    if (!SMTP_HOST || !SMTP_USER || !SMTP_PASSWORD) {
-      console.warn("SMTP not configured — skipping welcome email")
-      return NextResponse.json({ success: false, error: "SMTP not configured" }, { status: 200 })
+    if (!process.env.RESEND_API_KEY) {
+      console.warn("Resend not configured — skipping welcome email")
+      return NextResponse.json({ success: false, error: "Email service not configured" }, { status: 200 })
     }
-
-    const nodemailer = await import("nodemailer")
-    const transporter = nodemailer.createTransport({
-      host: SMTP_HOST,
-      port: SMTP_PORT,
-      secure: SMTP_PORT === 465,
-      auth: { user: SMTP_USER, pass: SMTP_PASSWORD },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-    })
-
-    await transporter.verify()
 
     const html = generateWelcomeHTML(name || "Student", email)
 
-    await transporter.sendMail({
-      from: `"${SMTP_FROM_NAME}" <${SMTP_FROM_EMAIL}>`,
-      to: email,
+    const { error } = await resend.emails.send({
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+      to: [email],
       subject: "🎉 Welcome to CampusHub — Your Campus Journey Starts Now!",
-      html,
-      text: `Hey ${name || "there"}! Welcome to CampusHub! Your campus journey starts now. Explore events, join hackathons, earn rewards, and connect with clubs. Visit https://campushub.pro to get started!`,
+      html: html,
     })
+
+    if (error) {
+      console.error("Welcome email error:", error)
+      return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+    }
 
     console.log("✅ Welcome email sent to:", email)
     return NextResponse.json({ success: true, message: "Welcome email sent" })
