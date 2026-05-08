@@ -7,7 +7,7 @@ import { useAuth } from "@/context/auth-context"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ThemeToggle } from "./theme-toggle"
 import { NotificationCenter } from "./notification-center"
-import { Menu, X, ChevronDown, Rocket, Users, ShoppingBag, PlusCircle, Search as SearchIcon, Trophy, Calendar, Command, Bot, Flame } from "lucide-react"
+import { Menu, X, ChevronDown, Rocket, Users, ShoppingBag, PlusCircle, Search as SearchIcon, Trophy, Calendar, Command, Bot, Flame, BookOpen } from "lucide-react"
 import { useState, useEffect, useCallback } from "react"
 import { useConfig } from "@/context/config-context"
 import { CommandMenu } from "@/components/command-menu"
@@ -55,6 +55,7 @@ export function Navbar() {
       items: [
         { href: "/search", label: "Search", icon: <SearchIcon className="h-4 w-4 mr-2" /> },
         { href: "/confessions", label: "Confessions", icon: <Flame className="h-4 w-4 text-orange-500 mr-2" /> },
+        { href: "/resources", label: "Study Materials", icon: <BookOpen className="h-4 w-4 text-blue-500 mr-2" /> },
       ]
     },
     {

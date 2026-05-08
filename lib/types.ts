@@ -626,6 +626,7 @@ export type PointTransactionType =
   | "redemption"
   | "refund"
   | "bonus"
+  | "resource_upload"
   | "other"
 
 export type PointTransaction = {
@@ -681,6 +682,28 @@ export type AcademicYear = {
     endDate: any
   }[]
   isActive: boolean
+}
+
+// ============================================
+// ACADEMIC RESOURCES (NOTES & PYQs)
+// ============================================
+
+export type ResourceType = "notes" | "pyq" | "book" | "other"
+
+export interface AcademicResource extends TenantEntity {
+  id: string
+  title: string
+  description?: string
+  type: ResourceType
+  department: string 
+  semester: string   
+  subject: string    
+  driveLink: string  
+  authorUid: string
+  authorName: string
+  upvotes: number
+  createdAt: any
+  status: "active" | "hidden"
 }
 
 // ============================================
