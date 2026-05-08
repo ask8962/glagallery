@@ -50,6 +50,7 @@ export function CommandMenu({ open, onOpenChange }: CommandMenuProps) {
         { icon: Trophy, label: "Hackathons", href: "/hackathons" },
         { icon: Flame, label: "Confessions Feed", href: "/confessions" },
         { icon: GraduationCap, label: "Academic Calendar", href: "/calendar" },
+        { icon: GraduationCap, label: "Study Resources", href: "/resources" },
     ]
 
     // Admin items (only for admins)

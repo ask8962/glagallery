@@ -184,3 +184,36 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
 }
+
+// DELETE: Remove a resource (Admin/Super Admin only or original author)
+export async function DELETE(request: NextRequest) {
+    try {
+        const { searchParams } = new URL(request.url)
+        const id = searchParams.get("id")
+        
+        // Basic authorization check via headers (MVP approach)
+        const uid = request.headers.get("x-user-id")
+        const role = request.headers.get("x-user-role")
+
+        if (!id) return NextResponse.json({ error: "Missing resource ID" }, { status: 400 })
+
+        const docRef = adminDb.collection("academicResources").doc(id)
+        const doc = await docRef.get()
+
+        if (!doc.exists) return NextResponse.json({ error: "Resource not found" }, { status: 404 })
+        
+        const data = doc.data()
+        
+        // Check if user is admin, super_admin, or the original author
+        if (data?.authorUid !== uid && role !== "admin" && role !== "super_admin") {
+             return NextResponse.json({ error: "Unauthorized to delete this resource" }, { status: 403 })
+        }
+
+        await docRef.delete()
+
+        return NextResponse.json({ success: true })
+    } catch (error: any) {
+        console.error("Resources DELETE error:", error)
+        return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+}

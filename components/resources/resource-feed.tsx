@@ -5,6 +5,8 @@ import { ResourceCard } from "./resource-card"
 import { Button } from "@/components/ui/button"
 import { Loader2, FolderOpen } from "lucide-react"
 import type { AcademicResource, ResourceType } from "@/lib/types"
+import { useAuth } from "@/context/auth-context"
+import { toast } from "sonner"
 
 interface ResourceFeedProps {
     type?: ResourceType | "all"
@@ -20,6 +22,30 @@ export function ResourceFeed({ type = "all", department = "all", semester = "all
     const [nextCursor, setNextCursor] = useState<string | null>(null)
     const [hasMore, setHasMore] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const { user, profile } = useAuth()
+
+    const handleDelete = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this resource?")) return
+
+        try {
+            const res = await fetch(`/api/resources?id=${id}`, {
+                method: "DELETE",
+                headers: {
+                    "x-user-id": user?.uid || "",
+                    "x-user-role": profile?.role || ""
+                }
+            })
+            if (!res.ok) {
+                const data = await res.json()
+                throw new Error(data.error || "Failed to delete resource")
+            }
+            
+            toast.success("Resource deleted successfully")
+            setResources(prev => prev.filter(r => r.id !== id))
+        } catch (err: any) {
+            toast.error(err.message)
+        }
+    }
 
     const fetchResources = useCallback(
         async (isInitial = true) => {
@@ -101,7 +127,11 @@ export function ResourceFeed({ type = "all", department = "all", semester = "all
         <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {resources.map((resource) => (
-                    <ResourceCard key={resource.id} resource={resource} />
+                    <ResourceCard 
+                        key={resource.id} 
+                        resource={resource} 
+                        onDelete={handleDelete}
+                    />
                 ))}
             </div>
 

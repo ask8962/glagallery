@@ -2,14 +2,23 @@ import { type AcademicResource } from "@/lib/types"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { BookOpen, FileText, DownloadCloud, ExternalLink, ThumbsUp, Clock, FileType } from "lucide-react"
+import { BookOpen, FileText, DownloadCloud, ExternalLink, ThumbsUp, Clock, FileType, Trash2 } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
+import { useAuth } from "@/context/auth-context"
 
 interface ResourceCardProps {
     resource: Partial<AcademicResource>
+    onDelete?: (id: string) => void
 }
 
-export function ResourceCard({ resource }: ResourceCardProps) {
+export function ResourceCard({ resource, onDelete }: ResourceCardProps) {
+    const { profile, user } = useAuth()
+    
+    // Check if current user is admin/super_admin or the original author
+    const isAdmin = profile?.role === "admin" || profile?.role === "super_admin"
+    const isAuthor = user?.uid === resource.authorUid
+    const canDelete = isAdmin || isAuthor
+    
     const getIcon = () => {
         switch (resource.type) {
             case "notes": return <FileText className="h-5 w-5 text-blue-500" />
@@ -79,6 +88,17 @@ export function ResourceCard({ resource }: ResourceCardProps) {
                             Open in Drive
                         </a>
                     </Button>
+                    
+                    {canDelete && onDelete && (
+                        <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="h-9 w-9 rounded-full text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20"
+                            onClick={() => onDelete(resource.id!)}
+                        >
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    )}
                 </div>
             </CardFooter>
         </Card>
