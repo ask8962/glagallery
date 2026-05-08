@@ -3,9 +3,10 @@ import { adminDb } from "@/lib/firebase-admin"
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
+        const params = await context.params
         const id = params.id
         if (!id) return NextResponse.json({ error: "Missing resource ID" }, { status: 400 })
 
