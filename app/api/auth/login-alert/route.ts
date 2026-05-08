@@ -7,58 +7,58 @@ const FROM_NAME = "CampusHub Security"
 
 // Extract real IP from request headers (works on Vercel, Cloudflare, etc.)
 function getClientIP(request: NextRequest): string {
-    const forwarded = request.headers.get("x-forwarded-for")
-    if (forwarded) {
-        // x-forwarded-for can contain multiple IPs: "client, proxy1, proxy2"
-        return forwarded.split(",")[0].trim()
-    }
-    const realIp = request.headers.get("x-real-ip")
-    if (realIp) return realIp.trim()
+  const forwarded = request.headers.get("x-forwarded-for")
+  if (forwarded) {
+    // x-forwarded-for can contain multiple IPs: "client, proxy1, proxy2"
+    return forwarded.split(",")[0].trim()
+  }
+  const realIp = request.headers.get("x-real-ip")
+  if (realIp) return realIp.trim()
 
-    const cfIp = request.headers.get("cf-connecting-ip")
-    if (cfIp) return cfIp.trim()
+  const cfIp = request.headers.get("cf-connecting-ip")
+  if (cfIp) return cfIp.trim()
 
-    return "Unknown"
+  return "Unknown"
 }
 
 // Fetch geo-location from IP (server-side — no CORS issues)
 async function getLocationFromIP(ip: string): Promise<{ city: string; region: string; country: string }> {
-    try {
-        if (!ip || ip === "Unknown" || ip === "::1" || ip === "127.0.0.1") {
-            return { city: "Localhost", region: "Dev Environment", country: "" }
-        }
-        // ip-api.com is free and doesn't need API key (100 req/min)
-        const res = await fetch(`http://ip-api.com/json/${ip}?fields=status,city,regionName,country`, {
-            signal: AbortSignal.timeout(5000),
-        })
-        if (res.ok) {
-            const data = await res.json()
-            if (data.status === "success") {
-                return {
-                    city: data.city || "Unknown",
-                    region: data.regionName || "",
-                    country: data.country || "",
-                }
-            }
-        }
-    } catch {
-        // Geo lookup failed, continue with defaults
+  try {
+    if (!ip || ip === "Unknown" || ip === "::1" || ip === "127.0.0.1") {
+      return { city: "Localhost", region: "Dev Environment", country: "" }
     }
-    return { city: "Unknown", region: "", country: "" }
+    // ip-api.com is free and doesn't need API key (100 req/min)
+    const res = await fetch(`http://ip-api.com/json/${ip}?fields=status,city,regionName,country`, {
+      signal: AbortSignal.timeout(5000),
+    })
+    if (res.ok) {
+      const data = await res.json()
+      if (data.status === "success") {
+        return {
+          city: data.city || "Unknown",
+          region: data.regionName || "",
+          country: data.country || "",
+        }
+      }
+    }
+  } catch {
+    // Geo lookup failed, continue with defaults
+  }
+  return { city: "Unknown", region: "", country: "" }
 }
 
 function generateLoginAlertHTML(
-    name: string,
-    email: string,
-    browser: string,
-    os: string,
-    ip: string,
-    timestamp: string,
-    location: string
+  name: string,
+  email: string,
+  browser: string,
+  os: string,
+  ip: string,
+  timestamp: string,
+  location: string
 ): string {
-    const firstName = name.split(" ")[0] || "there"
+  const firstName = name.split(" ")[0] || "there"
 
-    return `
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -157,7 +157,7 @@ function generateLoginAlertHTML(
                 <p style="color: #fbbf24; font-size: 14px; font-weight: 700; margin: 0 0 8px 0;">&#9888;&#65039; Wasn't you?</p>
                 <p style="color: #d4d4d8; font-size: 14px; line-height: 1.6; margin: 0;">
                   If you didn't sign in, your account may be compromised. Please 
-                  <a href="https://campushub.pro/settings" style="color: #fbbf24; text-decoration: underline;">change your password immediately</a> 
+                  <a href="https://campushub.pro/profile" style="color: #fbbf24; text-decoration: underline;">Apply Two-Factor Authentication</a> 
                   or contact us at <a href="mailto:team@campushub.pro" style="color: #fbbf24; text-decoration: underline;">team@campushub.pro</a>.
                 </p>
               </div>
@@ -192,59 +192,59 @@ function generateLoginAlertHTML(
 }
 
 export async function POST(request: NextRequest) {
-    try {
-        const { name, email, browser, os } = await request.json()
+  try {
+    const { name, email, browser, os } = await request.json()
 
-        if (!email || !email.includes("@")) {
-            return NextResponse.json({ error: "Invalid email" }, { status: 400 })
-        }
-
-        if (!process.env.RESEND_API_KEY) {
-            console.warn("Resend not configured — skipping login alert email")
-            return NextResponse.json({ success: false, error: "Email service not configured" }, { status: 200 })
-        }
-
-        // Get real IP from server-side request headers
-        const ip = getClientIP(request)
-        console.log("Detected client IP:", ip)
-
-        // Get geo-location from IP (server-side, no CORS issues)
-        const geo = await getLocationFromIP(ip)
-        const locationStr = [geo.city, geo.region, geo.country].filter(Boolean).join(", ") || "Unknown Location"
-        console.log("Resolved location:", locationStr)
-
-        const timestamp = new Date().toLocaleString("en-IN", {
-            timeZone: "Asia/Kolkata",
-            dateStyle: "full",
-            timeStyle: "short",
-        })
-
-        const html = generateLoginAlertHTML(
-            name || "User",
-            email,
-            browser || "Unknown Browser",
-            os || "Unknown Device",
-            ip,
-            timestamp,
-            locationStr
-        )
-
-        const { error } = await resend.emails.send({
-            from: `${FROM_NAME} <${FROM_EMAIL}>`,
-            to: [email],
-            subject: `🔐 New login to your CampusHub account`,
-            html: html,
-        })
-
-        if (error) {
-            console.error("Login alert email error:", error)
-            return NextResponse.json({ success: false, error: error.message }, { status: 500 })
-        }
-
-        console.log("✅ Login alert sent to:", email, "| IP:", ip, "| Location:", locationStr)
-        return NextResponse.json({ success: true, message: "Login alert sent" })
-    } catch (error: any) {
-        console.error("Login alert error:", error.message)
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+    if (!email || !email.includes("@")) {
+      return NextResponse.json({ error: "Invalid email" }, { status: 400 })
     }
+
+    if (!process.env.RESEND_API_KEY) {
+      console.warn("Resend not configured — skipping login alert email")
+      return NextResponse.json({ success: false, error: "Email service not configured" }, { status: 200 })
+    }
+
+    // Get real IP from server-side request headers
+    const ip = getClientIP(request)
+    console.log("Detected client IP:", ip)
+
+    // Get geo-location from IP (server-side, no CORS issues)
+    const geo = await getLocationFromIP(ip)
+    const locationStr = [geo.city, geo.region, geo.country].filter(Boolean).join(", ") || "Unknown Location"
+    console.log("Resolved location:", locationStr)
+
+    const timestamp = new Date().toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      dateStyle: "full",
+      timeStyle: "short",
+    })
+
+    const html = generateLoginAlertHTML(
+      name || "User",
+      email,
+      browser || "Unknown Browser",
+      os || "Unknown Device",
+      ip,
+      timestamp,
+      locationStr
+    )
+
+    const { error } = await resend.emails.send({
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+      to: [email],
+      subject: `🔐 New login to your CampusHub account`,
+      html: html,
+    })
+
+    if (error) {
+      console.error("Login alert email error:", error)
+      return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+    }
+
+    console.log("✅ Login alert sent to:", email, "| IP:", ip, "| Location:", locationStr)
+    return NextResponse.json({ success: true, message: "Login alert sent" })
+  } catch (error: any) {
+    console.error("Login alert error:", error.message)
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+  }
 }
