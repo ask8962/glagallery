@@ -29,42 +29,49 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://campushub.pro"),
+  metadataBase: new URL("https://www.campushub.pro"),
   title: {
-    default: "CampOS | Campus Operating System",
-    template: "%s | CampOS",
+    default: "CampusHub | Free Study Materials, PYQs & Campus Events",
+    template: "%s | CampusHub",
   },
   description:
-    "The official platform for your university to manage clubs, register for hackathons, and track upcoming events.",
-  keywords: ["University", "Campus OS", "Hackathons", "Events", "Student Community"],
+    "The official platform for university students to share study materials, download PYQs, access class notes, manage clubs, and track upcoming events. Join CampusHub today.",
+  keywords: ["CampusHub", "GLA University", "Study Materials", "Previous Year Questions", "PYQs", "Class Notes", "B.Tech Notes", "University Hackathons", "College Events", "Student Community", "College Resources"],
   authors: [{ name: "Anukalp Gupta", url: "https://github.com/ask8962" }],
   creator: "Anukalp Gupta",
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://campushub.pro",
-    title: "CampOS | Campus Operating System",
-    description: "Manage clubs, join hackathons, and explore campus life.",
-    siteName: "CampOS",
+    url: "https://www.campushub.pro",
+    title: "CampusHub | Free Study Materials, PYQs & Campus Events",
+    description: "Share study materials, download PYQs, explore events, and connect with your campus community.",
+    siteName: "CampusHub",
     images: [
       {
-        url: "/og-image.png", // We'll need to ensure this exists or use a default
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "CampOS Preview",
+        alt: "CampusHub Platform Preview",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "CampOS | Campus Operating System",
-    description: "The holistic operating system for your campus.",
+    title: "CampusHub | Free Study Materials, PYQs & Campus Events",
+    description: "Share study materials, download PYQs, explore events, and connect with your campus community.",
     creator: "@campushubpro",
     images: ["/og-image.png"],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   icons: {
     icon: "/favicon.ico",

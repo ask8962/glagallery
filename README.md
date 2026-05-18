@@ -197,7 +197,7 @@
 
 | Protection | Details |
 |-----------|---------|
-| **Tenant Routing** | Domain-based resolution (e.g. `@college.edu`) to isolate organizational data |
+| **Tenant Routing** | Domain-based resolution (e.g. `@college.ac.in`) to isolate organizational data |
 | **2FA (Email OTP)** | 6-digit server-generated codes, 5 req/hr limit |
 | **API Rate Limiting** | Uploads: 10/hr, Comments: 50/hr, Likes: 100/hr per IP |
 | **Security Headers** | CSP, X-Frame-Options, HSTS, Referrer-Policy, Permissions-Policy |
