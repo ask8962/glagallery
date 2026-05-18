@@ -229,16 +229,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       sessionExpired,
       sessionExpiryReason,
       signIn: async () => {
-        const { auth } = getFirebase()
-        try {
-          const result = await signInWithPopup(auth, googleProvider)
-          const signedInUser = result.user
-
-          // We removed the hardcoded @gla restriction here so you can login with Gmail.
-        } catch (error: any) {
-          // Re-throw the error to be handled by the UI
-          throw error
-        }
+        // Redirect to the new authentication page instead of direct Google Auth
+        window.location.href = "/auth/login";
       },
       signOut: async () => {
         const { auth } = getFirebase()

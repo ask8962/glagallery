@@ -2,13 +2,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getFirebase } from "@/lib/firebase";
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import Link from "next/link";
 import { Loader2, ArrowRight } from "lucide-react";
-import Image from "next/image";
 
-export default function LoginPage() {
+export default function SignUpPage() {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -20,11 +20,26 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
+    
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Update display name
+      await updateProfile(userCredential.user, {
+        displayName: name
+      });
       window.location.href = "/";
     } catch (err: any) {
-      setError("Invalid email or password. Please try again.");
+      if (err.code === "auth/email-already-in-use") {
+        setError("Email is already in use. Please sign in instead.");
+      } else {
+        setError(err?.message || "Failed to create account. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -48,7 +63,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-[#0a0a0a]">
       <div className="w-full max-w-md bg-[#111111] border border-zinc-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
         {/* Subtle glow effect */}
-        <div className="absolute -top-24 -left-24 w-48 h-48 bg-yellow-500/10 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-yellow-500/10 blur-[100px] rounded-full pointer-events-none" />
         
         <div className="relative z-10">
           <div className="flex justify-center mb-6">
@@ -63,8 +78,8 @@ export default function LoginPage() {
           </div>
 
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-white mb-2 tracking-tight">Welcome back</h1>
-            <p className="text-zinc-400 text-sm">Sign in to your CampusHub account</p>
+            <h1 className="text-2xl font-bold text-white mb-2 tracking-tight">Create an account</h1>
+            <p className="text-zinc-400 text-sm">Join CampusHub in under 2 minutes.</p>
           </div>
 
           {error && (
@@ -73,7 +88,20 @@ export default function LoginPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium text-zinc-300">Full Name *</label>
+              <input
+                type="text"
+                placeholder="e.g. Rahul Sharma"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={isLoading || isGoogleLoading}
+                className="w-full h-12 bg-[#1a1a1a] border border-zinc-800 rounded-xl px-4 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500 transition-all"
+              />
+            </div>
+
             <div className="space-y-1.5">
               <label className="text-sm font-medium text-zinc-300">Email *</label>
               <input
@@ -88,12 +116,7 @@ export default function LoginPage() {
             </div>
             
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-zinc-300">Password *</label>
-                <Link href="/auth/forgot" className="text-xs text-yellow-500 hover:text-yellow-400 font-medium transition-colors">
-                  Forgot password?
-                </Link>
-              </div>
+              <label className="text-sm font-medium text-zinc-300">Password *</label>
               <input
                 type="password"
                 placeholder="••••••••"
@@ -108,13 +131,13 @@ export default function LoginPage() {
             <button 
               type="submit" 
               disabled={isLoading || isGoogleLoading}
-              className="w-full h-12 bg-[#EAB308] hover:bg-[#FACC15] text-black font-semibold rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-70 disabled:cursor-not-allowed mt-2"
+              className="w-full h-12 bg-[#EAB308] hover:bg-[#FACC15] text-black font-semibold rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-70 disabled:cursor-not-allowed mt-4"
             >
               {isLoading ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <>
-                  Sign In <ArrowRight className="h-4 w-4" />
+                  Create Account <ArrowRight className="h-4 w-4" />
                 </>
               )}
             </button>
@@ -125,7 +148,7 @@ export default function LoginPage() {
               <div className="w-full border-t border-zinc-800"></div>
             </div>
             <div className="relative bg-[#111111] px-4 text-xs text-zinc-500 uppercase tracking-wider font-medium">
-              Or continue with
+              Or sign up with
             </div>
           </div>
 
@@ -151,9 +174,9 @@ export default function LoginPage() {
           </button>
 
           <p className="mt-8 text-center text-sm text-zinc-500">
-            Don't have an account?{" "}
-            <Link href="/auth/signup" className="text-yellow-500 hover:text-yellow-400 font-medium transition-colors">
-              Create one now
+            Already have an account?{" "}
+            <Link href="/auth/login" className="text-yellow-500 hover:text-yellow-400 font-medium transition-colors">
+              Sign in
             </Link>
           </p>
         </div>

@@ -175,19 +175,14 @@ export function Navbar() {
             <div className="h-6 w-px bg-border/50 mx-1 hidden sm:block" />
 
             {!loading && !user && (
-              <Button
-                onClick={async () => {
-                  try {
-                    await signIn()
-                  } catch (error: any) {
-                    alert(error.message || 'Sign in failed')
-                  }
-                }}
-                size="sm"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
-              >
-                Sign in
-              </Button>
+              <Link href="/auth/login" passHref>
+                <Button
+                  size="sm"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
+                >
+                  Sign in
+                </Button>
+              </Link>
             )}
 
             {user && (
