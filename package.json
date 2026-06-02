@@ -78,7 +78,7 @@
     "date-fns": "latest",
     "embla-carousel-react": "latest",
     "firebase": "latest",
-    "firebase-admin": "^13.6.0",
+    "firebase-admin": "^13.10.0",
     "framer-motion": "latest",
     "geist": "latest",
     "html5-qrcode": "^2.3.8",
