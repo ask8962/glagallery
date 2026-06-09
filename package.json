@@ -108,7 +108,7 @@
     "sonner": "latest",
     "tailwind-merge": "^3.4.1",
     "tailwindcss-animate": "^1.0.7",
-    "uuid": "^13.0.0",
+    "uuid": "^14.0.0",
     "vaul": "latest",
     "zod": "4.3.6"
   },
