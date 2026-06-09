@@ -83,7 +83,7 @@
     "geist": "latest",
     "html5-qrcode": "^2.3.8",
     "input-otp": "latest",
-    "isomorphic-dompurify": "^2.35.0",
+    "isomorphic-dompurify": "^3.12.0",
     "jose": "6.1.3",
     "jspdf": "^4.0.0",
     "jsqr": "^1.4.0",
